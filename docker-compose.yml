@@ -1,0 +1,16 @@
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: ftp_signup
+      MYSQL_USER: ftp
+      MYSQL_PASSWORD: ftp
+      MYSQL_ROOT_PASSWORD: ftp
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d
+
+volumes:
+  mysql-data:
