@@ -1,0 +1,178 @@
+/* Base layout / typography */
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-md);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-bold { font-weight: var(--font-weight-bold); }
+
+/* Layout utilities */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
+/* Buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-md);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-radius: var(--button-primary-border-radius);
+}
+
+.btn-secondary {
+  background: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-on-primary);
+}
+
+/* Card */
+
+.card {
+  background: var(--card-default-background);
+  border: var(--border-width-sm) solid var(--card-default-border);
+  border-radius: var(--card-default-border-radius);
+  padding: var(--space-4);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Chip */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  background: var(--chip-default-background);
+  color: var(--chip-default-foreground);
+  border-radius: var(--chip-default-border-radius);
+  font-size: var(--font-size-sm);
+}
+
+/* Form controls */
+
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  background: var(--input-default-background);
+  color: var(--input-default-foreground);
+  border: var(--border-width-sm) solid var(--input-default-border);
+  border-radius: var(--input-default-border-radius);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-md);
+  outline: none;
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-1);
+}
+
+/* Style-guide page helpers */
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.swatch-color {
+  height: var(--space-4);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-sm) solid var(--color-border);
+}
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.section {
+  margin-bottom: var(--space-4);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}

@@ -1,0 +1,46 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1a1a1a; /** Primary body text color, used on color-bg. Contrast ratio ~17.4:1. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-surface: #f8fafc; /** Slightly recessed surface, distinct from color-bg, used for cards. */
+  --color-primary: #1d4ed8; /** Brand/interactive accent color. Meets 4.5:1 as text on color-bg (~6.7:1). */
+  --color-on-primary: #ffffff; /** Text/icon color placed on top of color-primary. */
+  --color-muted: #475569; /** Secondary/muted text color. */
+  --color-border: #e2e8f0; /** Default hairline border color. */
+  --color-danger: #dc2626; /** Destructive/error accent color. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 600;
+  --line-height-base: 1.5;
+  --button-primary-background: var(--color-primary);
+  --button-primary-foreground: var(--color-on-primary);
+  --button-primary-border-radius: var(--radius-md);
+  --button-secondary-background: var(--color-bg);
+  --button-secondary-foreground: var(--color-primary);
+  --button-secondary-border: var(--color-primary);
+  --card-default-background: var(--color-surface);
+  --card-default-border: var(--color-border);
+  --card-default-border-radius: var(--radius-lg);
+  --chip-default-background: var(--color-surface);
+  --chip-default-foreground: var(--color-muted);
+  --chip-default-border-radius: var(--radius-sm);
+  --input-default-background: var(--color-bg);
+  --input-default-border: var(--color-border);
+  --input-default-foreground: var(--color-fg);
+  --input-default-border-radius: var(--radius-sm);
+}

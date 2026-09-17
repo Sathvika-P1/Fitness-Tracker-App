@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Style Guide</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="prototype-utils.css">
+</head>
+<body class="p-4">
+
+  <header class="section">
+    <h1 class="text-lg text-bold">Design System Style Guide</h1>
+    <p class="text-muted">Fitness Tracker App &mdash; tokens and components</p>
+  </header>
+
+  <section class="section">
+    <h2 class="section-title">Colors</h2>
+    <div class="swatch-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background: var(--color-fg);"></div>
+        <span class="text-sm text-bold">color-fg</span>
+        <span class="text-sm text-muted">#1a1a1a</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: var(--color-bg);"></div>
+        <span class="text-sm text-bold">color-bg</span>
+        <span class="text-sm text-muted">#ffffff</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: var(--color-surface);"></div>
+        <span class="text-sm text-bold">color-surface</span>
+        <span class="text-sm text-muted">#f8fafc</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: var(--color-primary);"></div>
+        <span class="text-sm text-bold">color-primary</span>
+        <span class="text-sm text-muted">#1d4ed8</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: var(--color-on-primary);"></div>
+        <span class="text-sm text-bold">color-on-primary</span>
+        <span class="text-sm text-muted">#ffffff</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: var(--color-muted);"></div>
+        <span class="text-sm text-bold">color-muted</span>
+        <span class="text-sm text-muted">#475569</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: var(--color-border);"></div>
+        <span class="text-sm text-bold">color-border</span>
+        <span class="text-sm text-muted">#e2e8f0</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: var(--color-danger);"></div>
+        <span class="text-sm text-bold">color-danger</span>
+        <span class="text-sm text-muted">#dc2626</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Spacing</h2>
+    <div class="stack">
+      <div class="row"><div style="width: var(--space-1); height: var(--space-1); background: var(--color-primary);"></div><span class="text-sm">space-1 (4px)</span></div>
+      <div class="row"><div style="width: var(--space-2); height: var(--space-2); background: var(--color-primary);"></div><span class="text-sm">space-2 (8px)</span></div>
+      <div class="row"><div style="width: var(--space-3); height: var(--space-3); background: var(--color-primary);"></div><span class="text-sm">space-3 (16px)</span></div>
+      <div class="row"><div style="width: var(--space-4); height: var(--space-4); background: var(--color-primary);"></div><span class="text-sm">space-4 (24px)</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Radii</h2>
+    <div class="row">
+      <div style="width: var(--space-4); height: var(--space-4); background: var(--color-surface); border: var(--border-width-sm) solid var(--color-border); border-radius: var(--radius-sm);"></div>
+      <span class="text-sm">radius-sm (4px)</span>
+      <div style="width: var(--space-4); height: var(--space-4); background: var(--color-surface); border: var(--border-width-sm) solid var(--color-border); border-radius: var(--radius-md);"></div>
+      <span class="text-sm">radius-md (8px)</span>
+      <div style="width: var(--space-4); height: var(--space-4); background: var(--color-surface); border: var(--border-width-sm) solid var(--color-border); border-radius: var(--radius-lg);"></div>
+      <span class="text-sm">radius-lg (16px)</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Typography</h2>
+    <div class="stack">
+      <span class="text-sm">font-size-sm: The quick brown fox</span>
+      <span class="text-md">font-size-md: The quick brown fox</span>
+      <span class="text-lg">font-size-lg: The quick brown fox</span>
+      <span style="font-weight: var(--font-weight-regular);">font-weight-regular (400): The quick brown fox</span>
+      <span style="font-weight: var(--font-weight-bold);">font-weight-bold (600): The quick brown fox</span>
+      <span style="font-family: var(--font-family-base);">font-family-base: The quick brown fox</span>
+      <span class="text-sm text-muted">line-height-base: 1.5 (see body text spacing)</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Borders</h2>
+    <div class="row">
+      <div style="width: var(--space-4); height: var(--space-4); border: var(--border-width-sm) solid var(--color-border);"></div>
+      <span class="text-sm">border-width-sm (1px)</span>
+      <div style="width: var(--space-4); height: var(--space-4); border: var(--border-width-md) solid var(--color-border);"></div>
+      <span class="text-sm">border-width-md (2px)</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Buttons</h2>
+    <div class="row">
+      <button class="btn btn-primary">Primary</button>
+      <button class="btn btn-secondary">Secondary</button>
+      <button class="btn btn-danger">Danger</button>
+    </div>
+    <p class="text-sm text-muted">Aliases: button-primary-background, button-primary-foreground, button-primary-border-radius, button-secondary-background, button-secondary-foreground, button-secondary-border</p>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Card</h2>
+    <div class="card" style="max-width: 320px;">
+      <h3 class="card-title">Workout Summary</h3>
+      <p class="card-body">32 minutes &middot; 5.2 km &middot; 410 kcal</p>
+    </div>
+    <p class="text-sm text-muted">Aliases: card-default-background, card-default-border, card-default-border-radius</p>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Chip</h2>
+    <div class="row">
+      <span class="chip">Cardio</span>
+      <span class="chip">Strength</span>
+      <span class="chip">Mobility</span>
+    </div>
+    <p class="text-sm text-muted">Aliases: chip-default-background, chip-default-foreground, chip-default-border-radius</p>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Form Controls</h2>
+    <div class="stack" style="max-width: 320px;">
+      <div>
+        <label class="label" for="name">Name</label>
+        <input class="input" id="name" type="text" placeholder="Jane Doe">
+      </div>
+      <div>
+        <label class="label" for="goal">Weekly goal</label>
+        <input class="input" id="goal" type="text" placeholder="5 workouts">
+      </div>
+    </div>
+    <p class="text-sm text-muted">Aliases: input-default-background, input-default-border, input-default-foreground, input-default-border-radius</p>
+  </section>
+
+</body>
+</html>
