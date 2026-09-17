@@ -1,16 +1,24 @@
 import os
 import urllib.error
 import urllib.request
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
-WEB_ROOT = os.path.join(os.path.dirname(__file__), "public")
-REPO_ROOT = os.path.dirname(os.path.dirname(__file__))
+WEB_ROOT = os.path.realpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "public"))
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DESIGN_SYSTEM_ROOT = os.path.realpath(os.path.join(REPO_ROOT, "design-system"))
 API_ORIGIN = os.environ.get("API_ORIGIN", "http://localhost:8001")
+PROXY_TIMEOUT_SECONDS = 10
 
 
 class Handler(SimpleHTTPRequestHandler):
     def translate_path(self, path):
-        self.directory = REPO_ROOT if path.startswith("/design-system/") else WEB_ROOT
+        if path.startswith("/design-system/"):
+            self.directory = REPO_ROOT
+            candidate = os.path.realpath(super().translate_path(path))
+            if os.path.commonpath([DESIGN_SYSTEM_ROOT, candidate]) != DESIGN_SYSTEM_ROOT:
+                return os.path.join(DESIGN_SYSTEM_ROOT, ".no-such-path-blocked")
+            return candidate
+        self.directory = WEB_ROOT
         return super().translate_path(path)
 
     def do_GET(self):
@@ -40,10 +48,17 @@ class Handler(SimpleHTTPRequestHandler):
             method=method,
         )
         try:
-            with urllib.request.urlopen(request) as response:
+            with urllib.request.urlopen(request, timeout=PROXY_TIMEOUT_SECONDS) as response:
                 self._relay_response(response)
         except urllib.error.HTTPError as error:
             self._relay_response(error)
+        except urllib.error.URLError:
+            body = b'{"message": "Upstream API is unavailable."}'
+            self.send_response(502)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
 
     def _relay_response(self, response):
         self.send_response(response.status if hasattr(response, "status") else response.code)
@@ -57,4 +72,4 @@ class Handler(SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     port = int(os.environ.get("ARC_WEB_PORT", 3001))
-    HTTPServer(("0.0.0.0", port), Handler).serve_forever()
+    ThreadingHTTPServer(("0.0.0.0", port), Handler).serve_forever()

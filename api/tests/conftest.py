@@ -3,6 +3,7 @@ import os
 os.environ.setdefault(
     "DATABASE_URL", "mysql+pymysql://ftp:ftp@localhost:3306/ftp_signup_test"
 )
+os.environ.setdefault("SECURE_COOKIES", "false")
 
 import pytest
 from sqlalchemy import create_engine, text

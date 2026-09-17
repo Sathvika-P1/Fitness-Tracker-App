@@ -272,7 +272,7 @@ tests:
     Frontend — signup.js renders each omitted-field error inline next to its own field, and
     the duplicate-email banner, matching the prototype's per-field pattern (vitest + jsdom).
     ```js
-    await submitSignupForm({ email: '', password: '<PLACEHOLDER>', displayName: 'X' });
+    await submitSignupForm({ email: '', password: 'pw-1', displayName: 'X' });
     expect(document.getElementById('email-error').textContent)
       .toContain('Enter an email to continue.');
     expect(document.getElementById('email').classList.contains('has-error')).toBe(true);

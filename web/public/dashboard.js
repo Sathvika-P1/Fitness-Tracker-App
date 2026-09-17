@@ -8,15 +8,19 @@ export function initials(displayName) {
 }
 
 export async function loadDashboard() {
-  const res = await fetch('/api/me', { credentials: 'include' });
-  if (res.status !== 200) {
+  try {
+    const res = await fetch('/api/me', { credentials: 'include' });
+    if (res.status !== 200) {
+      window.location.href = 'signup.html';
+      return;
+    }
+    const data = await res.json();
+    document.getElementById('welcome-name').textContent = `Welcome, ${data.display_name}`;
+    document.getElementById('welcome-email').textContent = data.email;
+    document.getElementById('avatar-initials').textContent = initials(data.display_name);
+  } catch {
     window.location.href = 'signup.html';
-    return;
   }
-  const data = await res.json();
-  document.getElementById('welcome-name').textContent = `Welcome, ${data.display_name}`;
-  document.getElementById('welcome-email').textContent = data.email;
-  document.getElementById('avatar-initials').textContent = initials(data.display_name);
 }
 
 if (document.getElementById('welcome-name')) {

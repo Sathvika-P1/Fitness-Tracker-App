@@ -91,6 +91,9 @@ export async function submitSignupForm({ email, password, displayName } = {}) {
       return { ok: true };
     }
     return { ok: false };
+  } catch {
+    setFieldError('email', 'Something went wrong. Please try again.');
+    return { ok: false };
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Create account';

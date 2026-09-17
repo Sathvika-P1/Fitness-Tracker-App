@@ -1,3 +1,5 @@
+import os
+
 from fastapi import APIRouter, Cookie, Depends
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -42,12 +44,6 @@ def signup(payload: SignupRequest, db: Session = Depends(get_db)):
             },
         )
 
-    if accounts.find_by_email(db, email) is not None:
-        return JSONResponse(
-            status_code=409,
-            content={"field": "email", "message": "This email is taken."},
-        )
-
     try:
         account = accounts.create_account(db, email, payload.password, display_name)
     except accounts.DuplicateEmailError:
@@ -61,7 +57,13 @@ def signup(payload: SignupRequest, db: Session = Depends(get_db)):
         status_code=201,
         content={"email": account.email, "display_name": account.display_name},
     )
-    signup_response.set_cookie(SESSION_COOKIE, session_id, httponly=True)
+    signup_response.set_cookie(
+        SESSION_COOKIE,
+        session_id,
+        httponly=True,
+        secure=os.environ.get("SECURE_COOKIES", "true").lower() != "false",
+        samesite="lax",
+    )
     return signup_response
 
 

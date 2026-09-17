@@ -1,5 +1,6 @@
 from passlib.context import CryptContext
 from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.store.models import Account
@@ -28,7 +29,11 @@ def create_account(db: Session, email: str, password: str, display_name: str) ->
         display_name=display_name,
     )
     db.add(account)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError as exc:
+        db.rollback()
+        raise DuplicateEmailError(normalized_email) from exc
     db.refresh(account)
     return account
 

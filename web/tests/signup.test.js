@@ -18,7 +18,7 @@ describe('signup form validation', () => {
   it('renders each omitted-field error inline next to its own field', async () => {
     const { submitSignupForm } = await loadSignupPage();
 
-    await submitSignupForm({ email: '', password: 'test-password', displayName: 'X' });
+    await submitSignupForm({ email: '', password: 'pw-1', displayName: 'X' });
 
     expect(document.getElementById('email-error').textContent).toContain(
       'Enter an email to continue.'
@@ -36,7 +36,7 @@ describe('signup form validation', () => {
 
     await submitSignupForm({
       email: 'jane.doe@example.com',
-      password: 'test-password',
+      password: 'pw-1',
       displayName: 'Jane D.',
     });
 
