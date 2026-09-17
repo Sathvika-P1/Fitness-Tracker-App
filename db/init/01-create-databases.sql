@@ -1,0 +1,5 @@
+CREATE DATABASE IF NOT EXISTS ftp_signup;
+CREATE DATABASE IF NOT EXISTS ftp_signup_test;
+GRANT ALL PRIVILEGES ON ftp_signup.* TO 'ftp'@'%';
+GRANT ALL PRIVILEGES ON ftp_signup_test.* TO 'ftp'@'%';
+FLUSH PRIVILEGES;

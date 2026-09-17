@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTP-STORY-001 — Sign Up</title>
+<style>
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1a1a1a; /** Primary body text color, used on color-bg. Contrast ratio ~17.4:1. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-surface: #f8fafc; /** Slightly recessed surface, distinct from color-bg, used for cards. */
+  --color-primary: #1d4ed8; /** Brand/interactive accent color. Meets 4.5:1 as text on color-bg (~6.7:1). */
+  --color-on-primary: #ffffff; /** Text/icon color placed on top of color-primary. */
+  --color-muted: #475569; /** Secondary/muted text color. */
+  --color-border: #e2e8f0; /** Default hairline border color. */
+  --color-danger: #dc2626; /** Destructive/error accent color. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 600;
+  --line-height-base: 1.5;
+  --button-primary-background: var(--color-primary);
+  --button-primary-foreground: var(--color-on-primary);
+  --button-primary-border-radius: var(--radius-md);
+  --button-secondary-background: var(--color-bg);
+  --button-secondary-foreground: var(--color-primary);
+  --button-secondary-border: var(--color-primary);
+  --card-default-background: var(--color-surface);
+  --card-default-border: var(--color-border);
+  --card-default-border-radius: var(--radius-lg);
+  --chip-default-background: var(--color-surface);
+  --chip-default-foreground: var(--color-muted);
+  --chip-default-border-radius: var(--radius-sm);
+  --input-default-background: var(--color-bg);
+  --input-default-border: var(--color-border);
+  --input-default-foreground: var(--color-fg);
+  --input-default-border-radius: var(--radius-sm);
+}
+
+</style>
+<style>
+/* Base layout / typography */
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-md);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-bold { font-weight: var(--font-weight-bold); }
+
+/* Layout utilities */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
+/* Buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-md);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-radius: var(--button-primary-border-radius);
+}
+
+.btn-secondary {
+  background: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-on-primary);
+}
+
+/* Card */
+
+.card {
+  background: var(--card-default-background);
+  border: var(--border-width-sm) solid var(--card-default-border);
+  border-radius: var(--card-default-border-radius);
+  padding: var(--space-4);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Chip */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  background: var(--chip-default-background);
+  color: var(--chip-default-foreground);
+  border-radius: var(--chip-default-border-radius);
+  font-size: var(--font-size-sm);
+}
+
+/* Form controls */
+
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  background: var(--input-default-background);
+  color: var(--input-default-foreground);
+  border: var(--border-width-sm) solid var(--input-default-border);
+  border-radius: var(--input-default-border-radius);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-md);
+  outline: none;
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-1);
+}
+
+/* Style-guide page helpers */
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.swatch-color {
+  height: var(--space-4);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-sm) solid var(--color-border);
+}
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.section {
+  margin-bottom: var(--space-4);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+</style>
+<!-- App nav: none (pre-auth signup flow has no chrome). Post-signup dashboard shows a
+     bottom tab bar (Today · Log · Progress · Profile) as a placeholder for the app shell
+     that later stories will build out; it is not this story's scope. -->
+<style>
+  html, body { height: 100%; }
+  body { min-height: 100dvh; }
+  .auth-shell {
+    min-height: calc(100dvh - 46px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4) var(--space-3);
+  }
+  .auth-card {
+    width: 100%;
+    max-width: 400px;
+  }
+  .field { margin-bottom: var(--space-3); }
+  .field-error-text {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--color-danger);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-1);
+  }
+  .input.has-error {
+    border-color: var(--color-danger);
+    border-width: var(--border-width-md);
+  }
+  .helper-text {
+    color: var(--color-muted);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-1);
+  }
+  .btn-block {
+    width: 100%;
+    min-height: 44px;
+  }
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .banner {
+    display: flex;
+    gap: var(--space-2);
+    align-items: flex-start;
+    background: var(--color-bg);
+    border: var(--border-width-md) solid var(--color-danger);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+  .banner-icon { color: var(--color-danger); font-weight: var(--font-weight-bold); flex-shrink: 0; }
+  .banner-title { color: var(--color-danger); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+  .banner-body { color: var(--color-fg); font-size: var(--font-size-sm); }
+  .link-inline {
+    color: var(--color-primary);
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .center-note {
+    text-align: center;
+    margin-top: var(--space-3);
+    font-size: var(--font-size-sm);
+    color: var(--color-muted);
+  }
+  .top-app-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3);
+    border-bottom: var(--border-width-sm) solid var(--color-border);
+  }
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-bold);
+  }
+  .empty-state {
+    text-align: center;
+    padding: var(--space-4) var(--space-3);
+  }
+  .empty-illustration {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    border: var(--border-width-sm) solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin: 0 auto var(--space-3);
+  }
+  .bottom-tabs {
+    display: flex;
+    border-top: var(--border-width-sm) solid var(--color-border);
+    position: sticky;
+    bottom: 0;
+    background: var(--color-bg);
+  }
+  .bottom-tab {
+    flex: 1;
+    text-align: center;
+    padding: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-muted);
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .bottom-tab.active { color: var(--color-primary); font-weight: var(--font-weight-bold); }
+  .isolation-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  @media (min-width: 720px) {
+    .isolation-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .account-frame {
+    border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .account-frame-label {
+    background: var(--color-surface);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-sm);
+    color: var(--color-muted);
+    border-bottom: var(--border-width-sm) solid var(--color-border);
+  }
+  .adr-stub {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: var(--space-4) var(--space-3);
+  }
+  .adr-stub pre {
+    background: var(--color-surface);
+    border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    font-size: var(--font-size-sm);
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--color-surface);border-bottom:1px solid var(--color-border);font-size:13px;font-family:var(--font-family-base)">
+  <span style="font-family: var(--font-family-base); color:var(--color-muted)">FTP-STORY-001</span>
+  <button id="prev-btn" style="background:none;border:none;color:var(--color-primary);cursor:pointer;min-height:32px;font:inherit">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--color-fg)"></span>
+  <button id="next-btn" style="background:none;border:none;color:var(--color-primary);cursor:pointer;min-height:32px;font:inherit">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+
+<script>
+  // Fixture data — simulates the accounts store. No network calls anywhere in this prototype.
+  const FIXTURE_ACCOUNTS = [
+    { email: "jane.doe@example.com", displayName: "Jane D." },
+  ];
+  const FIXTURE_DASHBOARDS = {
+    "jane.doe@example.com": { displayName: "Jane D.", logs: [] },
+    "marcus.lee@example.com": {
+      displayName: "Marcus L.",
+      logs: [
+        { activity: "Morning run", detail: "5.2 km · 32 min" },
+        { activity: "Strength session", detail: "Upper body · 45 min" },
+      ],
+    },
+  };
+</script>
+
+<div id="screens">
+
+  <!-- Screen: Sign Up Form (empty)
+       Notes:
+         - Satisfies AC1/AC2/AC5 entry point. Labels are always visible (not placeholders).
+         - Password helper text states the rule up front: minimum 8 characters. This rule
+           is not specified in the ACs — flagged for reviewer confirmation, a safe default.
+         - Single primary action: "Create account". No email verification step anywhere
+           in this flow — submitting takes the visitor straight to the signed-in dashboard.
+  -->
+  <div class="screen" data-name="Sign Up — Empty">
+    <!-- State: empty -->
+    <div class="auth-shell">
+      <div class="auth-card card">
+        <h1 class="card-title">Create your account</h1>
+        <p class="card-body text-muted">Track your workouts, progress, and goals — just for you.</p>
+        <p class="helper-text">Reviewer tip: submit with jane.doe@example.com to see the "already registered" rejection; any other email signs you in.</p>
+
+        <form id="signup-form-1" novalidate style="margin-top: var(--space-3);" onsubmit="return handleSignup(event)">
+          <div class="field">
+            <label class="label" for="email-1">Email</label>
+            <input class="input" id="email-1" type="email" autocomplete="email" placeholder="you@example.com">
+            <p class="field-error-text" id="email-1-error" style="display:none;" role="alert"></p>
+          </div>
+          <div class="field">
+            <label class="label" for="password-1">Password</label>
+            <input class="input" id="password-1" type="password" autocomplete="new-password" placeholder="At least 8 characters">
+            <p class="helper-text">Minimum 8 characters.</p>
+            <p class="field-error-text" id="password-1-error" style="display:none;" role="alert"></p>
+          </div>
+          <div class="field">
+            <label class="label" for="displayname-1">Display name</label>
+            <input class="input" id="displayname-1" type="text" autocomplete="name" placeholder="How you'll appear in the app">
+            <p class="field-error-text" id="displayname-1-error" style="display:none;" role="alert"></p>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="signup-1-submit">Create account</button>
+        </form>
+        <p class="center-note">Already have an account? <button class="link-inline" type="button">Sign in</button></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Sign Up Form (validation errors)
+       Notes:
+         - Satisfies AC5: omitted fields are each identified individually, inline, next
+           to the field that's missing — not a single generic banner.
+         - User's already-entered input is preserved (email is retained here); errors
+           never wipe the form.
+         - Error is communicated via icon + color + text (§3), not color alone.
+  -->
+  <div class="screen" data-name="Sign Up — Validation Errors">
+    <!-- State: error (validation) -->
+    <div class="auth-shell">
+      <div class="auth-card card">
+        <h1 class="card-title">Create your account</h1>
+        <p class="card-body text-muted">Track your workouts, progress, and goals — just for you.</p>
+
+        <form novalidate style="margin-top: var(--space-3);">
+          <div class="field">
+            <label class="label" for="email-2">Email</label>
+            <input class="input" id="email-2" type="email" autocomplete="email" value="jane.doe@example.com">
+          </div>
+          <div class="field">
+            <label class="label" for="password-2">Password</label>
+            <input class="input has-error" id="password-2" type="password" autocomplete="new-password" aria-describedby="password-2-error">
+            <p class="field-error-text" id="password-2-error"><span aria-hidden="true">⚠</span> Enter a password to continue.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="displayname-2">Display name</label>
+            <input class="input has-error" id="displayname-2" type="text" autocomplete="name" aria-describedby="displayname-2-error">
+            <p class="field-error-text" id="displayname-2-error"><span aria-hidden="true">⚠</span> Enter a display name to continue.</p>
+          </div>
+          <button type="button" class="btn btn-primary btn-block" onclick="show(0)">Back to form</button>
+        </form>
+        <p class="center-note">Already have an account? <button class="link-inline" type="button">Sign in</button></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Sign Up Form (submitting)
+       Notes:
+         - Button is disabled and relabelled while pending, preventing double-submit.
+         - Simulated latency is a setTimeout of 200–400ms in a real build; here it's a
+           static frame reviewers step through via the reviewer bar.
+  -->
+  <div class="screen" data-name="Sign Up — Submitting">
+    <!-- State: loading -->
+    <div class="auth-shell">
+      <div class="auth-card card">
+        <h1 class="card-title">Create your account</h1>
+        <p class="card-body text-muted">Track your workouts, progress, and goals — just for you.</p>
+
+        <form novalidate style="margin-top: var(--space-3);">
+          <div class="field">
+            <label class="label" for="email-3">Email</label>
+            <input class="input" id="email-3" type="email" value="jane.doe@example.com" disabled>
+          </div>
+          <div class="field">
+            <label class="label" for="password-3">Password</label>
+            <input class="input" id="password-3" type="password" value="••••••••••••" disabled>
+          </div>
+          <div class="field">
+            <label class="label" for="displayname-3">Display name</label>
+            <input class="input" id="displayname-3" type="text" value="Jane D." disabled>
+          </div>
+          <button type="button" class="btn btn-primary btn-block" disabled>Creating account…</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Sign Up Form (duplicate email rejected)
+       Notes:
+         - Satisfies AC3: rejection is anchored directly to the email field with a clear,
+           specific message (not a generic failure).
+         - Satisfies AC4 (an absence, so stated explicitly): the annotation and copy make
+           clear no second account is created for this email — the visitor is offered the
+           sign-in path for their existing account instead of a retry that would duplicate it.
+         - Non-conflicting fields (password, display name) retain the visitor's input.
+  -->
+  <div class="screen" data-name="Sign Up — Duplicate Email">
+    <!-- State: error (duplicate email) -->
+    <div class="auth-shell">
+      <div class="auth-card card">
+        <h1 class="card-title">Create your account</h1>
+        <p class="card-body text-muted">Track your workouts, progress, and goals — just for you.</p>
+
+        <form novalidate style="margin-top: var(--space-3);">
+          <div class="banner" role="alert">
+            <span class="banner-icon" aria-hidden="true">⚠</span>
+            <div>
+              <div class="banner-title">That email is already registered</div>
+              <div class="banner-body">jane.doe@example.com already has an account. No new account was created. <button class="link-inline" type="button" style="min-height:auto;">Sign in instead</button></div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label" for="email-4">Email</label>
+            <input class="input has-error" id="email-4" type="email" value="jane.doe@example.com" aria-describedby="email-4-error">
+            <p class="field-error-text" id="email-4-error"><span aria-hidden="true">⚠</span> This email is taken.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="password-4">Password</label>
+            <input class="input" id="password-4" type="password" value="••••••••">
+          </div>
+          <div class="field">
+            <label class="label" for="displayname-4">Display name</label>
+            <input class="input" id="displayname-4" type="text" value="Jane D.">
+          </div>
+          <button type="button" class="btn btn-primary btn-block" onclick="show(0)">Try a different email</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Signed In — Dashboard (empty)
+       Notes:
+         - Satisfies AC1 + AC2: this screen is reached directly from "Create account" with
+           no intermediate email-verification step — the visitor lands here signed in.
+         - Empty state is an invitation to act ("Log your first workout"), not a dead end.
+         - Display name from signup is shown in the header, proving the identity carried
+           through the flow.
+  -->
+  <div class="screen" data-name="Signed In — Dashboard (Empty)">
+    <!-- State: success / empty -->
+    <div class="top-app-bar">
+      <div>
+        <div class="text-bold">Welcome, Jane D.</div>
+        <div class="text-sm text-muted">jane.doe@example.com</div>
+      </div>
+      <div class="avatar">JD</div>
+    </div>
+    <div class="empty-state">
+      <div class="empty-illustration" aria-hidden="true">🏃</div>
+      <h2 class="text-lg text-bold">No workouts logged yet</h2>
+      <p class="text-muted" style="max-width: 320px; margin: var(--space-2) auto 0;">Your account is ready. Log your first workout to start tracking progress.</p>
+      <button class="btn btn-primary" style="margin-top: var(--space-3); min-height:44px;">Log a workout</button>
+    </div>
+    <div class="bottom-tabs">
+      <div class="bottom-tab active">Today</div>
+      <div class="bottom-tab">Log</div>
+      <div class="bottom-tab">Progress</div>
+      <div class="bottom-tab">Profile</div>
+    </div>
+  </div>
+
+  <!-- Screen: Account Data Isolation
+       Notes:
+         - Satisfies AC6: two independent accounts, each with different fixture data,
+           shown side by side. Marcus's account has logged workouts; Jane's is empty.
+         - The side-by-side framing is a review device only, to demonstrate isolation —
+           in the shipped product each visitor only ever sees their own single dashboard
+           in their own authenticated session.
+  -->
+  <div class="screen" data-name="Account Isolation (Review Device)">
+    <!-- State: success (two accounts) -->
+    <p class="text-sm text-muted" style="text-align:center; padding: var(--space-3) var(--space-3) 0;">
+      Side-by-side view for reviewer purposes only — demonstrates that each account's session returns only its own data.
+    </p>
+    <div class="isolation-grid">
+      <div class="account-frame">
+        <div class="account-frame-label">Session: jane.doe@example.com</div>
+        <div class="top-app-bar">
+          <div>
+            <div class="text-bold">Welcome, Jane D.</div>
+          </div>
+          <div class="avatar">JD</div>
+        </div>
+        <div class="empty-state">
+          <div class="empty-illustration" aria-hidden="true">🏃</div>
+          <p class="text-muted">No workouts logged yet.</p>
+        </div>
+      </div>
+      <div class="account-frame">
+        <div class="account-frame-label">Session: marcus.lee@example.com</div>
+        <div class="top-app-bar">
+          <div>
+            <div class="text-bold">Welcome, Marcus L.</div>
+          </div>
+          <div class="avatar">ML</div>
+        </div>
+        <div style="padding: var(--space-3);">
+          <div class="card" style="margin-bottom: var(--space-2);">
+            <div class="text-bold">Morning run</div>
+            <div class="text-sm text-muted">5.2 km · 32 min</div>
+          </div>
+          <div class="card">
+            <div class="text-bold">Strength session</div>
+            <div class="text-sm text-muted">Upper body · 45 min</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Architecture Note (ADR stub)
+       Notes:
+         - Satisfies AC7: represents the required lightweight ADR stub as a reviewable
+           artifact. The actual stub file is a build-story deliverable outside this
+           prototype's scope — this screen documents its intended content for sign-off.
+         - Deliberately not linked to any specific future work item, per the AC.
+  -->
+  <div class="screen" data-name="Architecture Note (ADR Stub)">
+    <!-- State: informational -->
+    <div class="adr-stub">
+      <h2 class="text-lg text-bold">ADR stub: account-identity reference (future work)</h2>
+      <p class="text-muted" style="margin-top: var(--space-2);">
+        This story creates the account itself but intentionally leaves open how future
+        data-logging features will reference the owning account. That mechanism is out
+        of scope here and must be defined before any logging feature is built.
+      </p>
+      <pre>Status: Stub — not yet decided
+Context:
+  Sign up (this story) creates an account with email, password, and display name,
+  and establishes a signed-in session scoped to that account.
+Decision needed (future):
+  A future story must define the account-identity reference mechanism used when
+  logging data (e.g. workouts) against an account — for example, how logged
+  records carry a stable reference to their owning account.
+Note:
+  This stub intentionally does not link to a specific future work item.</pre>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function clearFieldError(id) {
+  const el = document.getElementById(id + '-error');
+  const input = document.getElementById(id);
+  el.style.display = 'none';
+  el.textContent = '';
+  input.classList.remove('has-error');
+}
+function setFieldError(id, message) {
+  const el = document.getElementById(id + '-error');
+  const input = document.getElementById(id);
+  el.textContent = message;
+  el.style.display = 'flex';
+  input.classList.add('has-error');
+}
+async function handleSignup(event) {
+  event.preventDefault();
+  const email = document.getElementById('email-1').value.trim();
+  const password = document.getElementById('password-1').value;
+  const displayName = document.getElementById('displayname-1').value.trim();
+
+  ['email-1', 'password-1', 'displayname-1'].forEach(clearFieldError);
+
+  let hasError = false;
+  if (!email) { setFieldError('email-1', 'Enter an email to continue.'); hasError = true; }
+  if (!password) { setFieldError('password-1', 'Enter a password to continue.'); hasError = true; }
+  if (!displayName) { setFieldError('displayname-1', 'Enter a display name to continue.'); hasError = true; }
+  if (hasError) return false;
+
+  const submitBtn = document.getElementById('signup-1-submit');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Creating account…';
+
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  const isDuplicate = FIXTURE_ACCOUNTS.some((a) => a.email.toLowerCase() === email.toLowerCase());
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Create account';
+
+  if (isDuplicate) {
+    show(3);
+  } else {
+    show(4);
+  }
+  return false;
+}
+
+const screens = Array.from(document.querySelectorAll('.screen'));
+let cur = 0;
+function show(i) {
+  cur = Math.max(0, Math.min(screens.length - 1, i));
+  screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+  document.getElementById('screen-label').textContent =
+    `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+}
+document.getElementById('prev-btn').onclick = () => show(cur - 1);
+document.getElementById('next-btn').onclick = () => show(cur + 1);
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') show(cur + 1);
+  if (e.key === 'ArrowLeft') show(cur - 1);
+});
+show(0);
+</script>
+
+</body>
+</html>
+
+<!-- arc:css-inlined -->

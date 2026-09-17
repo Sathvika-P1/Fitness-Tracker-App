@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Fitness Tracker</title>
+<link rel="stylesheet" href="/design-system/tokens.css">
+<link rel="stylesheet" href="/design-system/prototype-utils.css">
+<style>
+  .top-app-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3);
+    border-bottom: var(--border-width-sm) solid var(--color-border);
+  }
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-bold);
+  }
+  .empty-state {
+    text-align: center;
+    padding: var(--space-4) var(--space-3);
+  }
+  .empty-illustration {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    border: var(--border-width-sm) solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin: 0 auto var(--space-3);
+  }
+  .bottom-tabs {
+    display: flex;
+    border-top: var(--border-width-sm) solid var(--color-border);
+    position: sticky;
+    bottom: 0;
+    background: var(--color-bg);
+  }
+  .bottom-tab {
+    flex: 1;
+    text-align: center;
+    padding: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-muted);
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .bottom-tab.active { color: var(--color-primary); font-weight: var(--font-weight-bold); }
+</style>
+</head>
+<body>
+
+<div class="top-app-bar">
+  <div>
+    <h1 class="text-bold" id="welcome-name" style="margin:0;font-size:inherit">Welcome</h1>
+    <div class="text-sm text-muted" id="welcome-email"></div>
+  </div>
+  <div class="avatar" id="avatar-initials" aria-hidden="true"></div>
+</div>
+<div class="empty-state">
+  <div class="empty-illustration" aria-hidden="true">🏃</div>
+  <h2 class="text-lg text-bold">No workouts logged yet</h2>
+  <p class="text-muted" style="max-width: 320px; margin: var(--space-2) auto 0;">Your account is ready. Log your first workout to start tracking progress.</p>
+  <button class="btn btn-primary" style="margin-top: var(--space-3); min-height:44px;">Log a workout</button>
+</div>
+<div class="bottom-tabs">
+  <div class="bottom-tab active">Today</div>
+  <div class="bottom-tab">Log</div>
+  <div class="bottom-tab">Progress</div>
+  <div class="bottom-tab">Profile</div>
+</div>
+
+<script type="module" src="/dashboard.js"></script>
+</body>
+</html>
