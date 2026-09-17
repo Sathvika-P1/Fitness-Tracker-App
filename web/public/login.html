@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign Up — Fitness Tracker</title>
+<title>Log In — Fitness Tracker</title>
 <link rel="stylesheet" href="/design-system/tokens.css">
 <link rel="stylesheet" href="/design-system/prototype-utils.css">
 <style>
@@ -21,22 +21,9 @@
     max-width: 400px;
   }
   .field { margin-bottom: var(--space-3); }
-  .field-error-text {
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-    color: var(--color-danger);
-    font-size: var(--font-size-sm);
-    margin-top: var(--space-1);
-  }
   .input.has-error {
     border-color: var(--color-danger);
     border-width: var(--border-width-md);
-  }
-  .helper-text {
-    color: var(--color-muted);
-    font-size: var(--font-size-sm);
-    margin-top: var(--space-1);
   }
   .btn-block {
     width: 100%;
@@ -85,40 +72,42 @@
 
 <div class="auth-shell">
   <div class="auth-card card">
-    <h1 class="card-title">Create your account</h1>
-    <p class="card-body text-muted">Track your workouts, progress, and goals — just for you.</p>
+    <h1 class="card-title">Log in</h1>
+    <p class="card-body text-muted" id="login-subtitle" hidden>Welcome back. Enter your credentials to continue.</p>
 
-    <div class="banner" id="duplicate-banner" role="alert" hidden>
+    <p class="card-body text-muted" id="session-check-status">Checking your session…</p>
+
+    <div class="banner" id="error-banner" role="alert" hidden>
       <span class="banner-icon" aria-hidden="true">⚠</span>
       <div>
-        <div class="banner-title">That email is already registered</div>
-        <div class="banner-body" id="duplicate-banner-body"></div>
+        <div class="banner-title">Invalid email or password</div>
+        <div class="banner-body">Double-check your credentials and try again.</div>
       </div>
     </div>
 
-    <form id="signup-form" novalidate style="margin-top: var(--space-3);">
+    <div class="banner" id="logged-out-banner" role="status" style="border-color:var(--color-border);" hidden>
+      <span class="banner-icon" aria-hidden="true" style="color:var(--color-primary);">✓</span>
+      <div>
+        <div class="banner-title" style="color:var(--color-primary);">You've been logged out</div>
+        <div class="banner-body">This device's session ended.</div>
+      </div>
+    </div>
+
+    <form id="login-form" novalidate style="margin-top: var(--space-3);" hidden>
       <div class="field">
         <label class="label" for="email">Email</label>
         <input class="input" id="email" type="email" autocomplete="email" placeholder="you@example.com">
-        <p class="field-error-text" id="email-error" style="display:none;" role="alert"></p>
       </div>
       <div class="field">
         <label class="label" for="password">Password</label>
-        <input class="input" id="password" type="password" autocomplete="new-password" placeholder="At least 8 characters">
-        <p class="helper-text">Minimum 8 characters.</p>
-        <p class="field-error-text" id="password-error" style="display:none;" role="alert"></p>
+        <input class="input" id="password" type="password" autocomplete="current-password" placeholder="Your password">
       </div>
-      <div class="field">
-        <label class="label" for="displayname">Display name</label>
-        <input class="input" id="displayname" type="text" autocomplete="name" placeholder="How you'll appear in the app">
-        <p class="field-error-text" id="displayname-error" style="display:none;" role="alert"></p>
-      </div>
-      <button type="submit" class="btn btn-primary btn-block" id="signup-submit">Create account</button>
+      <button type="submit" class="btn btn-primary btn-block" id="login-submit">Log in</button>
     </form>
-    <p class="center-note">Already have an account? <button class="link-inline" type="button" onclick="window.location.href='login.html'">Log in</button></p>
+    <p class="center-note" id="signup-note" hidden>New here? <button class="link-inline" type="button" onclick="window.location.href='signup.html'">Create an account</button></p>
   </div>
 </div>
 
-<script type="module" src="/signup.js"></script>
+<script type="module" src="/login.js"></script>
 </body>
 </html>
