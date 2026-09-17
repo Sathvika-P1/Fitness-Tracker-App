@@ -384,7 +384,7 @@ body {
        Notes:
          - Reuses signup.html's exact field-labeling and structure pattern: .card, .field,
            .label + .input, .field-error-text, .btn-block, .center-note.
-         - "Sign in" link on Sign Up now routes here (AC7); wired via Signup nav preview screen below.
+         - "Log in" link on Sign Up now routes here (AC7); wired via Signup nav preview screen below.
          - Session-check placeholder note documents AC8/AC9 (redirect-if-authenticated,
            persistent session) as a backend/routing behavior — no visible UI state to design
            beyond the form itself, since a returning authenticated user never sees this screen.
@@ -418,7 +418,7 @@ body {
           <button type="button" class="btn btn-primary btn-block" onclick="attemptLogin()">Log in</button>
         </form>
         <p class="helper-text" style="text-align:center;">Prototype note: try jordan@example.com / correcthorse1 for success, or anything else for the error state.</p>
-        <p class="center-note">New here? <button class="link-inline" type="button" onclick="showNamed('Sign up — Sign in link (AC7)')">Create an account</button></p>
+        <p class="center-note">New here? <button class="link-inline" type="button" onclick="showNamed('Sign up — Log in link (AC7)')">Create an account</button></p>
         <p class="helper-text" style="margin-top:var(--space-3);text-align:center;">
           <button class="link-inline" type="button" onclick="simulateSessionRedirect()">→ Simulate: open this page with an active session already stored</button>
         </p>
@@ -574,12 +574,14 @@ body {
     </div>
   </div>
 
-  <!-- Screen: Sign Up — "Sign in" link now active
+  <!-- Screen: Sign Up — "Log in" link now active
        Notes:
-         - AC7: clicking "Sign in" on the signup screen navigates to Log in. This mirrors
+         - AC7: clicking "Log in" on the signup screen navigates to Log in. This mirrors
            signup.html exactly, with the previously-inert link now wired to the Log in screen.
+         - Product owner feedback (2026-09-17): link text changed from "Sign in" to "Log in"
+           to match the page name it navigates to.
   -->
-  <div class="screen" data-name="Sign up — Sign in link (AC7)">
+  <div class="screen" data-name="Sign up — Log in link (AC7)">
     <!-- State: empty -->
     <div class="auth-shell">
       <div class="auth-card card">
@@ -601,9 +603,9 @@ body {
           </div>
           <button type="button" class="btn btn-primary btn-block">Create account</button>
         </form>
-        <p class="center-note">Already have an account? <button class="link-inline" type="button" onclick="showNamed('Log in — empty')">Sign in</button></p>
+        <p class="center-note">Already have an account? <button class="link-inline" type="button" onclick="showNamed('Log in — empty')">Log in</button></p>
         <p class="helper-text" style="margin-top:var(--space-3);text-align:center;">
-          Clicking "Sign in" now navigates to the Log in screen (previously inert).
+          Clicking "Log in" now navigates to the Log in screen (previously inert).
         </p>
       </div>
     </div>
