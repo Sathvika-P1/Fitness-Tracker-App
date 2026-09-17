@@ -1,7 +1,11 @@
+import logging
 import os
 import urllib.error
 import urllib.request
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 WEB_ROOT = os.path.realpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "public"))
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -52,7 +56,10 @@ class Handler(SimpleHTTPRequestHandler):
                 self._relay_response(response)
         except urllib.error.HTTPError as error:
             self._relay_response(error)
-        except urllib.error.URLError:
+        except urllib.error.URLError as error:
+            logger.error(
+                "api_proxy_unreachable path=%s error=%s", self.path, error
+            )
             body = b'{"message": "Upstream API is unavailable."}'
             self.send_response(502)
             self.send_header("Content-Type", "application/json")

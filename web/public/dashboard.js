@@ -18,7 +18,8 @@ export async function loadDashboard() {
     document.getElementById('welcome-name').textContent = `Welcome, ${data.display_name}`;
     document.getElementById('welcome-email').textContent = data.email;
     document.getElementById('avatar-initials').textContent = initials(data.display_name);
-  } catch {
+  } catch (error) {
+    console.error('dashboard_load_failed', { error });
     window.location.href = 'signup.html';
   }
 }

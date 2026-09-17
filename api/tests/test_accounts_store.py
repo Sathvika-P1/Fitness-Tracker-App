@@ -13,4 +13,11 @@ def test_email_uniqueness_enforced_at_db_level(db):
             Account.__table__.insert(),
             {"email": "race@example.com", "password_hash": "x", "display_name": "Racer 2"},
         )
-        db.commit()
+    db.rollback()
+
+
+def test_commit_integrity_error_becomes_duplicate_email_error(db, monkeypatch):
+    accounts.create_account(db, "race-unit@example.com", "pw-1", "First")
+    monkeypatch.setattr(accounts, "find_by_email", lambda *_: None)
+    with pytest.raises(accounts.DuplicateEmailError):
+        accounts.create_account(db, "race-unit@example.com", "pw-1", "Second")

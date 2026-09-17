@@ -1,9 +1,13 @@
+import logging
+
 from passlib.context import CryptContext
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.store.models import Account
+
+logger = logging.getLogger(__name__)
 
 _pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -33,6 +37,7 @@ def create_account(db: Session, email: str, password: str, display_name: str) ->
         db.commit()
     except IntegrityError as exc:
         db.rollback()
+        logger.warning("duplicate_email_race_detected error=%s", exc)
         raise DuplicateEmailError(normalized_email) from exc
     db.refresh(account)
     return account

@@ -91,7 +91,8 @@ export async function submitSignupForm({ email, password, displayName } = {}) {
       return { ok: true };
     }
     return { ok: false };
-  } catch {
+  } catch (error) {
+    console.error('signup_fetch_failed', { error });
     setFieldError('email', 'Something went wrong. Please try again.');
     return { ok: false };
   } finally {
