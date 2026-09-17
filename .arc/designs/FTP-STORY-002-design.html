@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTP-STORY-002 — Log In / Log Out</title>
+<style>
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1a1a1a; /** Primary body text color, used on color-bg. Contrast ratio ~17.4:1. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-surface: #f8fafc; /** Slightly recessed surface, distinct from color-bg, used for cards. */
+  --color-primary: #1d4ed8; /** Brand/interactive accent color. Meets 4.5:1 as text on color-bg (~6.7:1). */
+  --color-on-primary: #ffffff; /** Text/icon color placed on top of color-primary. */
+  --color-muted: #475569; /** Secondary/muted text color. */
+  --color-border: #e2e8f0; /** Default hairline border color. */
+  --color-danger: #dc2626; /** Destructive/error accent color. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 600;
+  --line-height-base: 1.5;
+  --button-primary-background: var(--color-primary);
+  --button-primary-foreground: var(--color-on-primary);
+  --button-primary-border-radius: var(--radius-md);
+  --button-secondary-background: var(--color-bg);
+  --button-secondary-foreground: var(--color-primary);
+  --button-secondary-border: var(--color-primary);
+  --card-default-background: var(--color-surface);
+  --card-default-border: var(--color-border);
+  --card-default-border-radius: var(--radius-lg);
+  --chip-default-background: var(--color-surface);
+  --chip-default-foreground: var(--color-muted);
+  --chip-default-border-radius: var(--radius-sm);
+  --input-default-background: var(--color-bg);
+  --input-default-border: var(--color-border);
+  --input-default-foreground: var(--color-fg);
+  --input-default-border-radius: var(--radius-sm);
+}
+
+</style>
+<style>
+/* Base layout / typography */
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-md);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-bold { font-weight: var(--font-weight-bold); }
+
+/* Layout utilities */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
+/* Buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-md);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-radius: var(--button-primary-border-radius);
+}
+
+.btn-secondary {
+  background: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-on-primary);
+}
+
+/* Card */
+
+.card {
+  background: var(--card-default-background);
+  border: var(--border-width-sm) solid var(--card-default-border);
+  border-radius: var(--card-default-border-radius);
+  padding: var(--space-4);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Chip */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  background: var(--chip-default-background);
+  color: var(--chip-default-foreground);
+  border-radius: var(--chip-default-border-radius);
+  font-size: var(--font-size-sm);
+}
+
+/* Form controls */
+
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  background: var(--input-default-background);
+  color: var(--input-default-foreground);
+  border: var(--border-width-sm) solid var(--input-default-border);
+  border-radius: var(--input-default-border-radius);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-md);
+  outline: none;
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-1);
+}
+
+/* Style-guide page helpers */
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.swatch-color {
+  height: var(--space-4);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-sm) solid var(--color-border);
+}
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.section {
+  margin-bottom: var(--space-4);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+</style>
+<!-- App nav: no persistent nav — this is a pre-authentication mobile-first auth flow plus the
+     post-login dashboard, matching the nav-less pattern already used by signup.html and
+     dashboard.html (dashboard has only its own top app bar + bottom tabs, no app shell). -->
+<style>
+  html, body { height: 100%; }
+  body { min-height: 100dvh; }
+  .auth-shell {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4) var(--space-3);
+  }
+  .auth-card { width: 100%; max-width: 400px; }
+  .field { margin-bottom: var(--space-3); }
+  .field-error-text {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--color-danger);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-1);
+  }
+  .input.has-error { border-color: var(--color-danger); border-width: var(--border-width-md); }
+  .helper-text { color: var(--color-muted); font-size: var(--font-size-sm); margin-top: var(--space-1); }
+  .btn-block { width: 100%; min-height: 44px; }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; pointer-events: none; }
+  .banner {
+    display: flex;
+    gap: var(--space-2);
+    align-items: flex-start;
+    background: var(--color-bg);
+    border: var(--border-width-md) solid var(--color-danger);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+  .banner[hidden] { display: none; }
+  .banner-icon { color: var(--color-danger); font-weight: var(--font-weight-bold); flex-shrink: 0; }
+  .banner-title { color: var(--color-danger); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+  .banner-body { color: var(--color-fg); font-size: var(--font-size-sm); }
+  .link-inline {
+    color: var(--color-primary);
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .center-note {
+    text-align: center;
+    margin-top: var(--space-3);
+    font-size: var(--font-size-sm);
+    color: var(--color-muted);
+  }
+  .top-app-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3);
+    border-bottom: var(--border-width-sm) solid var(--color-border);
+  }
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-bold);
+  }
+  .empty-state { text-align: center; padding: var(--space-4) var(--space-3); }
+  .empty-illustration {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    border: var(--border-width-sm) solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin: 0 auto var(--space-3);
+  }
+  .bottom-tabs {
+    display: flex;
+    border-top: var(--border-width-sm) solid var(--color-border);
+    position: sticky;
+    bottom: 0;
+    background: var(--color-bg);
+  }
+  .bottom-tab {
+    flex: 1;
+    text-align: center;
+    padding: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-muted);
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .bottom-tab.active { color: var(--color-primary); font-weight: var(--font-weight-bold); }
+  .device-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    background: var(--color-surface);
+    border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-muted);
+  }
+  .session-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-2) 0;
+    border-bottom: var(--border-width-sm) solid var(--color-border);
+  }
+  .session-row:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--color-surface);border-bottom:1px solid var(--color-border);font-size:13px;font-family:var(--font-family-base)">
+  <span style="font-family:var(--font-family-base);color:var(--color-muted)">FTP-STORY-002</span>
+  <button id="prev-btn" style="background:none;border:none;color:var(--color-primary);cursor:pointer;min-height:32px;">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--color-fg)"></span>
+  <button id="next-btn" style="background:none;border:none;color:var(--color-primary);cursor:pointer;min-height:32px;">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+
+<div id="screens">
+
+  <!-- Screen: Log In (empty/default)
+       Notes:
+         - Reuses signup.html's exact field-labeling and structure pattern: .card, .field,
+           .label + .input, .field-error-text, .btn-block, .center-note.
+         - "Sign in" link on Sign Up now routes here (AC7); wired via Signup nav preview screen below.
+         - Session-check placeholder note documents AC8/AC9 (redirect-if-authenticated,
+           persistent session) as a backend/routing behavior — no visible UI state to design
+           beyond the form itself, since a returning authenticated user never sees this screen.
+  -->
+  <div class="screen" data-name="Log in — empty">
+    <!-- State: empty -->
+    <div class="auth-shell">
+      <div class="auth-card card">
+        <h1 class="card-title">Log in</h1>
+        <p class="card-body text-muted">Welcome back. Enter your credentials to continue.</p>
+
+        <div class="banner" id="error-banner-1" role="alert" hidden>
+          <span class="banner-icon" aria-hidden="true">⚠</span>
+          <div>
+            <div class="banner-title">Invalid email or password</div>
+            <div class="banner-body">Double-check your credentials and try again.</div>
+          </div>
+        </div>
+
+        <form novalidate style="margin-top: var(--space-3);">
+          <div class="field">
+            <label class="label" for="email-1">Email</label>
+            <input class="input" id="email-1" type="email" autocomplete="email" placeholder="you@example.com">
+            <p class="field-error-text" style="display:none;" role="alert"></p>
+          </div>
+          <div class="field">
+            <label class="label" for="password-1">Password</label>
+            <input class="input" id="password-1" type="password" autocomplete="current-password" placeholder="Your password">
+            <p class="field-error-text" style="display:none;" role="alert"></p>
+          </div>
+          <button type="button" class="btn btn-primary btn-block" onclick="attemptLogin()">Log in</button>
+        </form>
+        <p class="helper-text" style="text-align:center;">Prototype note: try jordan@example.com / correcthorse1 for success, or anything else for the error state.</p>
+        <p class="center-note">New here? <button class="link-inline" type="button" onclick="showNamed('Sign up — Sign in link (AC7)')">Create an account</button></p>
+        <p class="helper-text" style="margin-top:var(--space-3);text-align:center;">
+          <button class="link-inline" type="button" onclick="simulateSessionRedirect()">→ Simulate: open this page with an active session already stored</button>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Log in — existing session detected
+       Notes:
+         - AC8: a visitor with an active session who navigates to the login URL never sees
+           the form — the page briefly shows a session-check state, then redirects straight
+           to the dashboard.
+         - AC9: this is the same path taken after closing/reopening the browser or returning
+           after an extended period without logging out — the stored session is still valid,
+           so no re-authentication is required. Modeled as one state because both scenarios
+           produce an identical outcome: skip the form, land on the dashboard.
+  -->
+  <div class="screen" data-name="Log in — existing session detected (AC8, AC9)">
+    <!-- State: loading -->
+    <div class="auth-shell">
+      <div class="auth-card card" style="text-align:center;">
+        <h1 class="card-title">Log in</h1>
+        <p class="card-body text-muted">Checking your session…</p>
+        <p class="helper-text" style="margin-top:var(--space-3);">
+          A stored, still-valid session was found — the log-in form itself is skipped and you're
+          taken straight to your dashboard.
+        </p>
+        <button type="button" class="btn btn-secondary btn-block" style="margin-top:var(--space-3);" onclick="showNamed('Dashboard — Device A (logged in)')">Continue to dashboard →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Log In — submitting
+       Notes:
+         - Button disables + relabels while pending, per guideline §4 (loading feedback,
+           prevent double-submit). Simulated 300ms latency via setTimeout, no real fetch.
+  -->
+  <div class="screen" data-name="Log in — submitting">
+    <!-- State: loading -->
+    <div class="auth-shell">
+      <div class="auth-card card">
+        <h1 class="card-title">Log in</h1>
+        <p class="card-body text-muted">Welcome back. Enter your credentials to continue.</p>
+        <form novalidate style="margin-top: var(--space-3);">
+          <div class="field">
+            <label class="label" for="email-2">Email</label>
+            <input class="input" id="email-2" type="email" value="jordan@example.com" disabled>
+          </div>
+          <div class="field">
+            <label class="label" for="password-2">Password</label>
+            <input class="input" id="password-2" type="password" value="••••••••••" disabled>
+          </div>
+          <button type="button" class="btn btn-primary btn-block" disabled>Logging in…</button>
+        </form>
+        <p class="center-note">New here? <button class="link-inline" type="button">Create an account</button></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Log In — invalid credentials
+       Notes:
+         - AC3/AC10: generic message regardless of whether the email exists, or whether the
+           email or password was wrong, or fields were empty/malformed. Same banner text on
+           every consecutive failed attempt — no lockout/rate-limit copy, matching AC10.
+         - Field values preserved after error, per guideline §6 (never force retyping).
+         - Deliberate deviation from signup.html: signup shows per-field errors
+           (.field-error-text under each input) because it needs to say *which* field is
+           invalid. Login must never do this — a per-field "email not found" message would
+           leak whether an account exists. Login uses ONLY the shared banner; do not add
+           per-field error text here even though signup.html's pattern includes it.
+  -->
+  <div class="screen" data-name="Log in — invalid credentials">
+    <!-- State: error -->
+    <div class="auth-shell">
+      <div class="auth-card card">
+        <h1 class="card-title">Log in</h1>
+        <p class="card-body text-muted">Welcome back. Enter your credentials to continue.</p>
+
+        <div class="banner" role="alert">
+          <span class="banner-icon" aria-hidden="true">⚠</span>
+          <div>
+            <div class="banner-title">Invalid email or password</div>
+            <div class="banner-body">Double-check your credentials and try again.</div>
+          </div>
+        </div>
+
+        <form novalidate style="margin-top: var(--space-3);">
+          <div class="field">
+            <label class="label" for="email-3">Email</label>
+            <input class="input has-error" id="email-3" type="email" value="jordan@example.com">
+          </div>
+          <div class="field">
+            <label class="label" for="password-3">Password</label>
+            <input class="input has-error" id="password-3" type="password" value="wrongpass1">
+          </div>
+          <button type="button" class="btn btn-primary btn-block" onclick="retryLogin()">Log in</button>
+        </form>
+        <p class="center-note">New here? <button class="link-inline" type="button">Create an account</button></p>
+        <p class="helper-text" style="margin-top:var(--space-3);text-align:center;">
+          Try again to see the same generic error repeat — no attempt counter, no lockout (AC10).
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Dashboard — Device A (after successful login)
+       Notes:
+         - AC1/AC2: correct credentials land the user here.
+         - Reuses dashboard.html structure verbatim: .top-app-bar, .avatar, .empty-state,
+           .bottom-tabs.
+         - Log out control added to top app bar (dashboard.html had none yet) — ends only
+           this device's session (AC5/AC6) and returns to the Log in screen.
+         - Device badge + active-sessions panel is new UI added for this story to make
+           multi-device session independence (AC4/AC12) visible/reviewable, since the base
+           dashboard had no session-management surface.
+  -->
+  <div class="screen" data-name="Dashboard — Device A (logged in)">
+    <!-- State: success -->
+    <div class="top-app-bar">
+      <div>
+        <h1 class="text-bold" style="margin:0;font-size:inherit">Welcome back, Jordan</h1>
+        <div class="text-sm text-muted">jordan@example.com <span class="device-badge">📱 iPhone · This device</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:var(--space-2);">
+        <div class="avatar" aria-hidden="true">J</div>
+        <button class="btn btn-secondary" style="min-height:44px;" onclick="showNamed('Logged out — Device A only (AC5, AC6)')">Log out</button>
+      </div>
+    </div>
+    <div class="empty-state">
+      <div class="empty-illustration" aria-hidden="true">🏃</div>
+      <h2 class="text-lg text-bold">No workouts logged yet</h2>
+      <p class="text-muted" style="max-width: 320px; margin: var(--space-2) auto 0;">Your account is ready. Log your first workout to start tracking progress.</p>
+      <button class="btn btn-primary" style="margin-top: var(--space-3); min-height:44px;">Log a workout</button>
+    </div>
+    <div style="max-width:400px;margin:0 auto;padding:0 var(--space-3) var(--space-4);">
+      <div class="card" style="margin-top:var(--space-3);">
+        <h3 class="text-bold" style="margin:0 0 var(--space-2);">Active sessions</h3>
+        <p class="text-muted text-sm" style="margin:0 0 var(--space-2);">Logging out only ends the session on this device.</p>
+        <div class="session-row">
+          <span>📱 iPhone <span class="text-muted text-sm">(this device)</span></span>
+          <span class="text-muted text-sm">Active now</span>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-tabs">
+      <div class="bottom-tab active">Today</div>
+      <div class="bottom-tab">Log</div>
+      <div class="bottom-tab">Progress</div>
+      <div class="bottom-tab">Profile</div>
+    </div>
+    <div style="text-align:center;padding:var(--space-3);">
+      <button class="link-inline" type="button" onclick="showNamed('Dashboard — Device B (second session, AC4)')">→ Simulate: log in from a second device</button>
+    </div>
+  </div>
+
+  <!-- Screen: Sign Up — "Sign in" link now active
+       Notes:
+         - AC7: clicking "Sign in" on the signup screen navigates to Log in. This mirrors
+           signup.html exactly, with the previously-inert link now wired to the Log in screen.
+  -->
+  <div class="screen" data-name="Sign up — Sign in link (AC7)">
+    <!-- State: empty -->
+    <div class="auth-shell">
+      <div class="auth-card card">
+        <h1 class="card-title">Create your account</h1>
+        <p class="card-body text-muted">Track your workouts, progress, and goals — just for you.</p>
+        <form novalidate style="margin-top: var(--space-3);">
+          <div class="field">
+            <label class="label" for="email-su">Email</label>
+            <input class="input" id="email-su" type="email" autocomplete="email" placeholder="you@example.com">
+          </div>
+          <div class="field">
+            <label class="label" for="password-su">Password</label>
+            <input class="input" id="password-su" type="password" autocomplete="new-password" placeholder="At least 8 characters">
+            <p class="helper-text">Minimum 8 characters.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="displayname-su">Display name</label>
+            <input class="input" id="displayname-su" type="text" autocomplete="name" placeholder="How you'll appear in the app">
+          </div>
+          <button type="button" class="btn btn-primary btn-block">Create account</button>
+        </form>
+        <p class="center-note">Already have an account? <button class="link-inline" type="button" onclick="showNamed('Log in — empty')">Sign in</button></p>
+        <p class="helper-text" style="margin-top:var(--space-3);text-align:center;">
+          Clicking "Sign in" now navigates to the Log in screen (previously inert).
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Dashboard — Device B (second concurrent session)
+       Notes:
+         - AC4: logging in again from a second device does not invalidate Device A's session.
+           Both are shown active simultaneously in the "Active sessions" panel.
+  -->
+  <div class="screen" data-name="Dashboard — Device B (second session, AC4)">
+    <!-- State: success -->
+    <div class="top-app-bar">
+      <div>
+        <h1 class="text-bold" style="margin:0;font-size:inherit">Welcome back, Jordan</h1>
+        <div class="text-sm text-muted">jordan@example.com <span class="device-badge">💻 Laptop · This device</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:var(--space-2);">
+        <div class="avatar" aria-hidden="true">J</div>
+        <button class="btn btn-secondary" style="min-height:44px;" onclick="showNamed('Logged out — Device B only (AC12)')">Log out</button>
+      </div>
+    </div>
+    <div class="empty-state">
+      <div class="empty-illustration" aria-hidden="true">🏃</div>
+      <h2 class="text-lg text-bold">No workouts logged yet</h2>
+      <p class="text-muted" style="max-width: 320px; margin: var(--space-2) auto 0;">Your account is ready. Log your first workout to start tracking progress.</p>
+      <button class="btn btn-primary" style="margin-top: var(--space-3); min-height:44px;">Log a workout</button>
+    </div>
+    <div style="max-width:400px;margin:0 auto;padding:0 var(--space-3) var(--space-4);">
+      <div class="card" style="margin-top:var(--space-3);">
+        <h3 class="text-bold" style="margin:0 0 var(--space-2);">Active sessions</h3>
+        <p class="text-muted text-sm" style="margin:0 0 var(--space-2);">Both devices stay signed in independently — logging in here didn't sign out the iPhone.</p>
+        <div class="session-row">
+          <span>💻 Laptop <span class="text-muted text-sm">(this device)</span></span>
+          <span class="text-muted text-sm">Active now</span>
+        </div>
+        <div class="session-row">
+          <span>📱 iPhone</span>
+          <span class="text-muted text-sm">Still active</span>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-tabs">
+      <div class="bottom-tab active">Today</div>
+      <div class="bottom-tab">Log</div>
+      <div class="bottom-tab">Progress</div>
+      <div class="bottom-tab">Profile</div>
+    </div>
+  </div>
+
+  <!-- Screen: Log out — Device A ended, Device B unaffected
+       Notes:
+         - AC5/AC6: logging out on Device A ends only that session and returns to Log in.
+         - AC12: Device B's session is called out as remaining active, since AC12 is only
+           observable by contrasting the two devices' states.
+  -->
+  <div class="screen" data-name="Logged out — Device A only (AC5, AC6)">
+    <!-- State: empty -->
+    <div class="auth-shell">
+      <div class="auth-card card">
+        <h1 class="card-title">Log in</h1>
+        <p class="card-body text-muted">Welcome back. Enter your credentials to continue.</p>
+        <div class="banner" role="status" style="border-color:var(--color-border);">
+          <span class="banner-icon" aria-hidden="true" style="color:var(--color-primary);">✓</span>
+          <div>
+            <div class="banner-title" style="color:var(--color-primary);">You've been logged out</div>
+            <div class="banner-body">This device's session ended. Your laptop session (Device B) is still active.</div>
+          </div>
+        </div>
+        <form novalidate style="margin-top: var(--space-3);">
+          <div class="field">
+            <label class="label" for="email-4">Email</label>
+            <input class="input" id="email-4" type="email" autocomplete="email" placeholder="you@example.com">
+          </div>
+          <div class="field">
+            <label class="label" for="password-4">Password</label>
+            <input class="input" id="password-4" type="password" autocomplete="current-password" placeholder="Your password">
+          </div>
+          <button type="button" class="btn btn-primary btn-block">Log in</button>
+        </form>
+        <p class="center-note">New here? <button class="link-inline" type="button">Create an account</button></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Log out — Device B ended, independent of Device A
+       Notes:
+         - AC12 mirrored from the opposite device: logging out of Device B does not affect
+           Device A (which was already logged out here for narrative clarity, but the point
+           is each logout is scoped to its own session only).
+  -->
+  <div class="screen" data-name="Logged out — Device B only (AC12)">
+    <!-- State: empty -->
+    <div class="auth-shell">
+      <div class="auth-card card">
+        <h1 class="card-title">Log in</h1>
+        <p class="card-body text-muted">Welcome back. Enter your credentials to continue.</p>
+        <div class="banner" role="status" style="border-color:var(--color-border);">
+          <span class="banner-icon" aria-hidden="true" style="color:var(--color-primary);">✓</span>
+          <div>
+            <div class="banner-title" style="color:var(--color-primary);">You've been logged out</div>
+            <div class="banner-body">Only this device's (laptop) session ended — logging out here never affects other devices' sessions.</div>
+          </div>
+        </div>
+        <form novalidate style="margin-top: var(--space-3);">
+          <div class="field">
+            <label class="label" for="email-5">Email</label>
+            <input class="input" id="email-5" type="email" autocomplete="email" placeholder="you@example.com">
+          </div>
+          <div class="field">
+            <label class="label" for="password-5">Password</label>
+            <input class="input" id="password-5" type="password" autocomplete="current-password" placeholder="Your password">
+          </div>
+          <button type="button" class="btn btn-primary btn-block">Log in</button>
+        </form>
+        <p class="center-note">New here? <button class="link-inline" type="button">Create an account</button></p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Inline fixture data — no real network calls anywhere in this prototype.
+const FIXTURE_USER = { email: "jordan@example.com", displayName: "Jordan", password: "correcthorse1" };
+
+const screens = Array.from(document.querySelectorAll('.screen'));
+let cur = 0;
+
+function show(i) {
+  cur = Math.max(0, Math.min(screens.length - 1, i));
+  screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+  document.getElementById('screen-label').textContent =
+    `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+  window.scrollTo(0, 0);
+}
+
+// AC8/AC9: entering with a stored session briefly shows the check state, then auto-redirects.
+// The guard re-checks the current screen so a reviewer who navigates away via Prev/Next
+// during the 500ms window isn't yanked back.
+function simulateSessionRedirect() {
+  showNamed('Log in — existing session detected (AC8, AC9)');
+  setTimeout(() => {
+    if (screens[cur].dataset.name === 'Log in — existing session detected (AC8, AC9)') {
+      showNamed('Dashboard — Device A (logged in)');
+    }
+  }, 500);
+}
+
+function showNamed(name) {
+  const i = screens.findIndex(s => s.dataset.name === name);
+  if (i >= 0) show(i);
+}
+
+document.getElementById('prev-btn').onclick = () => show(cur - 1);
+document.getElementById('next-btn').onclick = () => show(cur + 1);
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') show(cur + 1);
+  if (e.key === 'ArrowLeft') show(cur - 1);
+});
+
+// AC1/AC2 vs AC3/AC10: check the typed credentials against the fixture user. Correct
+// credentials land on the dashboard; anything else — wrong email, wrong password, or an
+// empty/malformed field — surfaces the same generic banner (AC3), and re-submitting after
+// a failure returns to this exact same error state with no lockout/rate-limit copy (AC10).
+function submitCredentials(email, password) {
+  document.getElementById('email-2').value = email;
+  document.getElementById('password-2').value = '•'.repeat(password.length);
+  show(2); // "submitting" loading state
+  setTimeout(() => {
+    if (email === FIXTURE_USER.email && password === FIXTURE_USER.password) {
+      showNamed('Dashboard — Device A (logged in)');
+    } else {
+      document.getElementById('email-3').value = email;
+      document.getElementById('password-3').value = password;
+      showNamed('Log in — invalid credentials');
+    }
+  }, 300);
+}
+
+function attemptLogin() {
+  submitCredentials(
+    document.getElementById('email-1').value.trim(),
+    document.getElementById('password-1').value
+  );
+}
+
+// Re-submitting from the invalid-credentials screen: same generic error path, same fields.
+function retryLogin() {
+  submitCredentials(
+    document.getElementById('email-3').value.trim(),
+    document.getElementById('password-3').value
+  );
+}
+
+show(0);
+</script>
+
+</body>
+</html>
+
+<!-- arc:css-inlined -->
