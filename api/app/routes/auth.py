@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from app.db import get_db
 from app.store import accounts, sessions
 from app.store.models import Account
+from app.store.sessions import SESSION_TTL
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +23,11 @@ class SignupRequest(BaseModel):
     email: str = ""
     password: str = ""
     display_name: str = ""
+
+
+class LoginRequest(BaseModel):
+    email: str = ""
+    password: str = ""
 
 
 @router.post("/api/signup")
@@ -83,6 +89,43 @@ def signup(payload: SignupRequest, db: Session = Depends(get_db)):
         (time.monotonic() - start) * 1000,
     )
     return signup_response
+
+
+@router.post("/api/login")
+def login(payload: LoginRequest, db: Session = Depends(get_db)):
+    start = time.monotonic()
+    email = payload.email.strip()
+    logger.info("login_attempt")
+
+    account = accounts.verify_credentials(db, email, payload.password)
+    if account is None:
+        logger.warning(
+            "login_invalid_credentials duration_ms=%.1f",
+            (time.monotonic() - start) * 1000,
+        )
+        return JSONResponse(
+            status_code=401, content={"message": "Invalid email or password."}
+        )
+
+    session_id = sessions.create_session(db, account.id)
+    login_response = JSONResponse(
+        status_code=200,
+        content={"email": account.email, "display_name": account.display_name},
+    )
+    login_response.set_cookie(
+        SESSION_COOKIE,
+        session_id,
+        httponly=True,
+        secure=os.environ.get("SECURE_COOKIES", "true").lower() != "false",
+        samesite="lax",
+        max_age=int(SESSION_TTL.total_seconds()),
+    )
+    logger.info(
+        "login_success account_id=%s duration_ms=%.1f",
+        account.id,
+        (time.monotonic() - start) * 1000,
+    )
+    return login_response
 
 
 @router.get("/api/me")

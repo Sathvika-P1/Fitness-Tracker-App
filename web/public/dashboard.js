@@ -11,7 +11,7 @@ export async function loadDashboard() {
   try {
     const res = await fetch('/api/me', { credentials: 'include' });
     if (res.status !== 200) {
-      window.location.href = 'signup.html';
+      window.location.href = 'login.html';
       return;
     }
     const data = await res.json();
@@ -20,10 +20,21 @@ export async function loadDashboard() {
     document.getElementById('avatar-initials').textContent = initials(data.display_name);
   } catch (error) {
     console.error('dashboard_load_failed', { error });
-    window.location.href = 'signup.html';
+    window.location.href = 'login.html';
   }
+}
+
+export async function logout() {
+  try {
+    await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+  } catch (error) {
+    console.error('logout_fetch_failed', { error });
+  }
+  window.location.href = 'login.html?logged_out=1';
 }
 
 if (document.getElementById('welcome-name')) {
   loadDashboard();
 }
+
+document.getElementById('logout-button')?.addEventListener('click', logout);

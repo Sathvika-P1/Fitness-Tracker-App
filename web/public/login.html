@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log In — Fitness Tracker</title>
+<link rel="stylesheet" href="/design-system/tokens.css">
+<link rel="stylesheet" href="/design-system/prototype-utils.css">
+</head>
+<body>
+
+<div class="auth-shell">
+  <div class="auth-card card">
+    <h1 class="card-title">Log in</h1>
+    <p class="card-body text-muted" id="login-subtitle" hidden>Welcome back. Enter your credentials to continue.</p>
+
+    <p class="card-body text-muted" id="session-check-status" role="status">Checking your session…</p>
+
+    <div class="banner" id="error-banner" role="alert" hidden>
+      <span class="banner-icon" aria-hidden="true">⚠</span>
+      <div>
+        <div class="banner-title">Invalid email or password</div>
+        <div class="banner-body">Double-check your credentials and try again.</div>
+      </div>
+    </div>
+
+    <div class="banner banner-neutral" id="logged-out-banner" role="status" hidden>
+      <span class="banner-icon" aria-hidden="true">✓</span>
+      <div>
+        <div class="banner-title">You've been logged out</div>
+        <div class="banner-body">This device's session ended.</div>
+      </div>
+    </div>
+
+    <form id="login-form" novalidate style="margin-top: var(--space-3);" hidden>
+      <div class="field">
+        <label class="label" for="email">Email</label>
+        <input class="input" id="email" type="email" autocomplete="email" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label class="label" for="password">Password</label>
+        <input class="input" id="password" type="password" autocomplete="current-password" placeholder="Your password">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" id="login-submit">Log in</button>
+    </form>
+    <p class="center-note" id="signup-note" hidden>New here? <button class="link-inline" type="button" onclick="window.location.href='signup.html'">Create an account</button></p>
+  </div>
+</div>
+
+<script type="module" src="/login.js"></script>
+</body>
+</html>

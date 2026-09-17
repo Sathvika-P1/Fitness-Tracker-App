@@ -43,5 +43,15 @@ def create_account(db: Session, email: str, password: str, display_name: str) ->
     return account
 
 
+def verify_credentials(db: Session, email: str, password: str) -> Account | None:
+    account = find_by_email(db, email)
+    if account is None:
+        _pwd_context.dummy_verify()
+        return None
+    if not _pwd_context.verify(password, account.password_hash):
+        return None
+    return account
+
+
 def count(db: Session) -> int:
     return db.execute(select(func.count()).select_from(Account)).scalar_one()
