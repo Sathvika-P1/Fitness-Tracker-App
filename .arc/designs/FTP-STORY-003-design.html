@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTP-STORY-003 — Profile Management</title>
+<style>
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1a1a1a; /** Primary body text color, used on color-bg. Contrast ratio ~17.4:1. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-surface: #f8fafc; /** Slightly recessed surface, distinct from color-bg, used for cards. */
+  --color-primary: #1d4ed8; /** Brand/interactive accent color. Meets 4.5:1 as text on color-bg (~6.7:1). */
+  --color-on-primary: #ffffff; /** Text/icon color placed on top of color-primary. */
+  --color-muted: #475569; /** Secondary/muted text color. */
+  --color-border: #e2e8f0; /** Default hairline border color. */
+  --color-danger: #dc2626; /** Destructive/error accent color. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 600;
+  --line-height-base: 1.5;
+  --button-primary-background: var(--color-primary);
+  --button-primary-foreground: var(--color-on-primary);
+  --button-primary-border-radius: var(--radius-md);
+  --button-secondary-background: var(--color-bg);
+  --button-secondary-foreground: var(--color-primary);
+  --button-secondary-border: var(--color-primary);
+  --card-default-background: var(--color-surface);
+  --card-default-border: var(--color-border);
+  --card-default-border-radius: var(--radius-lg);
+  --chip-default-background: var(--color-surface);
+  --chip-default-foreground: var(--color-muted);
+  --chip-default-border-radius: var(--radius-sm);
+  --input-default-background: var(--color-bg);
+  --input-default-border: var(--color-border);
+  --input-default-foreground: var(--color-fg);
+  --input-default-border-radius: var(--radius-sm);
+}
+
+</style>
+<style>
+/* Base layout / typography */
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-md);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-bold { font-weight: var(--font-weight-bold); }
+
+/* Layout utilities */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
+/* Buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-md);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-radius: var(--button-primary-border-radius);
+}
+
+.btn-secondary {
+  background: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-on-primary);
+}
+
+/* Card */
+
+.card {
+  background: var(--card-default-background);
+  border: var(--border-width-sm) solid var(--card-default-border);
+  border-radius: var(--card-default-border-radius);
+  padding: var(--space-4);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Chip */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  background: var(--chip-default-background);
+  color: var(--chip-default-foreground);
+  border-radius: var(--chip-default-border-radius);
+  font-size: var(--font-size-sm);
+}
+
+/* Form controls */
+
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  background: var(--input-default-background);
+  color: var(--input-default-foreground);
+  border: var(--border-width-sm) solid var(--input-default-border);
+  border-radius: var(--input-default-border-radius);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-md);
+  outline: none;
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-1);
+}
+
+/* Style-guide page helpers */
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.swatch-color {
+  height: var(--space-4);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-sm) solid var(--color-border);
+}
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.section {
+  margin-bottom: var(--space-4);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* Auth pages (signup / login) */
+
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+.auth-shell {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-3);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.field {
+  margin-bottom: var(--space-3);
+}
+
+.field-error-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.input.has-error {
+  border-color: var(--color-danger);
+  border-width: var(--border-width-md);
+}
+
+.helper-text {
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.btn-block {
+  width: 100%;
+  min-height: 44px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.banner {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  background: var(--color-bg);
+  border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.banner[hidden] {
+  display: none;
+}
+
+.banner-icon {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.banner-title {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+}
+
+.banner-body {
+  color: var(--color-fg);
+  font-size: var(--font-size-sm);
+}
+
+.link-inline {
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.center-note {
+  text-align: center;
+  margin-top: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+
+.banner-neutral {
+  border-color: var(--color-border);
+}
+
+.banner-neutral .banner-icon,
+.banner-neutral .banner-title {
+  color: var(--color-primary);
+}
+
+</style>
+<!-- App nav: bottom tab bar — Today · Log · Progress · Profile; Profile active.
+     Matches FTP-STORY-002's dashboard shell (top app bar + bottom tabs, no sidebar). -->
+<style>
+  html, body { height: 100%; }
+  body { min-height: 100dvh; }
+  .page-shell { max-width: 480px; margin: 0 auto; padding-bottom: var(--space-4); }
+  .top-app-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3);
+    border-bottom: var(--border-width-sm) solid var(--color-border);
+  }
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-bold);
+    flex-shrink: 0;
+  }
+  .bottom-tabs {
+    display: flex;
+    border-top: var(--border-width-sm) solid var(--color-border);
+    position: sticky;
+    bottom: 0;
+    background: var(--color-bg);
+  }
+  .bottom-tab {
+    flex: 1;
+    text-align: center;
+    padding: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-muted);
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .bottom-tab.active { color: var(--color-primary); font-weight: var(--font-weight-bold); }
+  .field { margin-bottom: var(--space-3); }
+  .field-error-text {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--color-danger);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-1);
+  }
+  .input.has-error { border-color: var(--color-danger); border-width: var(--border-width-md); }
+  .helper-text { color: var(--color-muted); font-size: var(--font-size-sm); margin-top: var(--space-1); }
+  .btn-block { width: 100%; min-height: 44px; }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; pointer-events: none; }
+  .not-set { color: var(--color-muted); font-style: italic; }
+  .banner {
+    display: flex;
+    gap: var(--space-2);
+    align-items: flex-start;
+    background: var(--color-bg);
+    border: var(--border-width-md) solid var(--color-primary);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    margin: var(--space-3);
+  }
+  .banner-icon { color: var(--color-primary); font-weight: var(--font-weight-bold); flex-shrink: 0; }
+  .banner-title { color: var(--color-primary); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+  .banner-body { color: var(--color-fg); font-size: var(--font-size-sm); }
+  .field-group-title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin: var(--space-4) 0 var(--space-2);
+  }
+  .char-counter { font-size: var(--font-size-sm); color: var(--color-muted); text-align: right; margin-top: var(--space-1); }
+  .char-counter.over { color: var(--color-danger); font-weight: var(--font-weight-bold); }
+  .content-pad { padding: 0 var(--space-3); }
+  .post-card { margin-top: var(--space-3); }
+  .post-meta { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-2); }
+  .link-inline {
+    color: var(--color-primary);
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .post-avatar {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--color-primary);
+    color: var(--color-on-primary); display: flex; align-items: center; justify-content: center;
+    font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--color-surface);border-bottom:1px solid var(--color-border);font-size:13px;font-family:var(--font-family-base)">
+  <span style="font-family:var(--font-family-base);color:var(--color-muted)">FTP-STORY-003</span>
+  <button id="prev-btn" style="background:none;border:none;color:var(--color-primary);cursor:pointer;min-height:32px;">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--color-fg)"></span>
+  <button id="next-btn" style="background:none;border:none;color:var(--color-primary);cursor:pointer;min-height:32px;">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+
+<div id="screens">
+
+  <!-- Screen: Profile — partially unset
+       Notes:
+         - AC1: display name and units preference were set at signup; fitness goal, height,
+           weight, age, and gender were left blank and show as "Not set" (never as a blank
+           input that looks broken or an empty numeric field).
+         - AC4: no user id appears anywhere in this screen — it always renders "my profile",
+           there is no route parameter to tamper with.
+  -->
+  <div class="screen" data-name="Profile — partially unset (AC1, AC4)">
+    <!-- State: partial -->
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <div style="display:flex;align-items:center;gap:var(--space-2);">
+          <div class="avatar" aria-hidden="true" id="avatar-initial-1">J</div>
+          <div>
+            <h1 class="text-bold" style="margin:0;font-size:inherit" id="header-name-1">Jordan</h1>
+            <div class="text-sm text-muted">Your profile</div>
+          </div>
+        </div>
+      </div>
+      <div class="content-pad">
+        <p class="helper-text" style="margin-top:var(--space-3);">
+          Only you can see or edit this — your profile is never shown by user id or link, and
+          there's no way to reach another account's data from here (AC4).
+        </p>
+
+        <div class="field-group-title">Account</div>
+        <div class="field">
+          <label class="label" for="dn-1">Display name</label>
+          <input class="input" id="dn-1" type="text" value="Jordan">
+        </div>
+
+        <div class="field-group-title">Preferences</div>
+        <div class="field">
+          <label class="label" for="units-1">Units</label>
+          <select class="input" id="units-1">
+            <option value="metric" selected>Metric (cm, kg)</option>
+            <option value="imperial">Imperial (in, lb)</option>
+          </select>
+        </div>
+        <div class="field">
+          <div class="label">Fitness goal</div>
+          <div class="input" style="display:flex;align-items:center;"><span class="not-set">Not set</span></div>
+        </div>
+
+        <div class="field-group-title">Body details</div>
+        <div class="field">
+          <div class="label">Height (cm)</div>
+          <div class="input" style="display:flex;align-items:center;"><span class="not-set">Not set</span></div>
+        </div>
+        <div class="field">
+          <div class="label">Weight (kg)</div>
+          <div class="input" style="display:flex;align-items:center;"><span class="not-set">Not set</span></div>
+        </div>
+        <div class="field">
+          <div class="label">Age</div>
+          <div class="input" style="display:flex;align-items:center;"><span class="not-set">Not set</span></div>
+        </div>
+        <div class="field">
+          <div class="label">Gender</div>
+          <div class="input" style="display:flex;align-items:center;"><span class="not-set">Not set</span></div>
+        </div>
+
+        <button class="btn btn-primary btn-block" type="button" onclick="showNamed('Profile — fully populated, editing (AC1, AC2, AC3)')">Edit profile</button>
+        <p class="helper-text" style="text-align:center;margin-top:var(--space-2);">
+          Prototype: click Edit profile to see all fields filled in and editable.
+        </p>
+      </div>
+      <div class="bottom-tabs">
+        <div class="bottom-tab">Today</div>
+        <div class="bottom-tab">Log</div>
+        <div class="bottom-tab">Progress</div>
+        <div class="bottom-tab active">Profile</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Profile — fully populated, editing
+       Notes:
+         - AC1: every field this time has a real value.
+         - AC2/AC3: editable fields for units, fitness goal, height, weight, age, gender, and
+           display name; single "Save changes" primary action, per §6 (one primary action).
+         - Gender uses a constrained <select> — the only way AC12 can be produced client-side
+           is via a tampered/stale request; see the dedicated "gender outside list" screen for
+           how that's handled server-side.
+  -->
+  <div class="screen" data-name="Profile — fully populated, editing (AC1, AC2, AC3)">
+    <!-- State: success -->
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <div style="display:flex;align-items:center;gap:var(--space-2);">
+          <div class="avatar" aria-hidden="true">J</div>
+          <div>
+            <h1 class="text-bold" style="margin:0;font-size:inherit">Jordan</h1>
+            <div class="text-sm text-muted">Your profile</div>
+          </div>
+        </div>
+      </div>
+      <div class="content-pad">
+        <div class="field-group-title">Account</div>
+        <div class="field">
+          <label class="label" for="dn-2">Display name</label>
+          <input class="input" id="dn-2" type="text" value="Jordan" oninput="updateCounter('dn-2','counter-2',50)">
+          <div class="char-counter" id="counter-2">6 / 50</div>
+          <p class="helper-text">Letters, numbers, spaces, and basic punctuation. Max 50 characters.</p>
+        </div>
+
+        <div class="field-group-title">Preferences</div>
+        <div class="field">
+          <label class="label" for="units-2">Units</label>
+          <select class="input" id="units-2">
+            <option value="metric" selected>Metric (cm, kg)</option>
+            <option value="imperial">Imperial (in, lb)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="label" for="goal-2">Fitness goal</label>
+          <select class="input" id="goal-2">
+            <option value="lose_weight" selected>Lose weight</option>
+            <option value="build_muscle">Build muscle</option>
+            <option value="improve_endurance">Improve endurance</option>
+            <option value="general_fitness">General fitness</option>
+          </select>
+        </div>
+
+        <div class="field-group-title">Body details</div>
+        <div class="field">
+          <label class="label" for="height-2">Height (cm)</label>
+          <input class="input" id="height-2" type="text" value="178">
+          <p class="helper-text">Valid range: 1–300 cm.</p>
+        </div>
+        <div class="field">
+          <label class="label" for="weight-2">Weight (kg)</label>
+          <input class="input" id="weight-2" type="text" value="74">
+          <p class="helper-text">Valid range: 1–500 kg.</p>
+        </div>
+        <div class="field">
+          <label class="label" for="age-2">Age</label>
+          <input class="input" id="age-2" type="text" value="31">
+          <p class="helper-text">Valid range: 1–120 years.</p>
+        </div>
+        <div class="field">
+          <label class="label" for="gender-2">Gender</label>
+          <select class="input" id="gender-2">
+            <option value="woman" selected>Woman</option>
+            <option value="man">Man</option>
+            <option value="non_binary">Non-binary</option>
+            <option value="prefer_not_to_say">Prefer not to say</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary btn-block" type="button" onclick="simulateSave()">Save changes</button>
+        <p class="helper-text" style="text-align:center;margin-top:var(--space-2);">
+          Prototype links: try
+          <button class="link-inline" type="button" onclick="showNamed('Display name — too long (AC5)')">a too-long name</button>,
+          <button class="link-inline" type="button" onclick="showNamed('Display name — invalid characters (AC6)')">invalid characters</button>,
+          <button class="link-inline" type="button" onclick="showNamed('Height / weight / age — out of range (AC9)')">out-of-range numbers</button>,
+          <button class="link-inline" type="button" onclick="showNamed('Height / weight / age — non-numeric (AC10)')">non-numeric values</button>, or
+          <button class="link-inline" type="button" onclick="showNamed('Height / weight / age — boundary values accepted (AC11)')">boundary values</button>.
+        </p>
+      </div>
+      <div class="bottom-tabs">
+        <div class="bottom-tab">Today</div>
+        <div class="bottom-tab">Log</div>
+        <div class="bottom-tab">Progress</div>
+        <div class="bottom-tab active">Profile</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Saving
+       Notes: §4 — primary button disables and relabels while pending; simulated 300ms latency. -->
+  <div class="screen" data-name="Saving… (§4 loading feedback)">
+    <!-- State: loading -->
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <div style="display:flex;align-items:center;gap:var(--space-2);">
+          <div class="avatar" aria-hidden="true">J</div>
+          <div>
+            <h1 class="text-bold" style="margin:0;font-size:inherit">Jordan</h1>
+            <div class="text-sm text-muted">Your profile</div>
+          </div>
+        </div>
+      </div>
+      <div class="content-pad">
+        <div class="field">
+          <div class="label">Display name</div>
+          <input class="input" value="Jordan A." disabled>
+        </div>
+        <p class="helper-text">Saving your changes…</p>
+        <button class="btn btn-primary btn-block" disabled>Saving…</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Saved confirmation
+       Notes: AC2/AC3 — confirms the save succeeded. Reuses the primary-color ✓ banner
+       pattern from FTP-STORY-002 (no dedicated "success" token exists yet — see summary). -->
+  <div class="screen" data-name="Saved — confirmation (AC2, AC3)">
+    <!-- State: success -->
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <div style="display:flex;align-items:center;gap:var(--space-2);">
+          <div class="avatar" aria-hidden="true">J</div>
+          <div>
+            <h1 class="text-bold" style="margin:0;font-size:inherit">Jordan A.</h1>
+            <div class="text-sm text-muted">Your profile</div>
+          </div>
+        </div>
+      </div>
+      <div class="banner" role="status">
+        <span class="banner-icon" aria-hidden="true">✓</span>
+        <div>
+          <div class="banner-title">Profile saved</div>
+          <div class="banner-body">Your changes have been saved.</div>
+        </div>
+      </div>
+      <div class="content-pad">
+        <div class="field">
+          <div class="label">Display name</div>
+          <input class="input" value="Jordan A." disabled>
+        </div>
+        <button class="btn btn-secondary btn-block" type="button" onclick="showNamed('Profile — next load shows persisted values (AC2, AC3)')">Reload profile page →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Profile — reloaded, persisted values shown
+       Notes: AC2/AC3 — this is the "next time the page loads" half of the acceptance
+       criteria; a toast alone doesn't prove persistence, so the fields are shown freshly
+       loaded with the saved values (178→180 cm, goal changed, name changed). -->
+  <div class="screen" data-name="Profile — next load shows persisted values (AC2, AC3)">
+    <!-- State: success -->
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <div style="display:flex;align-items:center;gap:var(--space-2);">
+          <div class="avatar" aria-hidden="true">J</div>
+          <div>
+            <h1 class="text-bold" style="margin:0;font-size:inherit">Jordan A.</h1>
+            <div class="text-sm text-muted">Your profile</div>
+          </div>
+        </div>
+      </div>
+      <div class="content-pad">
+        <p class="helper-text" style="margin-top:var(--space-3);">This is a fresh page load — every value below came from storage, not from the form you just submitted. Units preference was also changed to imperial in this save, and body detail labels follow it.</p>
+        <div class="field-group-title">Account</div>
+        <div class="field">
+          <div class="label">Display name</div>
+          <input class="input" value="Jordan A." disabled>
+        </div>
+        <div class="field-group-title">Preferences</div>
+        <div class="field">
+          <div class="label">Units</div>
+          <input class="input" value="Imperial (in, lb)" disabled>
+        </div>
+        <div class="field">
+          <div class="label">Fitness goal</div>
+          <input class="input" value="Build muscle" disabled>
+        </div>
+        <div class="field-group-title">Body details</div>
+        <div class="field">
+          <div class="label">Height (in)</div>
+          <input class="input" value="70.9" disabled>
+        </div>
+        <div class="field">
+          <div class="label">Weight (lb)</div>
+          <input class="input" value="163" disabled>
+        </div>
+        <div class="field">
+          <div class="label">Age</div>
+          <input class="input" value="31" disabled>
+        </div>
+        <div class="field">
+          <div class="label">Gender</div>
+          <input class="input" value="Woman" disabled>
+        </div>
+        <p class="helper-text">Stored canonically as 180 cm / 74 kg — validation always uses metric ranges regardless of display preference; only the shown unit/label changes.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Display name too long
+       Notes: AC5 — max is 50 characters; 63 typed here, live counter turns red/over. -->
+  <div class="screen" data-name="Display name — too long (AC5)">
+    <!-- State: error -->
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <div style="display:flex;align-items:center;gap:var(--space-2);">
+          <div class="avatar" aria-hidden="true">J</div>
+          <div><h1 class="text-bold" style="margin:0;font-size:inherit">Jordan</h1><div class="text-sm text-muted">Your profile</div></div>
+        </div>
+      </div>
+      <div class="content-pad">
+        <div class="field">
+          <label class="label" for="dn-3">Display name</label>
+          <input class="input has-error" id="dn-3" type="text" value="Jordan the Absolutely Unstoppable Marathon Champion 2026">
+          <div class="char-counter over">56 / 50</div>
+          <p class="field-error-text" role="alert">⚠ Display name must be 50 characters or fewer.</p>
+        </div>
+        <button class="btn btn-primary btn-block" type="button" disabled>Save changes</button>
+        <p class="helper-text" style="margin-top:var(--space-2);">The name was not saved — the previous value ("Jordan") remains in effect.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Display name invalid characters
+       Notes: AC6 — only letters, numbers, spaces, and basic punctuation are allowed. -->
+  <div class="screen" data-name="Display name — invalid characters (AC6)">
+    <!-- State: error -->
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <div style="display:flex;align-items:center;gap:var(--space-2);">
+          <div class="avatar" aria-hidden="true">J</div>
+          <div><h1 class="text-bold" style="margin:0;font-size:inherit">Jordan</h1><div class="text-sm text-muted">Your profile</div></div>
+        </div>
+      </div>
+      <div class="content-pad">
+        <div class="field">
+          <label class="label" for="dn-4">Display name</label>
+          <input class="input has-error" id="dn-4" type="text" value="Jordan 🔥🔥🔥">
+          <p class="field-error-text" role="alert">⚠ Display name can only contain letters, numbers, spaces, and basic punctuation (. , ' -).</p>
+        </div>
+        <button class="btn btn-primary btn-block" type="button" disabled>Save changes</button>
+        <p class="helper-text" style="margin-top:var(--space-2);">The name was not saved — the previous value ("Jordan") remains in effect.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Height / weight / age out of range
+       Notes: AC9 — canonical ranges are always validated in metric (cm/kg), regardless of
+       the units preference; only the field label/unit suffix follows the preference. All
+       three fields shown erroring together for reviewability; each is independent. -->
+  <div class="screen" data-name="Height / weight / age — out of range (AC9)">
+    <!-- State: error -->
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <div style="display:flex;align-items:center;gap:var(--space-2);">
+          <div class="avatar" aria-hidden="true">J</div>
+          <div><h1 class="text-bold" style="margin:0;font-size:inherit">Jordan</h1><div class="text-sm text-muted">Your profile</div></div>
+        </div>
+      </div>
+      <div class="content-pad">
+        <p class="helper-text" style="margin-top:var(--space-3);">Ranges are validated in metric units even if your display preference is imperial — only the label/unit shown changes.</p>
+        <div class="field">
+          <div class="label">Height (cm)</div>
+          <input class="input has-error" value="450">
+          <p class="field-error-text" role="alert">⚠ Height must be between 1 and 300 cm.</p>
+        </div>
+        <div class="field">
+          <div class="label">Weight (kg)</div>
+          <input class="input has-error" value="612">
+          <p class="field-error-text" role="alert">⚠ Weight must be between 1 and 500 kg.</p>
+        </div>
+        <div class="field">
+          <div class="label">Age</div>
+          <input class="input has-error" value="142">
+          <p class="field-error-text" role="alert">⚠ Age must be between 1 and 120.</p>
+        </div>
+        <button class="btn btn-primary btn-block" type="button" disabled>Save changes</button>
+        <p class="helper-text" style="margin-top:var(--space-2);">None of these values were saved — previous values remain in effect.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Height / weight / age non-numeric
+       Notes: AC10. -->
+  <div class="screen" data-name="Height / weight / age — non-numeric (AC10)">
+    <!-- State: error -->
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <div style="display:flex;align-items:center;gap:var(--space-2);">
+          <div class="avatar" aria-hidden="true">J</div>
+          <div><h1 class="text-bold" style="margin:0;font-size:inherit">Jordan</h1><div class="text-sm text-muted">Your profile</div></div>
+        </div>
+      </div>
+      <div class="content-pad">
+        <div class="field">
+          <div class="label">Height (cm)</div>
+          <input class="input has-error" value="tall">
+          <p class="field-error-text" role="alert">⚠ Height must be a number.</p>
+        </div>
+        <div class="field">
+          <div class="label">Weight (kg)</div>
+          <input class="input has-error" value="n/a">
+          <p class="field-error-text" role="alert">⚠ Weight must be a number.</p>
+        </div>
+        <div class="field">
+          <div class="label">Age</div>
+          <input class="input has-error" value="thirty-one">
+          <p class="field-error-text" role="alert">⚠ Age must be a number.</p>
+        </div>
+        <button class="btn btn-primary btn-block" type="button" disabled>Save changes</button>
+        <p class="helper-text" style="margin-top:var(--space-2);">None of these values were saved — previous values remain in effect.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Boundary values accepted
+       Notes: AC11 — exact min/max (1 cm, 300 cm, 1 kg, 500 kg, 1 yr, 120 yrs) are accepted,
+       not rejected. Shown here at the maximum boundary, saved successfully. -->
+  <div class="screen" data-name="Height / weight / age — boundary values accepted (AC11)">
+    <!-- State: success -->
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <div style="display:flex;align-items:center;gap:var(--space-2);">
+          <div class="avatar" aria-hidden="true">J</div>
+          <div><h1 class="text-bold" style="margin:0;font-size:inherit">Jordan</h1><div class="text-sm text-muted">Your profile</div></div>
+        </div>
+      </div>
+      <div class="banner" role="status">
+        <span class="banner-icon" aria-hidden="true">✓</span>
+        <div>
+          <div class="banner-title">Profile saved</div>
+          <div class="banner-body">Boundary values (height 300 cm, weight 500 kg, age 120) were accepted.</div>
+        </div>
+      </div>
+      <div class="content-pad">
+        <div class="field">
+          <div class="label">Height (cm)</div>
+          <input class="input" value="300" disabled>
+        </div>
+        <div class="field">
+          <div class="label">Weight (kg)</div>
+          <input class="input" value="500" disabled>
+        </div>
+        <div class="field">
+          <div class="label">Age</div>
+          <input class="input" value="120" disabled>
+        </div>
+        <p class="helper-text">The opposite boundary (height 1 cm, weight 1 kg, age 1) is accepted the same way.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Gender outside predefined list
+       Notes: AC12 — the <select> only ever offers the predefined list, so this can only be
+       produced by a tampered or stale request bypassing the client. The API still validates
+       and rejects it with the same inline-error pattern used elsewhere, so the field resets
+       to the select and shows the error rather than silently saving an invalid value. -->
+  <div class="screen" data-name="Gender — outside predefined list (AC12)">
+    <!-- State: error -->
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <div style="display:flex;align-items:center;gap:var(--space-2);">
+          <div class="avatar" aria-hidden="true">J</div>
+          <div><h1 class="text-bold" style="margin:0;font-size:inherit">Jordan</h1><div class="text-sm text-muted">Your profile</div></div>
+        </div>
+      </div>
+      <div class="content-pad">
+        <p class="helper-text" style="margin-top:var(--space-3);">
+          The gender field is always a fixed-choice selector in this app, so a reviewer can't
+          type an out-of-list value here. This state models what happens if a request reaches
+          the server with a value outside the list anyway (e.g. a tampered or stale request) —
+          the server rejects it the same way any other invalid field is rejected.
+        </p>
+        <div class="field">
+          <label class="label" for="gender-err">Gender</label>
+          <select class="input" id="gender-err">
+            <option value="woman">Woman</option>
+            <option value="man">Man</option>
+            <option value="non_binary">Non-binary</option>
+            <option value="prefer_not_to_say">Prefer not to say</option>
+          </select>
+          <p class="field-error-text" id="gender-err-text" role="alert" style="display:none;">⚠ Select a valid gender option from the list.</p>
+        </div>
+        <button class="btn btn-primary btn-block" type="button" id="gender-submit-btn" onclick="simulateGenderRejection()">Try submitting an out-of-list value</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Display name propagation
+       Notes: AC7 — after saving a new display name, the header greeting and an authored
+       post/comment elsewhere in the app both reflect the new name on their next load. -->
+  <div class="screen" data-name="Display name propagation — header and posts (AC7)">
+    <!-- State: success -->
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <div style="display:flex;align-items:center;gap:var(--space-2);">
+          <div class="avatar" aria-hidden="true">JA</div>
+          <div>
+            <h1 class="text-bold" style="margin:0;font-size:inherit">Jordan A.</h1>
+            <div class="text-sm text-muted">Your profile</div>
+          </div>
+        </div>
+      </div>
+      <div class="content-pad">
+        <p class="helper-text" style="margin-top:var(--space-3);">Display name updated to "Jordan A." — every surface that shows it now loads the new value.</p>
+        <div class="card post-card">
+          <div class="post-meta">
+            <div class="post-avatar" aria-hidden="true">JA</div>
+            <div>
+              <div class="text-bold text-sm">Jordan A.</div>
+              <div class="text-muted text-sm">Community feed · 2 hours ago</div>
+            </div>
+          </div>
+          <p class="card-body">Just hit a new personal best on my 5k — feeling great!</p>
+        </div>
+        <div class="card post-card">
+          <div class="post-meta">
+            <div class="post-avatar" aria-hidden="true">JA</div>
+            <div>
+              <div class="text-bold text-sm">Jordan A.</div>
+              <div class="text-muted text-sm">Comment on "Week 3 progress" · 1 day ago</div>
+            </div>
+          </div>
+          <p class="card-body">Great work — keep it up!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Duplicate display names across users
+       Notes: AC8 — display name is not unique across accounts; both users keep their own
+       name independently and neither save is blocked. -->
+  <div class="screen" data-name="Duplicate display names — no conflict (AC8)">
+    <!-- State: success -->
+    <div class="page-shell">
+      <div class="content-pad" style="padding-top:var(--space-3);">
+        <h2 class="text-lg text-bold">Two accounts, same display name</h2>
+        <p class="text-muted">Display names aren't required to be unique — both saves below succeed with no "name already taken" error.</p>
+        <div class="card" style="margin-top:var(--space-3);">
+          <div class="post-meta">
+            <div class="post-avatar" aria-hidden="true">A</div>
+            <div><div class="text-bold text-sm">Account: jordan@example.com</div><div class="text-muted text-sm">Display name saved</div></div>
+          </div>
+          <p class="card-body">Alex Rivera</p>
+        </div>
+        <div class="card" style="margin-top:var(--space-3);">
+          <div class="post-meta">
+            <div class="post-avatar" aria-hidden="true">A</div>
+            <div><div class="text-bold text-sm">Account: sam@example.com</div><div class="text-muted text-sm">Display name saved</div></div>
+          </div>
+          <p class="card-body">Alex Rivera</p>
+        </div>
+        <div class="banner" role="status" style="margin:var(--space-3) 0 0;">
+          <span class="banner-icon" aria-hidden="true">✓</span>
+          <div>
+            <div class="banner-title">Both saves succeeded</div>
+            <div class="banner-body">No duplicate-name error — display name is scoped per account, not unique app-wide.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const screens = Array.from(document.querySelectorAll('.screen'));
+let cur = 0;
+
+function show(i) {
+  cur = Math.max(0, Math.min(screens.length - 1, i));
+  screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+  document.getElementById('screen-label').textContent =
+    `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+  window.scrollTo(0, 0);
+}
+
+function showNamed(name) {
+  const i = screens.findIndex(s => s.dataset.name === name);
+  if (i >= 0) show(i);
+}
+
+document.getElementById('prev-btn').onclick = () => show(cur - 1);
+document.getElementById('next-btn').onclick = () => show(cur + 1);
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') show(cur + 1);
+  if (e.key === 'ArrowLeft') show(cur - 1);
+});
+
+function updateCounter(inputId, counterId, max) {
+  const val = document.getElementById(inputId).value;
+  const counter = document.getElementById(counterId);
+  counter.textContent = `${val.length} / ${max}`;
+  counter.classList.toggle('over', val.length > max);
+}
+
+// §4: primary button disables and relabels while pending; simulated 300ms latency, no real fetch.
+function simulateSave() {
+  showNamed('Saving… (§4 loading feedback)');
+  setTimeout(() => {
+    if (screens[cur].dataset.name === 'Saving… (§4 loading feedback)') {
+      showNamed('Saved — confirmation (AC2, AC3)');
+    }
+  }, 300);
+}
+
+// Models a tampered/stale request reaching the server with an out-of-list value (AC12);
+// the select itself never offers such a value, so the rejection is simulated on submit.
+function simulateGenderRejection() {
+  const sel = document.getElementById('gender-err');
+  const err = document.getElementById('gender-err-text');
+  const btn = document.getElementById('gender-submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  setTimeout(() => {
+    sel.classList.add('has-error');
+    err.style.display = 'flex';
+    btn.disabled = false;
+    btn.textContent = 'Try submitting an out-of-list value';
+  }, 300);
+}
+
+show(0);
+</script>
+
+</body>
+</html>
+
+<!-- arc:css-inlined -->
