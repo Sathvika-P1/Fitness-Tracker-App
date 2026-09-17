@@ -102,3 +102,13 @@ def me(db: Session = Depends(get_db), sid: str | None = Cookie(default=None)):
         (time.monotonic() - start) * 1000,
     )
     return {"email": account.email, "display_name": account.display_name}
+
+
+@router.post("/api/logout")
+def logout(db: Session = Depends(get_db), sid: str | None = Cookie(default=None)):
+    if sid:
+        sessions.delete_session(db, sid)
+    logger.info("logout")
+    response = JSONResponse(status_code=200, content={"message": "Signed out."})
+    response.delete_cookie(SESSION_COOKIE)
+    return response

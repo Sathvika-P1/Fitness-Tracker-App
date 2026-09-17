@@ -1,6 +1,12 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+import datetime
+
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 
 from app.db import Base
+
+
+def _utcnow() -> datetime.datetime:
+    return datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
 
 
 class Account(Base):
@@ -17,3 +23,5 @@ class SessionRow(Base):
 
     id = Column(String(64), primary_key=True)
     account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
+    created_at = Column(DateTime, nullable=False, default=_utcnow)
+    expires_at = Column(DateTime, nullable=False)
