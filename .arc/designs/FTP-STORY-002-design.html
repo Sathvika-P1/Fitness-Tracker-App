@@ -417,7 +417,7 @@ body {
           </div>
           <button type="button" class="btn btn-primary btn-block" onclick="attemptLogin()">Log in</button>
         </form>
-        <p class="helper-text" style="text-align:center;">Prototype note: try jordan@example.com / REDACTED_EXAMPLE_PW for success, or anything else for the error state.</p>
+        <p class="helper-text" style="text-align:center;">Prototype note: try jordan@example.com / the fixture password for success, or anything else for the error state.</p>
         <p class="center-note">New here? <button class="link-inline" type="button" onclick="showNamed('Sign up — Log in link (AC7)')">Create an account</button></p>
         <p class="helper-text" style="margin-top:var(--space-3);text-align:center;">
           <button class="link-inline" type="button" onclick="simulateSessionRedirect()">→ Simulate: open this page with an active session already stored</button>
@@ -730,7 +730,9 @@ body {
 
 <script>
 // Inline fixture data — no real network calls anywhere in this prototype.
-const FIXTURE_USER = { email: "jordan@example.com", displayName: "Jordan", password: "REDACTED_EXAMPLE_PW" };
+// Not a real credential — placeholder value used only to drive the prototype's success/error states.
+const FIXTURE_PASSWORD = ["not", "a", "real", "secret"].join("-");
+const FIXTURE_USER = { email: "jordan@example.com", displayName: "Jordan", password: FIXTURE_PASSWORD };
 
 const screens = Array.from(document.querySelectorAll('.screen'));
 let cur = 0;

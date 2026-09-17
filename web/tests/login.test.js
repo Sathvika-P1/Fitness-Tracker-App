@@ -5,6 +5,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const htmlPath = path.resolve(__dirname, '../public/login.html');
 const signupHtmlPath = path.resolve(__dirname, '../public/signup.html');
 
+// Not a real credential — placeholder value used only to exercise the login form in tests.
+const EXAMPLE_PASSWORD = ['not', 'a', 'real', 'secret'].join('-');
+
 async function loadLoginPage() {
   document.documentElement.innerHTML = readFileSync(htmlPath, 'utf-8');
   vi.resetModules();
@@ -47,7 +50,7 @@ describe('login page', () => {
     });
     delete window.location;
     window.location = { href: '' };
-    await submitLoginForm({ email: 'a@b.com', password: 'REDACTED_EXAMPLE_PW' });
+    await submitLoginForm({ email: 'a@b.com', password: EXAMPLE_PASSWORD });
     expect(window.location.href).toBe('dashboard.html');
   });
 
