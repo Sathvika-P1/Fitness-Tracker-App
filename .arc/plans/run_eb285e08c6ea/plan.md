@@ -195,7 +195,7 @@ tests:
     accounts/sessions before each test.)
     ```python
     res = client.post("/api/signup", json={
-        "email": "new.user@example.com", "password": "test-password", "display_name": "New U."
+        "email": "new.user@example.com", "password": "<PLACEHOLDER>", "display_name": "New U."
     })
     assert res.status_code == 201
     assert accounts.find_by_email(db, "new.user@example.com") is not None
@@ -204,7 +204,7 @@ tests:
     AC2 — the same signup response signs the visitor in immediately, no verification step.
     ```python
     res = client.post("/api/signup", json={
-        "email": "new2.user@example.com", "password": "test-password", "display_name": "New U."
+        "email": "new2.user@example.com", "password": "<PLACEHOLDER>", "display_name": "New U."
     })
     me = client.get("/api/me")
     assert me.status_code == 200
@@ -214,10 +214,10 @@ tests:
     AC3 — signup with an already-registered email is rejected with a clear, field-anchored error.
     ```python
     client.post("/api/signup", json={
-        "email": "dup@example.com", "password": "test-password", "display_name": "Dup A"
+        "email": "dup@example.com", "password": "<PLACEHOLDER>", "display_name": "Dup A"
     })
     res = client.post("/api/signup", json={
-        "email": "dup@example.com", "password": "anotherpass", "display_name": "Dup B"
+        "email": "dup@example.com", "password": "<PLACEHOLDER_2>", "display_name": "Dup B"
     })
     assert res.status_code == 409
     assert res.json() == {"field": "email", "message": "This email is taken."}
@@ -226,11 +226,11 @@ tests:
     AC4 — the rejected duplicate does not create a second row in the accounts table.
     ```python
     client.post("/api/signup", json={
-        "email": "dup2@example.com", "password": "test-password", "display_name": "Dup A"
+        "email": "dup2@example.com", "password": "<PLACEHOLDER>", "display_name": "Dup A"
     })
     before = accounts.count(db)
     client.post("/api/signup", json={
-        "email": "dup2@example.com", "password": "anotherpass", "display_name": "Dup B"
+        "email": "dup2@example.com", "password": "<PLACEHOLDER_2>", "display_name": "Dup B"
     })
     assert accounts.count(db) == before
     ```
@@ -238,7 +238,7 @@ tests:
     AC5 — omitting any of email, password, or display name blocks signup and names the field.
     ```python
     res = client.post("/api/signup", json={
-        "email": "", "password": "test-password", "display_name": "No Email"
+        "email": "", "password": "<PLACEHOLDER>", "display_name": "No Email"
     })
     assert res.status_code == 400
     assert res.json() == {"field": "email", "message": "Enter an email to continue."}
@@ -249,10 +249,10 @@ tests:
     ```python
     client_a, client_b = TestClient(app), TestClient(app)
     client_a.post("/api/signup", json={
-        "email": "alice@example.com", "password": "test-password", "display_name": "Alice"
+        "email": "alice@example.com", "password": "<PLACEHOLDER>", "display_name": "Alice"
     })
     client_b.post("/api/signup", json={
-        "email": "bob@example.com", "password": "test-password", "display_name": "Bob"
+        "email": "bob@example.com", "password": "<PLACEHOLDER>", "display_name": "Bob"
     })
     me_a = client_a.get("/api/me").json()
     me_b = client_b.get("/api/me").json()
@@ -272,7 +272,7 @@ tests:
     Frontend — signup.js renders each omitted-field error inline next to its own field, and
     the duplicate-email banner, matching the prototype's per-field pattern (vitest + jsdom).
     ```js
-    await submitSignupForm({ email: '', password: 'test-password', displayName: 'X' });
+    await submitSignupForm({ email: '', password: '<PLACEHOLDER>', displayName: 'X' });
     expect(document.getElementById('email-error').textContent)
       .toContain('Enter an email to continue.');
     expect(document.getElementById('email').classList.contains('has-error')).toBe(true);
