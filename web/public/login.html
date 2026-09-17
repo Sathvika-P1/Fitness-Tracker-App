@@ -6,67 +6,6 @@
 <title>Log In — Fitness Tracker</title>
 <link rel="stylesheet" href="/design-system/tokens.css">
 <link rel="stylesheet" href="/design-system/prototype-utils.css">
-<style>
-  html, body { height: 100%; }
-  body { min-height: 100dvh; }
-  .auth-shell {
-    min-height: 100dvh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-4) var(--space-3);
-  }
-  .auth-card {
-    width: 100%;
-    max-width: 400px;
-  }
-  .field { margin-bottom: var(--space-3); }
-  .input.has-error {
-    border-color: var(--color-danger);
-    border-width: var(--border-width-md);
-  }
-  .btn-block {
-    width: 100%;
-    min-height: 44px;
-  }
-  .btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-  .banner {
-    display: flex;
-    gap: var(--space-2);
-    align-items: flex-start;
-    background: var(--color-bg);
-    border: var(--border-width-md) solid var(--color-danger);
-    border-radius: var(--radius-md);
-    padding: var(--space-3);
-    margin-bottom: var(--space-3);
-  }
-  .banner[hidden] { display: none; }
-  .banner-icon { color: var(--color-danger); font-weight: var(--font-weight-bold); flex-shrink: 0; }
-  .banner-title { color: var(--color-danger); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
-  .banner-body { color: var(--color-fg); font-size: var(--font-size-sm); }
-  .link-inline {
-    color: var(--color-primary);
-    text-decoration: underline;
-    cursor: pointer;
-    background: none;
-    border: none;
-    padding: 0;
-    font: inherit;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-  }
-  .center-note {
-    text-align: center;
-    margin-top: var(--space-3);
-    font-size: var(--font-size-sm);
-    color: var(--color-muted);
-  }
-</style>
 </head>
 <body>
 
@@ -85,10 +24,10 @@
       </div>
     </div>
 
-    <div class="banner" id="logged-out-banner" role="status" style="border-color:var(--color-border);" hidden>
-      <span class="banner-icon" aria-hidden="true" style="color:var(--color-primary);">✓</span>
+    <div class="banner banner-neutral" id="logged-out-banner" role="status" hidden>
+      <span class="banner-icon" aria-hidden="true">✓</span>
       <div>
-        <div class="banner-title" style="color:var(--color-primary);">You've been logged out</div>
+        <div class="banner-title">You've been logged out</div>
         <div class="banner-body">This device's session ended.</div>
       </div>
     </div>

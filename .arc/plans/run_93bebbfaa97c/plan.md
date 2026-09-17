@@ -300,7 +300,7 @@ tests:
       global.fetch.mockResolvedValue({ status: 200, json: async () => ({ email: 'a@b.com', display_name: 'A' }) });
       delete window.location;
       window.location = { href: '' };
-      await submitLoginForm({ email: 'a@b.com', password: 'correct-pw' });
+      await submitLoginForm({ email: 'a@b.com', password: 'REDACTED_EXAMPLE_PW' });
       expect(window.location.href).toBe('dashboard.html');
     });
     ```

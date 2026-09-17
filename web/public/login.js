@@ -5,9 +5,18 @@ function hideErrorBanner() {
   document.getElementById('password').classList.remove('has-error');
 }
 
-function showErrorBanner() {
+function showErrorBanner({
+  title = 'Invalid email or password',
+  body = 'Double-check your credentials and try again.',
+} = {}) {
   const banner = document.getElementById('error-banner');
-  if (banner) banner.hidden = false;
+  const loggedOutBanner = document.getElementById('logged-out-banner');
+  if (loggedOutBanner) loggedOutBanner.hidden = true;
+  if (banner) {
+    banner.hidden = false;
+    banner.querySelector('.banner-title').textContent = title;
+    banner.querySelector('.banner-body').textContent = body;
+  }
   document.getElementById('email').classList.add('has-error');
   document.getElementById('password').classList.add('has-error');
 }
@@ -46,7 +55,10 @@ export async function submitLoginForm({ email, password } = {}) {
     return { ok: false };
   } catch (error) {
     console.error('login_fetch_failed', { error });
-    showErrorBanner();
+    showErrorBanner({
+      title: 'Unable to reach the server',
+      body: 'Check your connection and try again.',
+    });
     return { ok: false };
   } finally {
     submitBtn.disabled = false;
@@ -60,6 +72,7 @@ function revealLoginForm() {
   document.getElementById('login-form').hidden = false;
   document.getElementById('signup-note').hidden = false;
   if (new URLSearchParams(window.location.search).get('logged_out') === '1') {
+    document.getElementById('error-banner').hidden = true;
     document.getElementById('logged-out-banner').hidden = false;
   }
 }

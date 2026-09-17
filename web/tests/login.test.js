@@ -47,7 +47,7 @@ describe('login page', () => {
     });
     delete window.location;
     window.location = { href: '' };
-    await submitLoginForm({ email: 'a@b.com', password: 'correct-pw' });
+    await submitLoginForm({ email: 'a@b.com', password: 'REDACTED_EXAMPLE_PW' });
     expect(window.location.href).toBe('dashboard.html');
   });
 

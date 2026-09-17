@@ -25,7 +25,11 @@ export async function loadDashboard() {
 }
 
 export async function logout() {
-  await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+  try {
+    await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+  } catch (error) {
+    console.error('logout_fetch_failed', { error });
+  }
   window.location.href = 'login.html?logged_out=1';
 }
 
