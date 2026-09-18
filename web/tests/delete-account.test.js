@@ -32,7 +32,11 @@ describe('delete-account', () => {
     const { submitDeletion } = await loadDeleteAccountPage();
     global.fetch.mockResolvedValue({
       status: 401,
-      json: async () => ({ message: 'Incorrect password. Your account has not been changed.' }),
+      json: async () => ({
+        message: 'Incorrect password. Your account has not been changed.',
+        reason: 'incorrect_password',
+        remaining_attempts: 4,
+      }),
     });
 
     await submitDeletion('wrong-password');
@@ -50,7 +54,11 @@ describe('delete-account', () => {
     const { submitDeletion } = await loadDeleteAccountPage();
     global.fetch.mockResolvedValue({
       status: 423,
-      json: async () => ({ message: 'Too many incorrect attempts. Try again later.' }),
+      json: async () => ({
+        message: 'Too many incorrect attempts. Try again later.',
+        reason: 'locked_out',
+        remaining_attempts: 0,
+      }),
     });
 
     await submitDeletion('test-password');
@@ -69,13 +77,32 @@ describe('delete-account', () => {
     expect(document.getElementById('confirm-view').hidden).toBe(true);
   });
 
-  it('shows the already-deleted view on a 401 "Not signed in." response', async () => {
+  it('shows the already-deleted view on a 401 "not_signed_in" response', async () => {
     const { submitDeletion } = await loadDeleteAccountPage();
-    global.fetch.mockResolvedValue({ status: 401, json: async () => ({ message: 'Not signed in.' }) });
+    global.fetch.mockResolvedValue({
+      status: 401,
+      json: async () => ({ message: 'Not signed in.', reason: 'not_signed_in' }),
+    });
 
     await submitDeletion('test-password');
 
     expect(document.getElementById('already-deleted-view').hidden).toBe(false);
+  });
+
+  it('falls back to the confirm view without claiming an incorrect password when the error body is unparsable', async () => {
+    const { submitDeletion } = await loadDeleteAccountPage();
+    global.fetch.mockResolvedValue({
+      status: 401,
+      json: async () => {
+        throw new Error('bad body');
+      },
+    });
+
+    await submitDeletion('test-password');
+
+    expect(document.getElementById('confirm-view').hidden).toBe(false);
+    expect(document.getElementById('password-error').hidden).toBe(true);
+    expect(document.getElementById('deleting-view').hidden).toBe(true);
   });
 
   it('redirects an unauthenticated visitor to login instead of showing the confirm view', async () => {

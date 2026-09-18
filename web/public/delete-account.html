@@ -11,7 +11,7 @@
 
 <div class="page-shell">
   <div class="top-app-bar">
-    <a class="back-btn" href="account-settings.html" aria-label="Back">←</a>
+    <a id="back-btn" class="back-btn" href="account-settings.html" aria-label="Back">←</a>
     <span class="top-app-bar-title">Delete account</span>
   </div>
 
@@ -39,8 +39,8 @@
       <div>
         <div class="banner-title">Too many incorrect attempts</div>
         <div class="banner-body">
-          Deletion confirmation is temporarily locked after 5 incorrect password attempts,
-          the same limit used for sign-in. Try again in 15 minutes.
+          Deletion confirmation is temporarily locked after 5 incorrect password attempts.
+          Try again in 15 minutes.
         </div>
       </div>
     </div>
@@ -72,8 +72,8 @@
   </div>
 
   <div id="deleting-view" class="content-pad" style="margin-top: var(--space-4);" hidden>
-    <div class="empty-state">
-      <div class="empty-state-icon" aria-hidden="true">⏳</div>
+    <div class="account-empty-state">
+      <div class="account-empty-state-icon" aria-hidden="true">⏳</div>
       <div class="text-lg text-bold">Deleting your account…</div>
       <p class="text-sm text-muted">
         Erasing credentials, profile data, sessions, and content. This only takes a moment.
@@ -82,8 +82,8 @@
   </div>
 
   <div id="complete-view" class="content-pad" style="margin-top: var(--space-4);" hidden>
-    <div class="empty-state">
-      <div class="empty-state-icon" aria-hidden="true">✅</div>
+    <div class="account-empty-state">
+      <div class="account-empty-state-icon" aria-hidden="true">✅</div>
       <div class="text-lg text-bold">Your account has been deleted</div>
       <p class="text-sm text-muted">
         Your credentials, profile, workout logs, achievements, and posts have been
@@ -103,8 +103,8 @@
   </div>
 
   <div id="already-deleted-view" class="content-pad" style="margin-top: var(--space-4);" hidden>
-    <div class="empty-state">
-      <div class="empty-state-icon" aria-hidden="true">ℹ️</div>
+    <div class="account-empty-state">
+      <div class="account-empty-state-icon" aria-hidden="true">ℹ️</div>
       <div class="text-lg text-bold">This account was already deleted</div>
       <p class="text-sm text-muted">
         A deletion request for this account was already completed. No further action is

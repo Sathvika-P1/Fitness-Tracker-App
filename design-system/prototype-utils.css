@@ -430,11 +430,11 @@ body {
 .lockout-banner .banner-title { color: var(--color-danger); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
 .lockout-banner .banner-body { color: var(--color-fg); font-size: var(--font-size-sm); }
 
-.empty-state {
+.account-empty-state {
   display: flex; flex-direction: column; align-items: center; text-align: center;
   padding: var(--space-4) var(--space-3); gap: var(--space-2);
 }
-.empty-state-icon {
+.account-empty-state-icon {
   width: 64px; height: 64px; border-radius: 50%; background: var(--color-surface);
   display: flex; align-items: center; justify-content: center; font-size: var(--font-size-lg);
   color: var(--color-danger);

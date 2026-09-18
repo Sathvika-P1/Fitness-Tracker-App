@@ -1,4 +1,5 @@
 import { initials, clearFieldError, setFieldError } from './form-utils.js';
+import { fetchOrRedirect } from './session-utils.js';
 
 const DISPLAY_NAME_MAX_LENGTH = 50;
 
@@ -33,18 +34,10 @@ export function renderErrors(errors) {
 }
 
 export async function loadProfile() {
-  try {
-    const res = await fetch('/api/profile', { credentials: 'include' });
-    if (res.status !== 200) {
-      window.location.href = 'login.html';
-      return;
-    }
-    const data = await res.json();
-    renderProfile(data);
-  } catch (error) {
-    console.error('profile_load_failed', { error });
-    window.location.href = 'login.html';
-  }
+  const res = await fetchOrRedirect('/api/profile');
+  if (!res) return;
+  const data = await res.json();
+  renderProfile(data);
 }
 
 function collectFormValues() {

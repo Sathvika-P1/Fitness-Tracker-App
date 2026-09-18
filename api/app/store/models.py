@@ -39,3 +39,11 @@ class AccountDeletionAudit(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     account_reference = Column(String(64), nullable=False)
     deleted_at = Column(DateTime, nullable=False, default=_utcnow)
+
+
+class DeletionLockoutFailure(Base):
+    __tablename__ = "deletion_lockout_failures"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
+    created_at = Column(DateTime, nullable=False, default=_utcnow)

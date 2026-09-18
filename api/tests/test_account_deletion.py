@@ -43,7 +43,9 @@ def test_incorrect_password_blocks_deletion_and_account_stays_intact(
     )
     assert resp.status_code == 401
     assert resp.json() == {
-        "message": "Incorrect password. Your account has not been changed."
+        "message": "Incorrect password. Your account has not been changed.",
+        "reason": "incorrect_password",
+        "remaining_attempts": 4,
     }
 
     me = client_with_signed_up_account.get("/api/me")
@@ -74,7 +76,9 @@ def test_repeated_incorrect_attempts_lock_out_deletion(client_with_signed_up_acc
     )
     assert locked.status_code == 423
     assert locked.json() == {
-        "message": "Too many incorrect attempts. Try again later."
+        "message": "Too many incorrect attempts. Try again later.",
+        "reason": "locked_out",
+        "remaining_attempts": 0,
     }
 
 
@@ -88,7 +92,7 @@ def test_duplicate_deletion_request_is_handled_gracefully(client_with_signed_up_
         "/api/account/delete", json={"password": "test-password"}
     )
     assert second.status_code == 401
-    assert second.json() == {"message": "Not signed in."}
+    assert second.json() == {"message": "Not signed in.", "reason": "not_signed_in"}
 
 
 def test_deletion_writes_anonymized_audit_entry_without_pii(client_with_signed_up_account, db):
@@ -130,4 +134,4 @@ def test_deletion_requires_signed_in_session():
     client = TestClient(app)
     resp = client.post("/api/account/delete", json={"password": "test-password"})
     assert resp.status_code == 401
-    assert resp.json() == {"message": "Not signed in."}
+    assert resp.json() == {"message": "Not signed in.", "reason": "not_signed_in"}

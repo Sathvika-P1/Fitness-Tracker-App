@@ -1,10 +1,13 @@
-const MAX_ATTEMPTS = 5;
-let attempts = 0;
+import { fetchOrRedirect } from './session-utils.js';
 
 function showView(id) {
   ['confirm-view', 'deleting-view', 'complete-view', 'already-deleted-view'].forEach((viewId) => {
     document.getElementById(viewId).hidden = viewId !== id;
   });
+  const backBtn = document.getElementById('back-btn');
+  if (backBtn) {
+    backBtn.hidden = id === 'complete-view' || id === 'already-deleted-view';
+  }
 }
 
 export function updateDeleteButton() {
@@ -35,6 +38,7 @@ export async function submitDeletion(password) {
   } catch (error) {
     console.error('account_delete_failed', { error });
     showView('confirm-view');
+    updateDeleteButton();
     return;
   }
 
@@ -43,7 +47,15 @@ export async function submitDeletion(password) {
     return;
   }
 
-  const body = await res.json();
+  let body;
+  try {
+    body = await res.json();
+  } catch (error) {
+    console.error('account_delete_response_parse_failed', { error });
+    showView('confirm-view');
+    updateDeleteButton();
+    return;
+  }
 
   if (res.status === 423) {
     showView('confirm-view');
@@ -53,17 +65,16 @@ export async function submitDeletion(password) {
     return;
   }
 
-  if (body.message === 'Not signed in.') {
+  if (body.reason === 'not_signed_in') {
     showView('already-deleted-view');
     return;
   }
 
-  attempts += 1;
   showView('confirm-view');
   passwordError.hidden = false;
   intactNote.hidden = false;
-  const remaining = MAX_ATTEMPTS - attempts;
-  if (remaining > 0) {
+  const remaining = body.remaining_attempts;
+  if (typeof remaining === 'number' && remaining > 0) {
     attemptCounter.hidden = false;
     attemptCounter.textContent = `${remaining} attempt${remaining === 1 ? '' : 's'} remaining before lockout`;
   }
@@ -71,15 +82,7 @@ export async function submitDeletion(password) {
 }
 
 export async function requireSignedIn() {
-  try {
-    const res = await fetch('/api/me', { credentials: 'include' });
-    if (res.status !== 200) {
-      window.location.href = 'login.html';
-    }
-  } catch (error) {
-    console.error('delete_account_auth_check_failed', { error });
-    window.location.href = 'login.html';
-  }
+  await fetchOrRedirect('/api/me');
 }
 
 const passwordInput = document.getElementById('confirm-password');
@@ -92,6 +95,7 @@ passwordInput?.addEventListener('input', () => {
 });
 checkbox?.addEventListener('change', updateDeleteButton);
 submitBtn?.addEventListener('click', () => {
+  submitBtn.disabled = true;
   submitDeletion(passwordInput.value);
 });
 

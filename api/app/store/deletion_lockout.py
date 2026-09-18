@@ -1,38 +1,50 @@
 import datetime
 
+from sqlalchemy import delete, func, select
+from sqlalchemy.orm import Session
+
+from app.store.models import DeletionLockoutFailure
+from app.store.sessions import _utcnow
+
 MAX_ATTEMPTS = 5
 LOCKOUT_WINDOW = datetime.timedelta(minutes=15)
-MAX_TRACKED_ACCOUNTS = 10_000
-
-_failures: dict[int, list[datetime.datetime]] = {}
 
 
-def _utcnow() -> datetime.datetime:
-    return datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
-
-
-def _recent_failures(account_id: int) -> list[datetime.datetime]:
+def _purge_expired(db: Session) -> None:
+    # Sweeps every account's expired failures on each call (not just the one
+    # being checked), so rows for accounts that never retry don't accumulate
+    # forever - mirroring the bound the old in-process dict enforced.
     cutoff = _utcnow() - LOCKOUT_WINDOW
-    recent = [ts for ts in _failures.get(account_id, []) if ts > cutoff]
-    if recent:
-        _failures[account_id] = recent
-    else:
-        _failures.pop(account_id, None)
-    return recent
+    db.execute(delete(DeletionLockoutFailure).where(DeletionLockoutFailure.created_at <= cutoff))
+    db.commit()
 
 
-def record_failure(account_id: int) -> None:
-    _failures.setdefault(account_id, []).append(_utcnow())
-    if len(_failures) > MAX_TRACKED_ACCOUNTS:
-        oldest_account_id = min(
-            _failures, key=lambda tracked_id: _failures[tracked_id][-1]
+def _count_recent(db: Session, account_id: int) -> int:
+    _purge_expired(db)
+    return db.execute(
+        select(func.count())
+        .select_from(DeletionLockoutFailure)
+        .where(DeletionLockoutFailure.account_id == account_id)
+    ).scalar_one()
+
+
+def record_failure(db: Session, account_id: int) -> None:
+    db.add(DeletionLockoutFailure(account_id=account_id, created_at=_utcnow()))
+    db.commit()
+
+
+def is_locked(db: Session, account_id: int) -> bool:
+    return _count_recent(db, account_id) >= MAX_ATTEMPTS
+
+
+def remaining_attempts(db: Session, account_id: int) -> int:
+    return max(0, MAX_ATTEMPTS - _count_recent(db, account_id))
+
+
+def reset(db: Session, account_id: int) -> None:
+    db.execute(
+        delete(DeletionLockoutFailure).where(
+            DeletionLockoutFailure.account_id == account_id
         )
-        _failures.pop(oldest_account_id, None)
-
-
-def is_locked(account_id: int) -> bool:
-    return len(_recent_failures(account_id)) >= MAX_ATTEMPTS
-
-
-def reset(account_id: int) -> None:
-    _failures.pop(account_id, None)
+    )
+    db.commit()
