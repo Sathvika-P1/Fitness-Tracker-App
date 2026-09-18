@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTP-STORY-006 — Welcome/Landing Page &amp; Navigation Wiring</title>
+<style>
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1a1a1a; /** Primary body text color, used on color-bg. Contrast ratio ~17.4:1. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-surface: #f8fafc; /** Slightly recessed surface, distinct from color-bg, used for cards. */
+  --color-primary: #1d4ed8; /** Brand/interactive accent color. Meets 4.5:1 as text on color-bg (~6.7:1). */
+  --color-on-primary: #ffffff; /** Text/icon color placed on top of color-primary. */
+  --color-muted: #475569; /** Secondary/muted text color. */
+  --color-border: #e2e8f0; /** Default hairline border color. */
+  --color-danger: #dc2626; /** Destructive/error accent color. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 600;
+  --line-height-base: 1.5;
+  --button-primary-background: var(--color-primary);
+  --button-primary-foreground: var(--color-on-primary);
+  --button-primary-border-radius: var(--radius-md);
+  --button-secondary-background: var(--color-bg);
+  --button-secondary-foreground: var(--color-primary);
+  --button-secondary-border: var(--color-primary);
+  --card-default-background: var(--color-surface);
+  --card-default-border: var(--color-border);
+  --card-default-border-radius: var(--radius-lg);
+  --chip-default-background: var(--color-surface);
+  --chip-default-foreground: var(--color-muted);
+  --chip-default-border-radius: var(--radius-sm);
+  --input-default-background: var(--color-bg);
+  --input-default-border: var(--color-border);
+  --input-default-foreground: var(--color-fg);
+  --input-default-border-radius: var(--radius-sm);
+}
+
+</style>
+<style>
+/* Base layout / typography */
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-md);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-bold { font-weight: var(--font-weight-bold); }
+
+/* Layout utilities */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
+/* Buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-md);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-radius: var(--button-primary-border-radius);
+}
+
+.btn-secondary {
+  background: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-on-primary);
+}
+
+/* Card */
+
+.card {
+  background: var(--card-default-background);
+  border: var(--border-width-sm) solid var(--card-default-border);
+  border-radius: var(--card-default-border-radius);
+  padding: var(--space-4);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Chip */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  background: var(--chip-default-background);
+  color: var(--chip-default-foreground);
+  border-radius: var(--chip-default-border-radius);
+  font-size: var(--font-size-sm);
+}
+
+/* Form controls */
+
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  background: var(--input-default-background);
+  color: var(--input-default-foreground);
+  border: var(--border-width-sm) solid var(--input-default-border);
+  border-radius: var(--input-default-border-radius);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-md);
+  outline: none;
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-1);
+}
+
+/* Style-guide page helpers */
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.swatch-color {
+  height: var(--space-4);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-sm) solid var(--color-border);
+}
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.section {
+  margin-bottom: var(--space-4);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* Auth pages (signup / login) */
+
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+.auth-shell {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-3);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.field {
+  margin-bottom: var(--space-3);
+}
+
+.field-error-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.input.has-error {
+  border-color: var(--color-danger);
+  border-width: var(--border-width-md);
+}
+
+.helper-text {
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.btn-block {
+  width: 100%;
+  min-height: 44px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.banner {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  background: var(--color-bg);
+  border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.banner[hidden] {
+  display: none;
+}
+
+.banner-icon {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.banner-title {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+}
+
+.banner-body {
+  color: var(--color-fg);
+  font-size: var(--font-size-sm);
+}
+
+.link-inline {
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.center-note {
+  text-align: center;
+  margin-top: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+
+.banner-neutral {
+  border-color: var(--color-border);
+}
+
+.banner-neutral .banner-icon,
+.banner-neutral .banner-title {
+  color: var(--color-primary);
+}
+
+/* App shell (top bar, avatar, bottom tabs) */
+
+.page-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: var(--space-4);
+}
+
+.top-app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.bottom-tabs {
+  display: flex;
+  border-top: var(--border-width-sm) solid var(--color-border);
+  position: sticky;
+  bottom: 0;
+  background: var(--color-bg);
+}
+
+.bottom-tab {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.bottom-tab.active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Profile fields */
+
+.not-set {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.field-group-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.char-counter {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  text-align: right;
+  margin-top: var(--space-1);
+}
+
+.char-counter.over {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+}
+
+.content-pad {
+  padding: 0 var(--space-3);
+}
+
+/* Account deletion */
+
+.back-btn {
+  background: none; border: none; cursor: pointer; color: var(--color-primary);
+  font-size: var(--font-size-md); min-height: 44px; min-width: 44px;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+}
+
+.top-app-bar-title { font-weight: var(--font-weight-bold); font-size: var(--font-size-lg); }
+
+.danger-zone-card {
+  border: var(--border-width-sm) solid var(--color-danger);
+  border-radius: var(--card-default-border-radius);
+  background: var(--color-bg);
+  padding: var(--space-3);
+  margin: var(--space-3);
+}
+.danger-zone-title { color: var(--color-danger); font-weight: var(--font-weight-bold); margin-bottom: var(--space-1); }
+
+.consequence-list { margin: var(--space-3) 0; padding-left: 0; list-style: none; }
+.consequence-list li {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  padding: var(--space-1) 0; font-size: var(--font-size-sm); color: var(--color-fg);
+}
+.consequence-list li .mark { color: var(--color-danger); font-weight: var(--font-weight-bold); flex-shrink: 0; }
+
+.checkbox-row {
+  display: flex; align-items: flex-start; gap: var(--space-2);
+  margin: var(--space-3) 0; min-height: 44px;
+}
+.checkbox-row input[type="checkbox"] {
+  width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; accent-color: var(--color-danger);
+}
+.checkbox-row label { font-size: var(--font-size-sm); color: var(--color-fg); }
+
+.attempt-counter { font-size: var(--font-size-sm); color: var(--color-muted); margin-top: var(--space-1); }
+
+.lockout-banner {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  background: var(--color-bg); border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-3);
+}
+.lockout-banner .banner-icon { color: var(--color-danger); font-weight: var(--font-weight-bold); }
+.lockout-banner .banner-title { color: var(--color-danger); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+.lockout-banner .banner-body { color: var(--color-fg); font-size: var(--font-size-sm); }
+
+.account-empty-state {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: var(--space-4) var(--space-3); gap: var(--space-2);
+}
+.account-empty-state-icon {
+  width: 64px; height: 64px; border-radius: 50%; background: var(--color-surface);
+  display: flex; align-items: center; justify-content: center; font-size: var(--font-size-lg);
+  color: var(--color-danger);
+}
+
+</style>
+<!-- App nav: mobile fitness-tracker shell — top app bar + bottom tab bar (Today / Log / Progress / Profile), matching existing dashboard/profile/account-settings pages. The Welcome screen is pre-auth and has no tab bar, matching login/signup. -->
+<style>
+  /* Welcome screen — new layout pattern, composed from existing tokens/utilities only */
+  .welcome-shell {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4) var(--space-3);
+  }
+  .welcome-card {
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+  }
+  .welcome-logo {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-lg);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin: 0 auto var(--space-3);
+  }
+  .welcome-options {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+  .welcome-options .btn {
+    flex: 1 1 0;
+    min-height: 44px;
+  }
+  .redirect-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 100dvh;
+  }
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: var(--border-width-md) solid var(--color-border);
+    border-top-color: var(--color-primary);
+    animation: spin 0.8s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .spinner { animation: none; }
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .inline-error {
+    color: var(--color-danger);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-1);
+  }
+  .device-frame {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    min-height: 640px;
+    overflow: hidden;
+    background: var(--color-bg);
+    display: flex;
+    flex-direction: column;
+  }
+  .device-frame .page-shell,
+  .device-frame .welcome-shell,
+  .device-frame .auth-shell {
+    flex: 1;
+  }
+</style>
+</head>
+<body>
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--color-surface);border-bottom:1px solid var(--color-border);font-size:13px;font-family:var(--font-family-base)">
+  <span style="font-family:monospace;color:var(--color-muted)">FTP-STORY-006</span>
+  <button id="prev-btn" style="background:none;border:none;color:var(--color-primary);font-weight:var(--font-weight-bold);cursor:pointer;padding:var(--space-1) var(--space-2);">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--color-fg)"></span>
+  <button id="next-btn" style="background:none;border:none;color:var(--color-primary);font-weight:var(--font-weight-bold);cursor:pointer;padding:var(--space-1) var(--space-2);">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+
+<div id="screens" style="padding: var(--space-4) var(--space-3);">
+
+  <!-- State: checking-session -->
+  <!-- Screen: Welcome — Checking session
+       Notes:
+         - Simulates the /api/me call index.html makes on load (mirrors login.js checkExistingSession)
+         - Shown for ~350ms before resolving to either "Redirecting" (AC2) or "Welcome" (AC3)
+         - No layout to preserve here since this is the very first paint; a brief spinner avoids a flash of blank white
+  -->
+  <div class="screen" data-name="Welcome — Checking session">
+    <div class="device-frame">
+      <div class="redirect-note">
+        <div class="spinner" aria-hidden="true"></div>
+        <span class="text-muted" role="status">Checking your session…</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- State: redirecting -->
+  <!-- Screen: Welcome — Session found, redirecting
+       Notes:
+         - Satisfies AC2: an authenticated /api/me response sends the user straight to dashboard.html
+         - The welcome screen markup is never shown to a logged-in user
+         - Next screen shows the destination (dashboard.html, unchanged) so a reviewer can confirm where the redirect lands
+  -->
+  <div class="screen" data-name="Welcome — Redirecting to dashboard">
+    <div class="device-frame">
+      <div class="redirect-note" style="flex-direction:column;">
+        <div class="spinner" aria-hidden="true"></div>
+        <span class="text-muted" role="status" style="margin-top:var(--space-2);">Session found — redirecting to your dashboard…</span>
+      </div>
+    </div>
+    <p class="text-sm text-muted" style="text-align:center;margin-top:var(--space-2);">AC2 · /api/me returned an authenticated session → immediate redirect, welcome screen never renders.</p>
+  </div>
+
+  <!-- State: dashboard-reference -->
+  <!-- Screen: Dashboard (unchanged, shown for reference)
+       Notes:
+         - This is the redirect destination from the previous screen (AC2) and also the reference point for AC16:
+           the Profile/Account-settings logout control must mirror this exact placement (top app bar, right side,
+           next to the avatar) and styling (btn btn-secondary, min-height 44px)
+         - No changes in this story — reproduced verbatim from dashboard.html for side-by-side comparison
+  -->
+  <div class="screen" data-name="Dashboard (reference, unchanged)">
+    <div class="device-frame">
+      <div class="top-app-bar">
+        <div>
+          <h1 class="text-bold" style="margin:0;font-size:inherit">Welcome, Jordan</h1>
+          <div class="text-sm text-muted">jordan.diaz@example.com</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-2);">
+          <div class="avatar" aria-hidden="true">JD</div>
+          <button class="btn btn-secondary" style="min-height:44px;" type="button">Log out</button>
+        </div>
+      </div>
+      <div style="text-align:center;padding:var(--space-4) var(--space-3);">
+        <div style="width:72px;height:72px;border-radius:var(--radius-lg);background:var(--color-surface);border:var(--border-width-sm) solid var(--color-border);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto var(--space-3);" aria-hidden="true">🏃</div>
+        <h2 class="text-lg text-bold">No workouts logged yet</h2>
+        <p class="text-muted" style="max-width:320px;margin:var(--space-2) auto 0;">Your account is ready. Log your first workout to start tracking progress.</p>
+      </div>
+      <div class="bottom-tabs">
+        <div class="bottom-tab active">Today</div>
+        <div class="bottom-tab" role="button" aria-disabled="true">Log</div>
+        <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
+        <a class="bottom-tab" href="#">Profile</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- State: welcome-no-session -->
+  <!-- Screen: Welcome — No session (default landing screen)
+       Notes:
+         - Satisfies AC1, AC3, AC4, AC12: renders instead of a directory listing, shows app name + one-paragraph intro,
+           and "Log in" / "Sign up" appear side by side. Also the state shown when /api/me errors/times out (AC12).
+         - "Log in" navigates to login.html (AC5); "Sign up" navigates to signup.html (AC6) — simulated with setTimeout here, not a real navigation
+         - Ship as anchors, not buttons: <a class="btn btn-primary" href="login.html"> / <a class="btn btn-secondary" href="signup.html">, matching the existing pattern (profile.html "Account settings" link, account-settings.html "Delete my account" link) so middle-click/deep-link keep working per guidelines §7. Rendered as <button> here only to drive the inline simulation.
+         - Copy is intentionally short: one paragraph, plain language, no marketing fluff
+  -->
+  <div class="screen" data-name="Welcome — No session (proposed copy)">
+    <div class="device-frame">
+      <div class="welcome-shell">
+        <div class="welcome-card">
+          <div class="welcome-logo" aria-hidden="true">🏋️</div>
+          <h1 class="text-lg text-bold" style="margin:0;">Fitness Tracker</h1>
+          <p class="text-muted" style="margin-top: var(--space-3);">
+            Fitness Tracker helps you log workouts, track your progress toward a goal, and keep your
+            body stats in one place — so you always know how today's effort fits your bigger picture.
+          </p>
+          <div class="welcome-options">
+            <button class="btn btn-primary" id="welcome-login-btn" type="button">Log in</button>
+            <button class="btn btn-secondary" id="welcome-signup-btn" type="button">Sign up</button>
+          </div>
+          <p class="text-sm text-muted" id="welcome-nav-feedback" style="margin-top:var(--space-3);min-height:1.2em;" aria-live="polite"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- State: profile-with-logout -->
+  <!-- Screen: Profile — with logout control
+       Notes:
+         - Satisfies AC7, AC16: logout control added to the top app bar, mirroring dashboard's exact placement (right side, next to avatar) and styling (btn btn-secondary)
+         - All existing profile fields/edit/save behavior (AC11) and disabled Log/Progress tabs (AC9) are unchanged
+         - Click "Log out" to see the success path (redirect note) or use the error toggle for AC13/AC14
+  -->
+  <div class="screen" data-name="Profile — logout control added">
+    <div class="device-frame">
+      <div class="page-shell">
+        <div class="top-app-bar">
+          <div style="display:flex;align-items:center;gap:var(--space-2);">
+            <div class="avatar" aria-hidden="true">JD</div>
+            <div>
+              <h1 class="text-bold" style="margin:0;font-size:inherit">Jordan Diaz</h1>
+              <div class="text-sm text-muted">Your profile</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:var(--space-1);">
+            <button class="btn btn-secondary" id="profile-logout-btn" style="min-height:44px;" type="button">Log out</button>
+            <p class="inline-error" id="profile-logout-error" hidden>Logout failed. Please try again.</p>
+          </div>
+        </div>
+
+        <div class="content-pad">
+          <p class="text-sm text-muted" style="margin-top:var(--space-2);">Simulate:
+            <button class="link-inline" id="profile-logout-success-btn" type="button">log out (success)</button> ·
+            <button class="link-inline" id="profile-logout-fail-btn" type="button">log out (failure)</button>
+          </p>
+          <p class="helper-text" style="margin-top:var(--space-1);">
+            Only you can see or edit this — your profile is never shown by user id or link.
+          </p>
+          <div class="field-group-title">Account</div>
+          <div class="field">
+            <label class="label">Display name</label>
+            <input class="input" value="Jordan Diaz" readonly>
+          </div>
+          <div class="field-group-title">Preferences</div>
+          <div class="field">
+            <label class="label">Units</label>
+            <input class="input" value="Metric (cm, kg)" readonly>
+          </div>
+          <div class="field">
+            <label class="label">Fitness goal</label>
+            <input class="input" value="Build muscle" readonly>
+          </div>
+          <a class="btn btn-secondary btn-block" style="margin-top: var(--space-4);" href="#">Account settings</a>
+        </div>
+
+        <div class="bottom-tabs">
+          <a class="bottom-tab" href="#">Today</a>
+          <div class="bottom-tab" role="button" aria-disabled="true">Log</div>
+          <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
+          <a class="bottom-tab active" href="#">Profile</a>
+        </div>
+      </div>
+    </div>
+    <p class="text-sm text-muted" style="text-align:center;margin-top:var(--space-2);">AC9 · Log / Progress tabs stay disabled, no href — unchanged from before this story.</p>
+  </div>
+
+  <!-- State: profile-logout-error -->
+  <!-- Screen: Profile — logout failed (inline error)
+       Notes:
+         - Satisfies AC13, AC14: when /api/logout fails, an inline error shows near the logout control and the user stays on the page (no redirect)
+         - Error text sits directly under the button, right-aligned to match the control's position in the top app bar
+  -->
+  <div class="screen" data-name="Profile — logout failed">
+    <div class="device-frame">
+      <div class="page-shell">
+        <div class="top-app-bar">
+          <div style="display:flex;align-items:center;gap:var(--space-2);">
+            <div class="avatar" aria-hidden="true">JD</div>
+            <div>
+              <h1 class="text-bold" style="margin:0;font-size:inherit">Jordan Diaz</h1>
+              <div class="text-sm text-muted">Your profile</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:var(--space-1);">
+            <button class="btn btn-secondary" style="min-height:44px;" type="button">Log out</button>
+            <p class="inline-error">Logout failed. Please try again.</p>
+          </div>
+        </div>
+        <div class="content-pad">
+          <p class="text-muted" style="margin-top:var(--space-3);">The rest of the profile page is unaffected — the user remains here, fully in control, and can retry.</p>
+        </div>
+        <div class="bottom-tabs">
+          <a class="bottom-tab" href="#">Today</a>
+          <div class="bottom-tab" role="button" aria-disabled="true">Log</div>
+          <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
+          <a class="bottom-tab active" href="#">Profile</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- State: logged-out -->
+  <!-- Screen: Login — logged out (destination for successful logout)
+       Notes:
+         - Satisfies AC8: reproduces login.html's existing "You've been logged out" banner (login.html:29-35) verbatim,
+           reached via login.html?logged_out=1 — no changes to login.html needed, this is the unmodified destination
+         - This is where a successful logout from Profile or Account settings lands
+  -->
+  <div class="screen" data-name="Login — logged out (logout success destination)">
+    <div class="device-frame">
+      <div class="auth-shell">
+        <div class="auth-card card">
+          <h1 class="card-title">Log in</h1>
+          <div class="banner banner-neutral" role="status">
+            <span class="banner-icon" aria-hidden="true">✓</span>
+            <div>
+              <div class="banner-title">You've been logged out</div>
+              <div class="banner-body">This device's session ended.</div>
+            </div>
+          </div>
+          <form style="margin-top: var(--space-3);">
+            <div class="field">
+              <label class="label">Email</label>
+              <input class="input" type="email" placeholder="you@example.com">
+            </div>
+            <div class="field">
+              <label class="label">Password</label>
+              <input class="input" type="password" placeholder="Your password">
+            </div>
+            <button type="button" class="btn btn-primary btn-block">Log in</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- State: account-settings-with-logout -->
+  <!-- Screen: Account settings — with logout control
+       Notes:
+         - Satisfies AC7, AC16: same top app bar treatment as dashboard/profile — logout button on the right
+         - Danger zone (delete account) and disabled Log/Progress tabs remain exactly as before
+         - The column-flex wrapper around the button exists only to host the inline error when present; with no
+           error, the button renders in the identical position as the dashboard's row-flex wrapper (AC16)
+  -->
+  <div class="screen" data-name="Account settings — logout control added">
+    <div class="device-frame">
+      <div class="page-shell">
+        <div class="top-app-bar">
+          <span class="top-app-bar-title">Account settings</span>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:var(--space-1);">
+            <button class="btn btn-secondary" id="settings-logout-btn" style="min-height:44px;" type="button">Log out</button>
+            <p class="inline-error" id="settings-logout-error" hidden>Logout failed. Please try again.</p>
+          </div>
+        </div>
+        <div class="content-pad" style="margin-top: var(--space-3);">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title">Account</div>
+              <div class="row" style="justify-content: space-between; margin-top: var(--space-2);">
+                <span class="text-sm text-muted">Email</span>
+                <span class="text-sm">jordan.diaz@example.com</span>
+              </div>
+              <div class="row" style="justify-content: space-between; margin-top: var(--space-1);">
+                <span class="text-sm text-muted">Active sessions</span>
+                <span class="text-sm">1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="danger-zone-card">
+          <div class="row" style="align-items: center; gap: var(--space-1);">
+            <span aria-hidden="true">⚠️</span>
+            <span class="danger-zone-title">Danger zone</span>
+          </div>
+          <p class="text-sm" style="color: var(--color-fg); margin-top: var(--space-1);">
+            Deleting your account is permanent. Your credentials, profile, workout logs,
+            achievements, and posts will be erased immediately — this cannot be undone.
+          </p>
+          <a class="btn btn-primary btn-block" style="margin-top: var(--space-3);" href="#">Delete my account</a>
+        </div>
+        <div class="bottom-tabs">
+          <a class="bottom-tab" href="#">Today</a>
+          <div class="bottom-tab" role="button" aria-disabled="true">Log</div>
+          <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
+          <a class="bottom-tab active" href="#">Profile</a>
+        </div>
+      </div>
+    </div>
+    <p class="text-sm text-muted" style="text-align:center;margin-top:var(--space-2);">Click "Log out" to simulate a successful logout, landing on the same "logged out" login screen shown earlier in this deck (AC8). The inline-error treatment (AC13/AC14) is identical in styling to the Profile screen shown previously.</p>
+  </div>
+
+</div>
+
+<script>
+const screens = Array.from(document.querySelectorAll('.screen'));
+let cur = 0;
+function show(i) {
+  cur = Math.max(0, Math.min(screens.length - 1, i));
+  screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+  document.getElementById('screen-label').textContent =
+    `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+}
+document.getElementById('prev-btn').onclick = () => show(cur - 1);
+document.getElementById('next-btn').onclick = () => show(cur + 1);
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') show(cur + 1);
+  if (e.key === 'ArrowLeft') show(cur - 1);
+});
+show(0);
+
+// Welcome screen: simulate navigation (AC5, AC6)
+const welcomeFeedback = document.getElementById('welcome-nav-feedback');
+document.getElementById('welcome-login-btn')?.addEventListener('click', () => {
+  welcomeFeedback.textContent = 'Navigating to login.html…';
+  setTimeout(() => { welcomeFeedback.textContent = '(prototype) would now load login.html'; }, 300);
+});
+document.getElementById('welcome-signup-btn')?.addEventListener('click', () => {
+  welcomeFeedback.textContent = 'Navigating to signup.html…';
+  setTimeout(() => { welcomeFeedback.textContent = '(prototype) would now load signup.html'; }, 300);
+});
+
+// Profile logout: default button and explicit "success" simulate land on the logged-out login screen (AC8);
+// the explicit "failure" simulate shows the inline error state (AC13/AC14), staying on the current page.
+function goToLoggedOut() {
+  setTimeout(() => {
+    show(screens.findIndex(s => s.dataset.name === 'Login — logged out (logout success destination)'));
+  }, 300);
+}
+function goToLogoutFailed() {
+  setTimeout(() => {
+    show(screens.findIndex(s => s.dataset.name === 'Profile — logout failed'));
+  }, 300);
+}
+document.getElementById('profile-logout-btn')?.addEventListener('click', goToLoggedOut);
+document.getElementById('profile-logout-success-btn')?.addEventListener('click', goToLoggedOut);
+document.getElementById('profile-logout-fail-btn')?.addEventListener('click', goToLogoutFailed);
+
+document.getElementById('settings-logout-btn')?.addEventListener('click', goToLoggedOut);
+</script>
+
+</body>
+</html>
+
+<!-- arc:css-inlined -->
