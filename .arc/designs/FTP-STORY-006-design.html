@@ -574,6 +574,70 @@ body {
   .device-frame .auth-shell {
     flex: 1;
   }
+
+  /* Avatar menu — click the avatar to reveal View profile / Logout (replaces a separate Log out button) */
+  .avatar-menu {
+    position: relative;
+  }
+  .avatar-menu-trigger {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 50%;
+    display: block;
+  }
+  .avatar-menu-trigger:focus-visible {
+    outline: var(--border-width-md) solid var(--color-primary);
+    outline-offset: 2px;
+  }
+  .avatar-menu-dropdown {
+    position: absolute;
+    top: calc(100% + var(--space-2));
+    right: 0;
+    min-width: 180px;
+    background: var(--color-bg);
+    border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-1);
+    z-index: 20;
+  }
+  .avatar-menu-dropdown[hidden] {
+    display: none;
+  }
+  .avatar-menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+    background: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--color-fg);
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-sm);
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .avatar-menu-item:hover,
+  .avatar-menu-item:focus-visible {
+    background: var(--color-surface);
+  }
+  .avatar-menu-item.danger {
+    color: var(--color-danger);
+  }
+  .avatar-menu-error {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: var(--space-1);
+    white-space: nowrap;
+  }
 </style>
 </head>
 <body>
@@ -590,6 +654,37 @@ body {
 <div style="height:46px"></div><!-- spacer -->
 
 <div id="screens" style="padding: var(--space-4) var(--space-3);">
+
+  <!-- State: welcome-no-session -->
+  <!-- Screen: Welcome — No session (default landing screen)
+       Notes:
+         - Shown first in this deck per reviewer feedback: this is the screen most visitors land on, so it leads the review
+         - Satisfies AC1, AC3, AC4, AC12: renders instead of a directory listing, shows app name + one-paragraph intro,
+           and "Log in" / "Sign up" appear side by side. Also the state shown when /api/me errors/times out (AC12).
+         - "Log in" navigates to login.html (AC5); "Sign up" navigates to signup.html (AC6) — simulated with setTimeout here, not a real navigation
+         - Ship as anchors, not buttons: <a class="btn btn-primary" href="login.html"> / <a class="btn btn-secondary" href="signup.html">, matching the existing pattern (profile.html "Account settings" link, account-settings.html "Delete my account" link) so middle-click/deep-link keep working per guidelines §7. Rendered as <button> here only to drive the inline simulation.
+         - Copy is intentionally short: one paragraph, plain language, no marketing fluff
+         - The preceding "Checking session" / "Redirecting" states (next in this deck) are what a visitor sees for a split second before this screen or the dashboard renders
+  -->
+  <div class="screen" data-name="Welcome — No session (proposed copy)">
+    <div class="device-frame">
+      <div class="welcome-shell">
+        <div class="welcome-card">
+          <div class="welcome-logo" aria-hidden="true">🏋️</div>
+          <h1 class="text-lg text-bold" style="margin:0;">Fitness Tracker</h1>
+          <p class="text-muted" style="margin-top: var(--space-3);">
+            Fitness Tracker helps you log workouts, track your progress toward a goal, and keep your
+            body stats in one place — so you always know how today's effort fits your bigger picture.
+          </p>
+          <div class="welcome-options">
+            <button class="btn btn-primary" id="welcome-login-btn" type="button">Log in</button>
+            <button class="btn btn-secondary" id="welcome-signup-btn" type="button">Sign up</button>
+          </div>
+          <p class="text-sm text-muted" id="welcome-nav-feedback" style="margin-top:var(--space-3);min-height:1.2em;" aria-live="polite"></p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- State: checking-session -->
   <!-- Screen: Welcome — Checking session
@@ -625,23 +720,30 @@ body {
   </div>
 
   <!-- State: dashboard-reference -->
-  <!-- Screen: Dashboard (unchanged, shown for reference)
+  <!-- Screen: Dashboard — avatar menu (View profile / Logout)
        Notes:
          - This is the redirect destination from the previous screen (AC2) and also the reference point for AC16:
-           the Profile/Account-settings logout control must mirror this exact placement (top app bar, right side,
-           next to the avatar) and styling (btn btn-secondary, min-height 44px)
-         - No changes in this story — reproduced verbatim from dashboard.html for side-by-side comparison
+           the Profile/Account-settings logout control must mirror this exact placement and styling
+         - Per reviewer feedback: clicking the JD avatar opens a menu with "View profile" then "Logout" below it,
+           replacing the earlier separate "Log out" button (AC7, AC8 still satisfied — Logout is just reached
+           through the avatar now, same /api/logout + redirect-to-login.html?logged_out=1 behavior)
+         - Click the avatar below to open the menu
   -->
-  <div class="screen" data-name="Dashboard (reference, unchanged)">
+  <div class="screen" data-name="Dashboard — avatar menu">
     <div class="device-frame">
       <div class="top-app-bar">
         <div>
           <h1 class="text-bold" style="margin:0;font-size:inherit">Welcome, Jordan</h1>
           <div class="text-sm text-muted">jordan.diaz@example.com</div>
         </div>
-        <div style="display:flex;align-items:center;gap:var(--space-2);">
-          <div class="avatar" aria-hidden="true">JD</div>
-          <button class="btn btn-secondary" style="min-height:44px;" type="button">Log out</button>
+        <div class="avatar-menu" data-avatar-menu>
+          <button class="avatar-menu-trigger" type="button" aria-haspopup="true" aria-expanded="false" data-avatar-trigger>
+            <div class="avatar" aria-hidden="true">JD</div>
+          </button>
+          <div class="avatar-menu-dropdown" role="menu" hidden data-avatar-dropdown>
+            <a class="avatar-menu-item" role="menuitem" href="#">View profile</a>
+            <button class="avatar-menu-item danger" role="menuitem" type="button" id="dashboard-logout-btn">Logout</button>
+          </div>
         </div>
       </div>
       <div style="text-align:center;padding:var(--space-4) var(--space-3);">
@@ -658,43 +760,14 @@ body {
     </div>
   </div>
 
-  <!-- State: welcome-no-session -->
-  <!-- Screen: Welcome — No session (default landing screen)
-       Notes:
-         - Satisfies AC1, AC3, AC4, AC12: renders instead of a directory listing, shows app name + one-paragraph intro,
-           and "Log in" / "Sign up" appear side by side. Also the state shown when /api/me errors/times out (AC12).
-         - "Log in" navigates to login.html (AC5); "Sign up" navigates to signup.html (AC6) — simulated with setTimeout here, not a real navigation
-         - Ship as anchors, not buttons: <a class="btn btn-primary" href="login.html"> / <a class="btn btn-secondary" href="signup.html">, matching the existing pattern (profile.html "Account settings" link, account-settings.html "Delete my account" link) so middle-click/deep-link keep working per guidelines §7. Rendered as <button> here only to drive the inline simulation.
-         - Copy is intentionally short: one paragraph, plain language, no marketing fluff
-  -->
-  <div class="screen" data-name="Welcome — No session (proposed copy)">
-    <div class="device-frame">
-      <div class="welcome-shell">
-        <div class="welcome-card">
-          <div class="welcome-logo" aria-hidden="true">🏋️</div>
-          <h1 class="text-lg text-bold" style="margin:0;">Fitness Tracker</h1>
-          <p class="text-muted" style="margin-top: var(--space-3);">
-            Fitness Tracker helps you log workouts, track your progress toward a goal, and keep your
-            body stats in one place — so you always know how today's effort fits your bigger picture.
-          </p>
-          <div class="welcome-options">
-            <button class="btn btn-primary" id="welcome-login-btn" type="button">Log in</button>
-            <button class="btn btn-secondary" id="welcome-signup-btn" type="button">Sign up</button>
-          </div>
-          <p class="text-sm text-muted" id="welcome-nav-feedback" style="margin-top:var(--space-3);min-height:1.2em;" aria-live="polite"></p>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- State: profile-with-logout -->
-  <!-- Screen: Profile — with logout control
+  <!-- Screen: Profile — avatar menu (View profile / Logout)
        Notes:
-         - Satisfies AC7, AC16: logout control added to the top app bar, mirroring dashboard's exact placement (right side, next to avatar) and styling (btn btn-secondary)
+         - Satisfies AC7, AC16: same avatar-menu control as the dashboard reference screen — click JD, then Logout
          - All existing profile fields/edit/save behavior (AC11) and disabled Log/Progress tabs (AC9) are unchanged
-         - Click "Log out" to see the success path (redirect note) or use the error toggle for AC13/AC14
+         - Click the avatar, then "Logout" to see the success path, or use the simulate links below for AC13/AC14
   -->
-  <div class="screen" data-name="Profile — logout control added">
+  <div class="screen" data-name="Profile — avatar menu">
     <div class="device-frame">
       <div class="page-shell">
         <div class="top-app-bar">
@@ -705,9 +778,15 @@ body {
               <div class="text-sm text-muted">Your profile</div>
             </div>
           </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:var(--space-1);">
-            <button class="btn btn-secondary" id="profile-logout-btn" style="min-height:44px;" type="button">Log out</button>
-            <p class="inline-error" id="profile-logout-error" hidden>Logout failed. Please try again.</p>
+          <div class="avatar-menu" data-avatar-menu>
+            <button class="avatar-menu-trigger" type="button" aria-haspopup="true" aria-expanded="false" data-avatar-trigger>
+              <div class="avatar" aria-hidden="true">JD</div>
+            </button>
+            <div class="avatar-menu-dropdown" role="menu" hidden data-avatar-dropdown>
+              <a class="avatar-menu-item" role="menuitem" href="#">View profile</a>
+              <button class="avatar-menu-item danger" role="menuitem" type="button" id="profile-logout-btn">Logout</button>
+            </div>
+            <p class="inline-error avatar-menu-error" id="profile-logout-error" hidden>Logout failed. Please try again.</p>
           </div>
         </div>
 
@@ -764,9 +843,11 @@ body {
               <div class="text-sm text-muted">Your profile</div>
             </div>
           </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:var(--space-1);">
-            <button class="btn btn-secondary" style="min-height:44px;" type="button">Log out</button>
-            <p class="inline-error">Logout failed. Please try again.</p>
+          <div class="avatar-menu">
+            <button class="avatar-menu-trigger" type="button" aria-haspopup="true" aria-expanded="false">
+              <div class="avatar" aria-hidden="true">JD</div>
+            </button>
+            <p class="inline-error avatar-menu-error">Logout failed. Please try again.</p>
           </div>
         </div>
         <div class="content-pad">
@@ -818,21 +899,25 @@ body {
   </div>
 
   <!-- State: account-settings-with-logout -->
-  <!-- Screen: Account settings — with logout control
+  <!-- Screen: Account settings — avatar menu (View profile / Logout)
        Notes:
-         - Satisfies AC7, AC16: same top app bar treatment as dashboard/profile — logout button on the right
+         - Satisfies AC7, AC16: same avatar-menu control as the dashboard/profile reference screens — click JD, then Logout
          - Danger zone (delete account) and disabled Log/Progress tabs remain exactly as before
-         - The column-flex wrapper around the button exists only to host the inline error when present; with no
-           error, the button renders in the identical position as the dashboard's row-flex wrapper (AC16)
   -->
-  <div class="screen" data-name="Account settings — logout control added">
+  <div class="screen" data-name="Account settings — avatar menu">
     <div class="device-frame">
       <div class="page-shell">
         <div class="top-app-bar">
           <span class="top-app-bar-title">Account settings</span>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:var(--space-1);">
-            <button class="btn btn-secondary" id="settings-logout-btn" style="min-height:44px;" type="button">Log out</button>
-            <p class="inline-error" id="settings-logout-error" hidden>Logout failed. Please try again.</p>
+          <div class="avatar-menu" data-avatar-menu>
+            <button class="avatar-menu-trigger" type="button" aria-haspopup="true" aria-expanded="false" data-avatar-trigger>
+              <div class="avatar" aria-hidden="true">JD</div>
+            </button>
+            <div class="avatar-menu-dropdown" role="menu" hidden data-avatar-dropdown>
+              <a class="avatar-menu-item" role="menuitem" href="#">View profile</a>
+              <button class="avatar-menu-item danger" role="menuitem" type="button" id="settings-logout-btn">Logout</button>
+            </div>
+            <p class="inline-error avatar-menu-error" id="settings-logout-error" hidden>Logout failed. Please try again.</p>
           </div>
         </div>
         <div class="content-pad" style="margin-top: var(--space-3);">
@@ -869,7 +954,7 @@ body {
         </div>
       </div>
     </div>
-    <p class="text-sm text-muted" style="text-align:center;margin-top:var(--space-2);">Click "Log out" to simulate a successful logout, landing on the same "logged out" login screen shown earlier in this deck (AC8). The inline-error treatment (AC13/AC14) is identical in styling to the Profile screen shown previously.</p>
+    <p class="text-sm text-muted" style="text-align:center;margin-top:var(--space-2);">Click the avatar, then "Logout", to simulate a successful logout, landing on the same "logged out" login screen shown earlier in this deck (AC8). The inline-error treatment (AC13/AC14) is identical in styling to the Profile screen shown previously.</p>
   </div>
 
 </div>
@@ -902,7 +987,25 @@ document.getElementById('welcome-signup-btn')?.addEventListener('click', () => {
   setTimeout(() => { welcomeFeedback.textContent = '(prototype) would now load signup.html'; }, 300);
 });
 
-// Profile logout: default button and explicit "success" simulate land on the logged-out login screen (AC8);
+// Avatar menu: click the trigger to open/close the "View profile" / "Logout" dropdown
+document.querySelectorAll('[data-avatar-menu]').forEach(menu => {
+  const trigger = menu.querySelector('[data-avatar-trigger]');
+  const dropdown = menu.querySelector('[data-avatar-dropdown]');
+  if (!trigger || !dropdown) return;
+  trigger.addEventListener('click', () => {
+    const isOpen = !dropdown.hidden;
+    dropdown.hidden = isOpen;
+    trigger.setAttribute('aria-expanded', String(!isOpen));
+  });
+  document.addEventListener('click', (e) => {
+    if (!menu.contains(e.target)) {
+      dropdown.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+  });
+});
+
+// Logout (via the avatar menu's "Logout" item): success lands on the logged-out login screen (AC8);
 // the explicit "failure" simulate shows the inline error state (AC13/AC14), staying on the current page.
 function goToLoggedOut() {
   setTimeout(() => {
@@ -914,6 +1017,7 @@ function goToLogoutFailed() {
     show(screens.findIndex(s => s.dataset.name === 'Profile — logout failed'));
   }, 300);
 }
+document.getElementById('dashboard-logout-btn')?.addEventListener('click', goToLoggedOut);
 document.getElementById('profile-logout-btn')?.addEventListener('click', goToLoggedOut);
 document.getElementById('profile-logout-success-btn')?.addEventListener('click', goToLoggedOut);
 document.getElementById('profile-logout-fail-btn')?.addEventListener('click', goToLogoutFailed);
