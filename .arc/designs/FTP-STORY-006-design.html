@@ -254,7 +254,7 @@ body {
 
 .auth-card {
   width: 100%;
-  max-width: 400px;
+  max-width: 480px;
 }
 
 .field {
@@ -356,7 +356,7 @@ body {
 /* App shell (top bar, avatar, bottom tabs) */
 
 .page-shell {
-  max-width: 480px;
+  max-width: 720px;
   margin: 0 auto;
   padding-bottom: var(--space-4);
 }
@@ -510,7 +510,7 @@ body {
   }
   .welcome-card {
     width: 100%;
-    max-width: 480px;
+    max-width: 640px;
     text-align: center;
   }
   .welcome-logo {
@@ -558,14 +558,12 @@ body {
     font-size: var(--font-size-sm);
     margin-top: var(--space-1);
   }
+  /* Round 4: reviewer wants desktop view, not a simulated phone. Removed the bordered/rounded
+     phone-frame chrome and the 420px cap; each screen now renders at desktop width. */
   .device-frame {
     width: 100%;
-    max-width: 420px;
+    max-width: 1100px;
     margin: 0 auto;
-    border: var(--border-width-sm) solid var(--color-border);
-    border-radius: var(--radius-lg);
-    min-height: 640px;
-    overflow: hidden;
     background: var(--color-bg);
     display: flex;
     flex-direction: column;
