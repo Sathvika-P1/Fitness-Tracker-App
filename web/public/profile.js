@@ -1,5 +1,5 @@
 import { initials, clearFieldError, setFieldError } from './form-utils.js';
-import { fetchOrRedirect } from './session-utils.js';
+import { fetchOrRedirect, logout as sharedLogout } from './session-utils.js';
 
 const DISPLAY_NAME_MAX_LENGTH = 50;
 
@@ -14,7 +14,6 @@ function setFieldValue(name, value) {
 
 export function renderProfile(data) {
   document.getElementById('header-name').textContent = data.display_name;
-  document.getElementById('avatar-initial').textContent = initials(data.display_name);
   document.getElementById('avatar-menu-initial').textContent = initials(data.display_name);
   FIELDS.forEach((field) => setFieldValue(field, data[field]));
   const counter = document.getElementById('display-name-counter');
@@ -114,21 +113,8 @@ form?.addEventListener('submit', async (event) => {
   }
 });
 
-export async function logout() {
-  const errorEl = document.getElementById('profile-logout-error');
-  errorEl.hidden = true;
-  try {
-    const res = await fetch('/api/logout', { method: 'POST', credentials: 'include' });
-    if (res.status !== 200) {
-      errorEl.hidden = false;
-      return;
-    }
-  } catch (error) {
-    console.error('logout_fetch_failed', { error });
-    errorEl.hidden = false;
-    return;
-  }
-  window.location.href = 'login.html?logged_out=1';
+export function logout() {
+  return sharedLogout('profile-logout-error');
 }
 
 document.getElementById('profile-logout-btn')?.addEventListener('click', logout);
