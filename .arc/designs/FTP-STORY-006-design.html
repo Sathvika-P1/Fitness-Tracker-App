@@ -103,6 +103,7 @@ body {
 /* Buttons */
 
 .btn {
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -727,7 +728,9 @@ body {
          - Per reviewer feedback: clicking the JD avatar opens a menu with "View profile" then "Logout" below it,
            replacing the earlier separate "Log out" button (AC7, AC8 still satisfied — Logout is just reached
            through the avatar now, same /api/logout + redirect-to-login.html?logged_out=1 behavior)
-         - Click the avatar below to open the menu
+         - Click the avatar below to open the menu; "View profile" jumps to the Profile screen in this deck
+         - The redundant bottom-tab "Profile" entry has been removed per reviewer feedback — Profile is now reached
+           only through the avatar menu, so dashboard's bottom tabs are just Today / Log / Progress
   -->
   <div class="screen" data-name="Dashboard — avatar menu">
     <div class="device-frame">
@@ -741,7 +744,7 @@ body {
             <div class="avatar" aria-hidden="true">JD</div>
           </button>
           <div class="avatar-menu-dropdown" role="menu" hidden data-avatar-dropdown>
-            <a class="avatar-menu-item" role="menuitem" href="#">View profile</a>
+            <a class="avatar-menu-item" role="menuitem" href="#" data-goto-screen="Profile — avatar menu">View profile</a>
             <button class="avatar-menu-item danger" role="menuitem" type="button" id="dashboard-logout-btn">Logout</button>
           </div>
         </div>
@@ -755,7 +758,6 @@ body {
         <div class="bottom-tab active">Today</div>
         <div class="bottom-tab" role="button" aria-disabled="true">Log</div>
         <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
-        <a class="bottom-tab" href="#">Profile</a>
       </div>
     </div>
   </div>
@@ -765,7 +767,11 @@ body {
        Notes:
          - Satisfies AC7, AC16: same avatar-menu control as the dashboard reference screen — click JD, then Logout
          - All existing profile fields/edit/save behavior (AC11) and disabled Log/Progress tabs (AC9) are unchanged
-         - Click the avatar, then "Logout" to see the success path, or use the simulate links below for AC13/AC14
+         - Click the avatar, then "Logout" to see the success path. The separate "logout failed" state is its own
+           screen next in this deck (reachable via the reviewer bar) rather than an extra simulate control here —
+           removed the "log out (success)/(failure)" links per reviewer feedback since they duplicated what the
+           avatar menu and the dedicated error screen already demonstrate
+         - "Account settings" below is now wired to jump to the Account settings screen in this deck (previously a dead "#" link)
   -->
   <div class="screen" data-name="Profile — avatar menu">
     <div class="device-frame">
@@ -783,7 +789,7 @@ body {
               <div class="avatar" aria-hidden="true">JD</div>
             </button>
             <div class="avatar-menu-dropdown" role="menu" hidden data-avatar-dropdown>
-              <a class="avatar-menu-item" role="menuitem" href="#">View profile</a>
+              <a class="avatar-menu-item" role="menuitem" href="#" data-goto-screen="Profile — avatar menu">View profile</a>
               <button class="avatar-menu-item danger" role="menuitem" type="button" id="profile-logout-btn">Logout</button>
             </div>
             <p class="inline-error avatar-menu-error" id="profile-logout-error" hidden>Logout failed. Please try again.</p>
@@ -791,11 +797,7 @@ body {
         </div>
 
         <div class="content-pad">
-          <p class="text-sm text-muted" style="margin-top:var(--space-2);">Simulate:
-            <button class="link-inline" id="profile-logout-success-btn" type="button">log out (success)</button> ·
-            <button class="link-inline" id="profile-logout-fail-btn" type="button">log out (failure)</button>
-          </p>
-          <p class="helper-text" style="margin-top:var(--space-1);">
+          <p class="helper-text" style="margin-top:var(--space-3);">
             Only you can see or edit this — your profile is never shown by user id or link.
           </p>
           <div class="field-group-title">Account</div>
@@ -812,18 +814,17 @@ body {
             <label class="label">Fitness goal</label>
             <input class="input" value="Build muscle" readonly>
           </div>
-          <a class="btn btn-secondary btn-block" style="margin-top: var(--space-4);" href="#">Account settings</a>
+          <a class="btn btn-secondary btn-block" style="margin-top: var(--space-4);" href="#" data-goto-screen="Account settings — avatar menu">Account settings</a>
         </div>
 
         <div class="bottom-tabs">
-          <a class="bottom-tab" href="#">Today</a>
+          <a class="bottom-tab" href="#" data-goto-screen="Dashboard — avatar menu">Today</a>
           <div class="bottom-tab" role="button" aria-disabled="true">Log</div>
           <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
-          <a class="bottom-tab active" href="#">Profile</a>
         </div>
       </div>
     </div>
-    <p class="text-sm text-muted" style="text-align:center;margin-top:var(--space-2);">AC9 · Log / Progress tabs stay disabled, no href — unchanged from before this story.</p>
+    <p class="text-sm text-muted" style="text-align:center;margin-top:var(--space-2);">AC9 · Log / Progress tabs stay disabled, no href — unchanged from before this story. The "Profile" tab has been removed per reviewer feedback since it duplicated the avatar menu's "View profile".</p>
   </div>
 
   <!-- State: profile-logout-error -->
@@ -854,10 +855,9 @@ body {
           <p class="text-muted" style="margin-top:var(--space-3);">The rest of the profile page is unaffected — the user remains here, fully in control, and can retry.</p>
         </div>
         <div class="bottom-tabs">
-          <a class="bottom-tab" href="#">Today</a>
+          <a class="bottom-tab" href="#" data-goto-screen="Dashboard — avatar menu">Today</a>
           <div class="bottom-tab" role="button" aria-disabled="true">Log</div>
           <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
-          <a class="bottom-tab active" href="#">Profile</a>
         </div>
       </div>
     </div>
@@ -903,6 +903,9 @@ body {
        Notes:
          - Satisfies AC7, AC16: same avatar-menu control as the dashboard/profile reference screens — click JD, then Logout
          - Danger zone (delete account) and disabled Log/Progress tabs remain exactly as before
+         - Fixed an overflow bug in this revision: .btn was missing box-sizing:border-box, so btn-block elements
+           (this screen's "Delete my account", Profile's "Account settings" link) rendered wider than their
+           container and pushed content out of view. Root-caused and fixed once in the shared .btn rule.
   -->
   <div class="screen" data-name="Account settings — avatar menu">
     <div class="device-frame">
@@ -914,7 +917,7 @@ body {
               <div class="avatar" aria-hidden="true">JD</div>
             </button>
             <div class="avatar-menu-dropdown" role="menu" hidden data-avatar-dropdown>
-              <a class="avatar-menu-item" role="menuitem" href="#">View profile</a>
+              <a class="avatar-menu-item" role="menuitem" href="#" data-goto-screen="Profile — avatar menu">View profile</a>
               <button class="avatar-menu-item danger" role="menuitem" type="button" id="settings-logout-btn">Logout</button>
             </div>
             <p class="inline-error avatar-menu-error" id="settings-logout-error" hidden>Logout failed. Please try again.</p>
@@ -947,10 +950,9 @@ body {
           <a class="btn btn-primary btn-block" style="margin-top: var(--space-3);" href="#">Delete my account</a>
         </div>
         <div class="bottom-tabs">
-          <a class="bottom-tab" href="#">Today</a>
+          <a class="bottom-tab" href="#" data-goto-screen="Dashboard — avatar menu">Today</a>
           <div class="bottom-tab" role="button" aria-disabled="true">Log</div>
           <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
-          <a class="bottom-tab active" href="#">Profile</a>
         </div>
       </div>
     </div>
@@ -1005,24 +1007,25 @@ document.querySelectorAll('[data-avatar-menu]').forEach(menu => {
   });
 });
 
-// Logout (via the avatar menu's "Logout" item): success lands on the logged-out login screen (AC8);
-// the explicit "failure" simulate shows the inline error state (AC13/AC14), staying on the current page.
+// Logout (via the avatar menu's "Logout" item): success lands on the logged-out login screen (AC8).
+// The "logout failed" state (AC13/AC14) lives as its own screen in this deck, reachable via the reviewer bar.
 function goToLoggedOut() {
   setTimeout(() => {
     show(screens.findIndex(s => s.dataset.name === 'Login — logged out (logout success destination)'));
   }, 300);
 }
-function goToLogoutFailed() {
-  setTimeout(() => {
-    show(screens.findIndex(s => s.dataset.name === 'Profile — logout failed'));
-  }, 300);
-}
 document.getElementById('dashboard-logout-btn')?.addEventListener('click', goToLoggedOut);
 document.getElementById('profile-logout-btn')?.addEventListener('click', goToLoggedOut);
-document.getElementById('profile-logout-success-btn')?.addEventListener('click', goToLoggedOut);
-document.getElementById('profile-logout-fail-btn')?.addEventListener('click', goToLogoutFailed);
-
 document.getElementById('settings-logout-btn')?.addEventListener('click', goToLoggedOut);
+
+// In-prototype navigation: "View profile", "Account settings", and bottom-tab "Today" jump to their real screens
+document.querySelectorAll('[data-goto-screen]').forEach(el => {
+  el.addEventListener('click', (e) => {
+    e.preventDefault();
+    el.closest('[data-avatar-dropdown]')?.setAttribute('hidden', '');
+    show(screens.findIndex(s => s.dataset.name === el.dataset.gotoScreen));
+  });
+});
 </script>
 
 </body>
