@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from sqlalchemy import inspect, text
 
 from app.db import Base, engine
+from app.routes.account import router as account_router
 from app.routes.auth import router as auth_router
 from app.routes.profile import router as profile_router
 
@@ -62,3 +63,4 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.include_router(auth_router)
 app.include_router(profile_router)
+app.include_router(account_router)

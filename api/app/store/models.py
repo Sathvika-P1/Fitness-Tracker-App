@@ -31,3 +31,19 @@ class SessionRow(Base):
     account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
     created_at = Column(DateTime, nullable=False, default=_utcnow)
     expires_at = Column(DateTime, nullable=False)
+
+
+class DeletionLockout(Base):
+    __tablename__ = "deletion_lockouts"
+
+    account_id = Column(Integer, ForeignKey("accounts.id"), primary_key=True)
+    failed_attempts = Column(Integer, nullable=False, default=0)
+    locked_until = Column(DateTime, nullable=True)
+
+
+class DeletionAudit(Base):
+    __tablename__ = "deletion_audits"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    account_reference = Column(String(64), nullable=False)
+    deleted_at = Column(DateTime, nullable=False, default=_utcnow)

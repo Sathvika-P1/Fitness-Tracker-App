@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account settings — Fitness Tracker</title>
+<link rel="stylesheet" href="/design-system/tokens.css">
+<link rel="stylesheet" href="/design-system/prototype-utils.css">
+<style>
+  .back-btn {
+    background: none; border: none; cursor: pointer; color: var(--color-primary);
+    font-size: var(--font-size-md); min-height: 44px; min-width: 44px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .danger-zone-card {
+    border: var(--border-width-sm) solid var(--color-danger);
+    border-radius: var(--card-default-border-radius);
+    background: var(--color-bg);
+    padding: var(--space-3);
+    margin: var(--space-3);
+  }
+  .danger-zone-title { color: var(--color-danger); font-weight: var(--font-weight-bold); margin-bottom: var(--space-1); }
+  .consequence-list { margin: var(--space-3) 0; padding-left: 0; list-style: none; }
+  .consequence-list li {
+    display: flex; gap: var(--space-2); align-items: flex-start;
+    padding: var(--space-1) 0; font-size: var(--font-size-sm); color: var(--color-fg);
+  }
+  .consequence-list li .mark { color: var(--color-danger); font-weight: var(--font-weight-bold); flex-shrink: 0; }
+  .checkbox-row {
+    display: flex; align-items: flex-start; gap: var(--space-2);
+    margin: var(--space-3) 0; min-height: 44px;
+  }
+  .checkbox-row input[type="checkbox"] {
+    width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; accent-color: var(--color-danger);
+  }
+  .checkbox-row label { font-size: var(--font-size-sm); color: var(--color-fg); }
+  .spinner {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--color-on-primary); border-top-color: transparent;
+    opacity: 0.85;
+    display: inline-block; animation: spin .7s linear infinite; margin-right: var(--space-2);
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .lockout-banner {
+    display: flex; gap: var(--space-2); align-items: flex-start;
+    background: var(--color-bg); border: var(--border-width-md) solid var(--color-danger);
+    border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-3);
+  }
+  .lockout-banner .banner-icon { color: var(--color-danger); font-weight: var(--font-weight-bold); }
+  .lockout-banner .banner-title { color: var(--color-danger); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+  .lockout-banner .banner-body { color: var(--color-fg); font-size: var(--font-size-sm); }
+  .empty-state {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: var(--space-4) var(--space-3); gap: var(--space-2);
+  }
+  .empty-state-icon {
+    width: 64px; height: 64px; border-radius: 50%; background: var(--color-surface);
+    display: flex; align-items: center; justify-content: center; font-size: var(--font-size-lg);
+    color: var(--color-danger);
+  }
+  .attempt-counter { font-size: var(--font-size-sm); color: var(--color-muted); margin-top: var(--space-1); }
+  .device-list { margin: var(--space-2) 0; }
+  .device-row { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) 0;
+    border-bottom: var(--border-width-sm) solid var(--color-border); font-size: var(--font-size-sm); }
+  .device-row:last-child { border-bottom: none; }
+  .device-icon { color: var(--color-muted); flex-shrink: 0; }
+  .device-status-revoked { color: var(--color-danger); font-size: var(--font-size-sm); margin-left: auto; font-weight: var(--font-weight-bold); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="page-shell">
+
+  <!-- View: danger-zone -->
+  <div id="view-danger-zone" class="view">
+    <div class="top-app-bar">
+      <span class="top-app-bar-title">Account settings</span>
+    </div>
+    <div class="content-pad" style="margin-top: var(--space-3);">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">Account</div>
+          <div class="row" style="justify-content: space-between; margin-top: var(--space-2);">
+            <span class="text-sm text-muted">Email</span>
+            <span class="text-sm" id="account-email"></span>
+          </div>
+          <div class="row" style="justify-content: space-between; margin-top: var(--space-1);">
+            <span class="text-sm text-muted">Active sessions</span>
+            <span class="text-sm" id="account-session-count"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="danger-zone-card">
+      <div class="row" style="align-items: center; gap: var(--space-1);">
+        <span aria-hidden="true">⚠️</span>
+        <span class="danger-zone-title">Danger zone</span>
+      </div>
+      <p class="text-sm" style="color: var(--color-fg); margin-top: var(--space-1);">
+        Deleting your account is permanent. Your credentials, profile, workout logs,
+        achievements, and posts will be erased immediately — this cannot be undone.
+      </p>
+      <button class="btn btn-primary btn-block" style="margin-top: var(--space-3);" id="start-delete-btn">
+        Delete my account
+      </button>
+    </div>
+
+    <div class="bottom-tabs">
+      <a class="bottom-tab" href="dashboard.html">Today</a>
+      <div class="bottom-tab" role="button" aria-disabled="true">Log</div>
+      <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
+      <a class="bottom-tab active" href="profile.html">Profile</a>
+    </div>
+  </div>
+
+  <!-- View: confirm-password -->
+  <div id="view-confirm" class="view" hidden>
+    <div class="top-app-bar">
+      <button class="back-btn" id="confirm-back-btn" aria-label="Back">←</button>
+      <span class="top-app-bar-title">Delete account</span>
+    </div>
+
+    <div class="content-pad" style="margin-top: var(--space-3);">
+      <div id="lockout-banner" class="lockout-banner" hidden>
+        <span class="banner-icon" aria-hidden="true">🔒</span>
+        <div>
+          <div class="banner-title">Too many incorrect attempts</div>
+          <div class="banner-body">
+            Deletion confirmation is temporarily locked after 5 incorrect password attempts,
+            the same limit used for sign-in. Try again in 15 minutes.
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="border-color: var(--color-danger);">
+        <div class="card-body">
+          <div class="card-title" style="color: var(--color-danger);">This action is permanent</div>
+          <p class="text-sm text-muted" style="margin-top: var(--space-1);">
+            Deleting your account will immediately and permanently erase:
+          </p>
+          <ul class="consequence-list">
+            <li><span class="mark" aria-hidden="true">✕</span><span>Your login credentials — you won't be able to sign back in</span></li>
+            <li><span class="mark" aria-hidden="true">✕</span><span>Your profile information (name, goals, height, weight, age)</span></li>
+            <li><span class="mark" aria-hidden="true">✕</span><span>All active sessions on every device, not just this one</span></li>
+            <li><span class="mark" aria-hidden="true">✕</span><span>Your workout logs, achievements, and posts</span></li>
+          </ul>
+          <p class="text-sm text-muted">
+            There is no grace period and no way to undo this once it completes.
+          </p>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top: var(--space-4);">
+        <label class="label" for="confirm-password">Enter your current password to confirm</label>
+        <input class="input" type="password" id="confirm-password" placeholder="Password">
+        <div id="password-error" class="field-error-text" hidden>
+          <span aria-hidden="true">⚠</span>
+          <span>Incorrect password. Your account has not been changed.</span>
+        </div>
+        <div id="attempt-counter" class="attempt-counter" hidden></div>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="confirm-checkbox">
+        <label for="confirm-checkbox">I understand this permanently deletes my account and cannot be undone.</label>
+      </div>
+
+      <button id="delete-submit-btn" class="btn btn-primary btn-block" disabled>
+        Permanently delete account
+      </button>
+      <button class="btn btn-secondary btn-block" style="margin-top: var(--space-2);" id="cancel-btn">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- View: deleting -->
+  <div id="view-deleting" class="view" hidden>
+    <div class="top-app-bar">
+      <span class="top-app-bar-title">Delete account</span>
+    </div>
+    <div class="content-pad" style="margin-top: var(--space-4);">
+      <div class="empty-state">
+        <div class="empty-state-icon" aria-hidden="true">⏳</div>
+        <div class="text-lg text-bold">Deleting your account…</div>
+        <p class="text-sm text-muted">
+          Erasing credentials, profile data, sessions, and content. This only takes a moment.
+        </p>
+        <button class="btn btn-primary btn-block" disabled style="margin-top: var(--space-3);">
+          <span class="spinner" aria-hidden="true"></span>Deleting account…
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View: deletion-complete -->
+  <div id="view-complete" class="view" hidden>
+    <div class="content-pad" style="margin-top: var(--space-4);">
+      <div class="empty-state">
+        <div class="empty-state-icon" aria-hidden="true">✅</div>
+        <div class="text-lg text-bold">Your account has been deleted</div>
+        <p class="text-sm text-muted">
+          Your credentials, profile, workout logs, achievements, and posts have been
+          permanently erased. This cannot be undone.
+        </p>
+      </div>
+
+      <div class="card" style="margin-top: var(--space-2);">
+        <div class="card-body">
+          <div class="card-title">Sessions revoked</div>
+          <div class="device-list" id="revoked-session-list"></div>
+        </div>
+      </div>
+
+      <p class="text-sm text-muted" style="margin-top: var(--space-3);">
+        Signing in again with the old email and password will no longer work.
+      </p>
+      <p class="text-sm text-muted" style="margin-top: var(--space-2);">
+        A minimal, anonymized record (a non-identifying account reference and the deletion
+        timestamp) is kept for compliance purposes. It contains no personal information.
+      </p>
+      <button class="btn btn-primary btn-block" style="margin-top: var(--space-3);" id="complete-signin-btn">
+        Go to sign-in
+      </button>
+    </div>
+  </div>
+
+  <!-- View: already-deleted -->
+  <div id="view-already-deleted" class="view" hidden>
+    <div class="content-pad" style="margin-top: var(--space-4);">
+      <div class="empty-state">
+        <div class="empty-state-icon" aria-hidden="true">ℹ️</div>
+        <div class="text-lg text-bold">This account was already deleted</div>
+        <p class="text-sm text-muted">
+          A deletion request for this account was already completed. No further action is
+          needed — your data was already erased.
+        </p>
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-top: var(--space-3);" id="already-deleted-signin-btn">
+        Go to sign-in
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script type="module" src="/account-settings.js"></script>
+</body>
+</html>
