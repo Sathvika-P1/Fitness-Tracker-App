@@ -1,18 +1,4 @@
-export function clearFieldError(id) {
-  const el = document.getElementById(id + '-error');
-  const input = document.getElementById(id);
-  el.style.display = 'none';
-  el.textContent = '';
-  input.classList.remove('has-error');
-}
-
-export function setFieldError(id, message) {
-  const el = document.getElementById(id + '-error');
-  const input = document.getElementById(id);
-  el.textContent = message;
-  el.style.display = 'flex';
-  input.classList.add('has-error');
-}
+import { clearFieldError, setFieldError } from './form-utils.js';
 
 function hideDuplicateBanner() {
   const banner = document.getElementById('duplicate-banner');

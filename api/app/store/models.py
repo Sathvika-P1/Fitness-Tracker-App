@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
 
 from app.db import Base
 
@@ -16,6 +16,12 @@ class Account(Base):
     email = Column(String(255), unique=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
     display_name = Column(String(255), nullable=False)
+    units_preference = Column(String(16), nullable=True)
+    fitness_goal = Column(String(32), nullable=True)
+    height_cm = Column(Float, nullable=True)
+    weight_kg = Column(Float, nullable=True)
+    age = Column(Integer, nullable=True)
+    gender = Column(String(32), nullable=True)
 
 
 class SessionRow(Base):

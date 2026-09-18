@@ -1,11 +1,6 @@
-export function initials(displayName) {
-  return displayName
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((part) => part[0].toUpperCase())
-    .slice(0, 2)
-    .join('');
-}
+import { initials } from './form-utils.js';
+
+export { initials };
 
 export async function loadDashboard() {
   try {

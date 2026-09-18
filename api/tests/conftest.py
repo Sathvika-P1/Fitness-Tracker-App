@@ -9,7 +9,7 @@ import pytest
 from sqlalchemy import create_engine, text
 
 from app.db import Base, DATABASE_URL, SessionLocal, engine
-from app.main import app
+from app.main import _backfill_profile_columns, _backfill_session_ttl_columns, app
 from app.store.models import Account, SessionRow
 
 
@@ -23,6 +23,8 @@ def _create_test_database():
     admin_engine.dispose()
 
     Base.metadata.create_all(engine)
+    _backfill_session_ttl_columns()
+    _backfill_profile_columns()
     yield
 
 
@@ -41,3 +43,19 @@ def db():
     session = SessionLocal()
     yield session
     session.close()
+
+
+@pytest.fixture
+def client_with_signed_up_account():
+    from fastapi.testclient import TestClient
+
+    client = TestClient(app)
+    client.post(
+        "/api/signup",
+        json={
+            "email": "jordan@example.com",
+            "password": "test-password",
+            "display_name": "Jordan",
+        },
+    )
+    return client
