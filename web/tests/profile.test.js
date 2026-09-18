@@ -48,4 +48,22 @@ describe('profile', () => {
     expect(errorEl.textContent).toContain('Height must be between 1 and 300 cm.');
     expect(inputEl.classList.contains('has-error')).toBe(true);
   });
+
+  it('reports session expiry on a 401 save response', async () => {
+    const { saveProfile } = await loadProfilePage();
+    global.fetch.mockResolvedValue({ status: 401 });
+
+    const result = await saveProfile({ display_name: 'Jordan' });
+
+    expect(result).toEqual({ ok: false, sessionExpired: true });
+  });
+
+  it('reports a network error when the save request throws', async () => {
+    const { saveProfile } = await loadProfilePage();
+    global.fetch.mockRejectedValue(new Error('network down'));
+
+    const result = await saveProfile({ display_name: 'Jordan' });
+
+    expect(result).toEqual({ ok: false, networkError: true });
+  });
 });

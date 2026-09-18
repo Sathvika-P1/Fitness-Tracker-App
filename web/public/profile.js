@@ -1,15 +1,8 @@
+import { initials, clearFieldError, setFieldError } from './form-utils.js';
+
 const DISPLAY_NAME_MAX_LENGTH = 50;
 
 const FIELDS = ['display_name', 'units_preference', 'fitness_goal', 'height_cm', 'weight_kg', 'age', 'gender'];
-
-function initials(displayName) {
-  return displayName
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((part) => part[0].toUpperCase())
-    .slice(0, 2)
-    .join('');
-}
 
 function setFieldValue(name, value) {
   const el = document.getElementById(name.replace(/_/g, '-'));
@@ -29,31 +22,13 @@ export function renderProfile(data) {
 }
 
 export function clearErrors() {
-  FIELDS.forEach((field) => {
-    const errorEl = document.getElementById(`${field.replace(/_/g, '-')}-error`);
-    const inputEl = document.getElementById(field.replace(/_/g, '-'));
-    if (errorEl) {
-      errorEl.hidden = true;
-      errorEl.textContent = '';
-    }
-    if (inputEl) {
-      inputEl.classList.remove('has-error');
-    }
-  });
+  FIELDS.forEach((field) => clearFieldError(field.replace(/_/g, '-')));
 }
 
 export function renderErrors(errors) {
   clearErrors();
   Object.entries(errors).forEach(([field, message]) => {
-    const errorEl = document.getElementById(`${field.replace(/_/g, '-')}-error`);
-    const inputEl = document.getElementById(field.replace(/_/g, '-'));
-    if (errorEl) {
-      errorEl.textContent = `⚠ ${message}`;
-      errorEl.hidden = false;
-    }
-    if (inputEl) {
-      inputEl.classList.add('has-error');
-    }
+    setFieldError(field.replace(/_/g, '-'), `⚠ ${message}`);
   });
 }
 
@@ -85,14 +60,23 @@ function collectFormValues() {
 }
 
 export async function saveProfile(formValues) {
-  const res = await fetch('/api/profile', {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(formValues),
-  });
+  let res;
+  try {
+    res = await fetch('/api/profile', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formValues),
+    });
+  } catch (error) {
+    console.error('profile_save_failed', { error });
+    return { ok: false, networkError: true };
+  }
   if (res.status === 200) {
     return { ok: true };
+  }
+  if (res.status === 401) {
+    return { ok: false, sessionExpired: true };
   }
   const body = await res.json();
   return { ok: false, errors: body.errors || {} };
@@ -102,6 +86,7 @@ const form = document.getElementById('profile-form');
 const displayNameInput = document.getElementById('display-name');
 const saveButton = document.getElementById('save-button');
 const savedBanner = document.getElementById('saved-banner');
+const saveErrorBanner = document.getElementById('save-error-banner');
 
 displayNameInput?.addEventListener('input', () => {
   const counter = document.getElementById('display-name-counter');
@@ -114,6 +99,7 @@ form?.addEventListener('submit', async (event) => {
   event.preventDefault();
   clearErrors();
   savedBanner.hidden = true;
+  saveErrorBanner.hidden = true;
   saveButton.disabled = true;
   saveButton.textContent = 'Saving…';
   try {
@@ -121,6 +107,10 @@ form?.addEventListener('submit', async (event) => {
     if (result.ok) {
       savedBanner.hidden = false;
       await loadProfile();
+    } else if (result.sessionExpired) {
+      window.location.href = 'login.html';
+    } else if (result.networkError) {
+      saveErrorBanner.hidden = false;
     } else {
       renderErrors(result.errors);
     }

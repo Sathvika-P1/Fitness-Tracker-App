@@ -8,16 +8,12 @@ ALLOWED_UNITS = {"metric", "imperial"}
 ALLOWED_GOALS = {"lose_weight", "build_muscle", "improve_endurance", "general_fitness"}
 ALLOWED_GENDERS = {"woman", "man", "non_binary", "prefer_not_to_say"}
 DISPLAY_NAME_MAX_LENGTH = 50
-DISPLAY_NAME_PATTERN = re.compile(
-    r"""
-    ^[
-        A-Za-z0-9   # letters and digits
-        \s          # spaces
-        .,'\-       # basic punctuation: period, comma, apostrophe, hyphen
-    ]+$
-    """,
-    re.VERBOSE,
-)
+# Allows letters, digits, spaces, and basic punctuation (period, comma, apostrophe, hyphen).
+DISPLAY_NAME_PATTERN = re.compile(r"^[A-Za-z0-9 .,'\-]+$")
+
+
+def is_valid_display_name(name: str) -> bool:
+    return bool(DISPLAY_NAME_PATTERN.match(name))
 
 
 def serialize_profile(account: Account) -> dict:

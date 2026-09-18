@@ -1,3 +1,4 @@
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -70,6 +71,22 @@ def test_display_name_with_disallowed_characters_is_rejected(client_with_signed_
     res = client_with_signed_up_account.post("/api/profile", json={"display_name": "Jordan \U0001f525"})
     assert res.status_code == 400
     assert "display_name" in res.json()["errors"]
+
+
+@pytest.mark.parametrize("name", ["Jordan #1", "Jordan: Runner"])
+def test_display_name_with_hash_or_colon_is_rejected(client_with_signed_up_account, name):
+    res = client_with_signed_up_account.post("/api/profile", json={"display_name": name})
+    assert res.status_code == 400
+    assert "display_name" in res.json()["errors"]
+
+
+def test_non_finite_height_and_weight_are_rejected(client_with_signed_up_account):
+    res = client_with_signed_up_account.post(
+        "/api/profile", json={"height_cm": "nan", "weight_kg": "inf"}
+    )
+    assert res.status_code == 400
+    assert "height_cm" in res.json()["errors"]
+    assert "weight_kg" in res.json()["errors"]
 
 
 def test_display_name_change_propagates_to_me_endpoint(client_with_signed_up_account):

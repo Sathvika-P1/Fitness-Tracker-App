@@ -1,4 +1,5 @@
 import logging
+import math
 
 from fastapi import APIRouter, Cookie, Depends
 from fastapi.responses import JSONResponse
@@ -36,6 +37,8 @@ def _validate_range(field_label: str, raw: str, minimum: float, maximum: float, 
         value = int(raw.strip()) if integer else float(raw.strip())
     except ValueError:
         return None, f"{field_label} must be a number."
+    if not math.isfinite(value):
+        return None, f"{field_label} must be a number."
     if value < minimum or value > maximum:
         suffix = f" {unit}" if unit else ""
         return None, f"{field_label} must be between {int(minimum)} and {int(maximum)}{suffix}."
@@ -67,7 +70,7 @@ def update_profile(
         name = payload.display_name.strip()
         if not name or len(name) > profiles.DISPLAY_NAME_MAX_LENGTH:
             errors["display_name"] = "Display name must be 50 characters or fewer."
-        elif not profiles.DISPLAY_NAME_PATTERN.match(name):
+        elif not profiles.is_valid_display_name(name):
             errors["display_name"] = (
                 "Display name can only contain letters, numbers, spaces, and basic "
                 "punctuation (. , ' -)."
