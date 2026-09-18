@@ -15,6 +15,7 @@ function setFieldValue(name, value) {
 export function renderProfile(data) {
   document.getElementById('header-name').textContent = data.display_name;
   document.getElementById('avatar-initial').textContent = initials(data.display_name);
+  document.getElementById('avatar-menu-initial').textContent = initials(data.display_name);
   FIELDS.forEach((field) => setFieldValue(field, data[field]));
   const counter = document.getElementById('display-name-counter');
   const len = (data.display_name || '').length;

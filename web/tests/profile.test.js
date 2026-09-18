@@ -37,6 +37,26 @@ describe('profile', () => {
     expect(document.getElementById('units-preference').value).toBe('metric');
   });
 
+  it('populates the avatar-menu trigger with the user initials (AC15, AC16)', async () => {
+    global.fetch.mockResolvedValue({
+      status: 200,
+      json: async () => ({
+        display_name: 'Jordan Diaz',
+        units_preference: 'metric',
+        fitness_goal: null,
+        height_cm: null,
+        weight_kg: null,
+        age: null,
+        gender: null,
+      }),
+    });
+
+    const { loadProfile } = await loadProfilePage();
+    await loadProfile();
+
+    expect(document.getElementById('avatar-menu-initial').textContent).toBe('JD');
+  });
+
   it('renders inline field errors from a rejected save without saving', async () => {
     const { renderErrors } = await loadProfilePage();
 

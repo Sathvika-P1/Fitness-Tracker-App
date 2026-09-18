@@ -1,3 +1,4 @@
+import { initials } from './form-utils.js';
 import { fetchOrRedirect } from './session-utils.js';
 
 export async function loadAccountSummary() {
@@ -8,6 +9,7 @@ export async function loadAccountSummary() {
   const count = data.active_sessions;
   document.getElementById('active-sessions-count').textContent =
     `${count} device${count === 1 ? '' : 's'}`;
+  document.getElementById('avatar-menu-initial').textContent = initials(data.display_name || '');
 }
 
 export async function logout() {
