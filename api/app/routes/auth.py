@@ -1,3 +1,4 @@
+import hashlib
 import logging
 import os
 import time
@@ -8,8 +9,8 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.db import get_db
-from app.store import accounts, sessions
-from app.store.models import Account
+from app.store import accounts, deletion_lockout, sessions
+from app.store.models import Account, AccountDeletionAudit
 from app.store.sessions import SESSION_TTL
 
 logger = logging.getLogger(__name__)
@@ -27,6 +28,10 @@ class SignupRequest(BaseModel):
 
 class LoginRequest(BaseModel):
     email: str = ""
+    password: str = ""
+
+
+class DeleteAccountRequest(BaseModel):
     password: str = ""
 
 
@@ -145,6 +150,48 @@ def me(db: Session = Depends(get_db), sid: str | None = Cookie(default=None)):
         (time.monotonic() - start) * 1000,
     )
     return {"email": account.email, "display_name": account.display_name}
+
+
+@router.post("/api/account/delete")
+def delete_account(
+    payload: DeleteAccountRequest,
+    db: Session = Depends(get_db),
+    sid: str | None = Cookie(default=None),
+):
+    account_id = sessions.get_account_id_for_session(db, sid) if sid else None
+    if account_id is None:
+        logger.warning("account_delete_unauthorized")
+        return JSONResponse(status_code=401, content={"message": "Not signed in."})
+
+    if deletion_lockout.is_locked(account_id):
+        logger.warning("account_delete_locked_out account_id=%s", account_id)
+        return JSONResponse(
+            status_code=423,
+            content={"message": "Too many incorrect attempts. Try again later."},
+        )
+
+    account = db.get(Account, account_id)
+    if account is None or not accounts.verify_credentials(
+        db, account.email, payload.password
+    ):
+        deletion_lockout.record_failure(account_id)
+        logger.warning("account_delete_incorrect_password account_id=%s", account_id)
+        return JSONResponse(
+            status_code=401,
+            content={
+                "message": "Incorrect password. Your account has not been changed."
+            },
+        )
+
+    deletion_lockout.reset(account_id)
+    account_reference = hashlib.sha256(account.email.encode("utf-8")).hexdigest()
+    db.add(AccountDeletionAudit(account_reference=account_reference))
+    accounts.delete_account(db, account)
+    logger.info("account_deleted account_id=%s", account_id)
+
+    response = JSONResponse(status_code=200, content={"message": "Account deleted."})
+    response.delete_cookie(SESSION_COOKIE)
+    return response
 
 
 @router.post("/api/logout")

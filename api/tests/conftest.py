@@ -10,7 +10,8 @@ from sqlalchemy import create_engine, text
 
 from app.db import Base, DATABASE_URL, SessionLocal, engine
 from app.main import _backfill_profile_columns, _backfill_session_ttl_columns, app
-from app.store.models import Account, SessionRow
+from app.store import deletion_lockout
+from app.store.models import Account, AccountDeletionAudit, SessionRow
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -33,8 +34,10 @@ def _clean_tables():
     db = SessionLocal()
     db.query(SessionRow).delete()
     db.query(Account).delete()
+    db.query(AccountDeletionAudit).delete()
     db.commit()
     db.close()
+    deletion_lockout._failures.clear()
     yield
 
 

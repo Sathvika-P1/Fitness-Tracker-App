@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delete account — Fitness Tracker</title>
+<link rel="stylesheet" href="/design-system/tokens.css">
+<link rel="stylesheet" href="/design-system/prototype-utils.css">
+</head>
+<body>
+
+<div class="page-shell">
+  <div class="top-app-bar">
+    <a class="back-btn" href="account-settings.html" aria-label="Back">←</a>
+    <span class="top-app-bar-title">Delete account</span>
+  </div>
+
+  <div id="confirm-view" class="content-pad" style="margin-top: var(--space-3);">
+    <div class="card" style="border-color: var(--color-danger);">
+      <div class="card-body">
+        <div class="card-title" style="color: var(--color-danger);">This action is permanent</div>
+        <p class="text-sm text-muted" style="margin-top: var(--space-1);">
+          Deleting your account will immediately and permanently erase:
+        </p>
+        <ul class="consequence-list">
+          <li><span class="mark" aria-hidden="true">✕</span><span>Your login credentials — you won't be able to sign back in</span></li>
+          <li><span class="mark" aria-hidden="true">✕</span><span>Your profile information (name, goals, height, weight, age)</span></li>
+          <li><span class="mark" aria-hidden="true">✕</span><span>All active sessions on every device, not just this one</span></li>
+          <li><span class="mark" aria-hidden="true">✕</span><span>Your workout logs, achievements, and posts</span></li>
+        </ul>
+        <p class="text-sm text-muted">
+          There is no grace period and no way to undo this once it completes.
+        </p>
+      </div>
+    </div>
+
+    <div id="lockout-banner" class="lockout-banner" hidden>
+      <span class="banner-icon" aria-hidden="true">🔒</span>
+      <div>
+        <div class="banner-title">Too many incorrect attempts</div>
+        <div class="banner-body">
+          Deletion confirmation is temporarily locked after 5 incorrect password attempts,
+          the same limit used for sign-in. Try again in 15 minutes.
+        </div>
+      </div>
+    </div>
+
+    <div class="field" style="margin-top: var(--space-4);">
+      <label class="label" for="confirm-password">Enter your current password to confirm</label>
+      <input class="input" type="password" id="confirm-password" placeholder="Password">
+      <div id="password-error" class="field-error-text" role="alert" hidden>
+        <span aria-hidden="true">⚠</span>
+        <span>Incorrect password. Your account has not been changed.</span>
+      </div>
+      <div id="attempt-counter" class="attempt-counter" hidden></div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="confirm-checkbox">
+      <label for="confirm-checkbox">I understand this permanently deletes my account and cannot be undone.</label>
+    </div>
+
+    <button id="delete-submit-btn" class="btn btn-primary btn-block" disabled>
+      Permanently delete account
+    </button>
+    <a class="btn btn-secondary btn-block" style="margin-top: var(--space-2);" href="account-settings.html">
+      Cancel
+    </a>
+    <p id="intact-note" class="text-sm text-muted" style="margin-top: var(--space-3);" hidden>
+      Nothing was deleted. Your credentials, profile, and sessions are all still active.
+    </p>
+  </div>
+
+  <div id="deleting-view" class="content-pad" style="margin-top: var(--space-4);" hidden>
+    <div class="empty-state">
+      <div class="empty-state-icon" aria-hidden="true">⏳</div>
+      <div class="text-lg text-bold">Deleting your account…</div>
+      <p class="text-sm text-muted">
+        Erasing credentials, profile data, sessions, and content. This only takes a moment.
+      </p>
+    </div>
+  </div>
+
+  <div id="complete-view" class="content-pad" style="margin-top: var(--space-4);" hidden>
+    <div class="empty-state">
+      <div class="empty-state-icon" aria-hidden="true">✅</div>
+      <div class="text-lg text-bold">Your account has been deleted</div>
+      <p class="text-sm text-muted">
+        Your credentials, profile, workout logs, achievements, and posts have been
+        permanently erased. This cannot be undone.
+      </p>
+    </div>
+    <p class="text-sm text-muted" style="margin-top: var(--space-3);">
+      Signing in again with the old email and password will no longer work.
+    </p>
+    <p class="text-sm text-muted" style="margin-top: var(--space-2);">
+      A minimal, anonymized record (a non-identifying account reference and the deletion
+      timestamp) is kept for compliance purposes. It contains no personal information.
+    </p>
+    <a class="btn btn-primary btn-block" style="margin-top: var(--space-3);" href="login.html">
+      Go to sign-in
+    </a>
+  </div>
+
+  <div id="already-deleted-view" class="content-pad" style="margin-top: var(--space-4);" hidden>
+    <div class="empty-state">
+      <div class="empty-state-icon" aria-hidden="true">ℹ️</div>
+      <div class="text-lg text-bold">This account was already deleted</div>
+      <p class="text-sm text-muted">
+        A deletion request for this account was already completed. No further action is
+        needed — your data was already erased.
+      </p>
+    </div>
+    <a class="btn btn-primary btn-block" style="margin-top: var(--space-3);" href="login.html">
+      Go to sign-in
+    </a>
+  </div>
+</div>
+
+<script type="module" src="/delete-account.js"></script>
+</body>
+</html>
