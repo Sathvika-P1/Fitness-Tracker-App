@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile — Fitness Tracker</title>
+<link rel="stylesheet" href="/design-system/tokens.css">
+<link rel="stylesheet" href="/design-system/prototype-utils.css">
+</head>
+<body>
+
+<div class="page-shell">
+  <div class="top-app-bar">
+    <div style="display:flex;align-items:center;gap:var(--space-2);">
+      <div class="avatar" id="avatar-initial" aria-hidden="true"></div>
+      <div>
+        <h1 class="text-bold" id="header-name" style="margin:0;font-size:inherit"></h1>
+        <div class="text-sm text-muted">Your profile</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="banner banner-neutral" role="status" id="saved-banner" hidden>
+    <span class="banner-icon" aria-hidden="true">✓</span>
+    <div>
+      <div class="banner-title">Profile saved</div>
+      <div class="banner-body">Your changes have been saved.</div>
+    </div>
+  </div>
+
+  <div class="content-pad">
+    <p class="helper-text" style="margin-top:var(--space-3);">
+      Only you can see or edit this — your profile is never shown by user id or link.
+    </p>
+
+    <form id="profile-form">
+      <div class="field-group-title">Account</div>
+      <div class="field">
+        <label class="label" for="display-name">Display name</label>
+        <input class="input" id="display-name" name="display_name" type="text" maxlength="200">
+        <div class="char-counter" id="display-name-counter">0 / 50</div>
+        <p class="helper-text">Letters, numbers, spaces, and basic punctuation. Max 50 characters.</p>
+        <p class="field-error-text" id="display-name-error" role="alert" hidden></p>
+      </div>
+
+      <div class="field-group-title">Preferences</div>
+      <div class="field">
+        <label class="label" for="units-preference">Units</label>
+        <select class="input" id="units-preference" name="units_preference">
+          <option value="">Not set</option>
+          <option value="metric">Metric (cm, kg)</option>
+          <option value="imperial">Imperial (in, lb)</option>
+        </select>
+        <p class="field-error-text" id="units-preference-error" role="alert" hidden></p>
+      </div>
+      <div class="field">
+        <label class="label" for="fitness-goal">Fitness goal</label>
+        <select class="input" id="fitness-goal" name="fitness_goal">
+          <option value="">Not set</option>
+          <option value="lose_weight">Lose weight</option>
+          <option value="build_muscle">Build muscle</option>
+          <option value="improve_endurance">Improve endurance</option>
+          <option value="general_fitness">General fitness</option>
+        </select>
+        <p class="field-error-text" id="fitness-goal-error" role="alert" hidden></p>
+      </div>
+
+      <div class="field-group-title">Body details</div>
+      <div class="field">
+        <label class="label" for="height-cm">Height (cm)</label>
+        <input class="input" id="height-cm" name="height_cm" type="text" inputmode="decimal" placeholder="Not set">
+        <p class="helper-text">Valid range: 1–300 cm.</p>
+        <p class="field-error-text" id="height-cm-error" role="alert" hidden></p>
+      </div>
+      <div class="field">
+        <label class="label" for="weight-kg">Weight (kg)</label>
+        <input class="input" id="weight-kg" name="weight_kg" type="text" inputmode="decimal" placeholder="Not set">
+        <p class="helper-text">Valid range: 1–500 kg.</p>
+        <p class="field-error-text" id="weight-kg-error" role="alert" hidden></p>
+      </div>
+      <div class="field">
+        <label class="label" for="age">Age</label>
+        <input class="input" id="age" name="age" type="text" inputmode="numeric" placeholder="Not set">
+        <p class="helper-text">Valid range: 1–120 years.</p>
+        <p class="field-error-text" id="age-error" role="alert" hidden></p>
+      </div>
+      <div class="field">
+        <label class="label" for="gender">Gender</label>
+        <select class="input" id="gender" name="gender">
+          <option value="">Not set</option>
+          <option value="woman">Woman</option>
+          <option value="man">Man</option>
+          <option value="non_binary">Non-binary</option>
+          <option value="prefer_not_to_say">Prefer not to say</option>
+        </select>
+        <p class="field-error-text" id="gender-error" role="alert" hidden></p>
+      </div>
+
+      <button class="btn btn-primary btn-block" type="submit" id="save-button">Save changes</button>
+    </form>
+  </div>
+
+  <div class="bottom-tabs">
+    <a class="bottom-tab" href="dashboard.html">Today</a>
+    <div class="bottom-tab">Log</div>
+    <div class="bottom-tab">Progress</div>
+    <a class="bottom-tab active" href="profile.html">Profile</a>
+  </div>
+</div>
+
+<script type="module" src="/profile.js"></script>
+</body>
+</html>
