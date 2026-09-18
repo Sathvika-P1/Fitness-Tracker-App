@@ -15,6 +15,26 @@ def test_correct_password_deletes_account_and_clears_session(client_with_signed_
     assert me.status_code == 401
 
 
+def test_me_reports_active_session_count_for_account_settings(client_with_signed_up_account):
+    device_b = TestClient(app)
+    device_b.post(
+        "/api/login", json={"email": "jordan@example.com", "password": "test-password"}
+    )
+
+    me = client_with_signed_up_account.get("/api/me")
+    assert me.json()["active_sessions"] == 2
+
+
+def test_delete_cookie_clears_with_matching_security_attributes(client_with_signed_up_account):
+    resp = client_with_signed_up_account.post(
+        "/api/account/delete", json={"password": "test-password"}
+    )
+    set_cookie = resp.headers["set-cookie"].lower()
+    assert "sid=" in set_cookie
+    assert "httponly" in set_cookie
+    assert "samesite=lax" in set_cookie
+
+
 def test_incorrect_password_blocks_deletion_and_account_stays_intact(
     client_with_signed_up_account,
 ):

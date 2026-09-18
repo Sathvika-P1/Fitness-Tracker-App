@@ -39,6 +39,10 @@ describe('delete-account', () => {
 
     expect(document.getElementById('password-error').hidden).toBe(false);
     expect(document.getElementById('confirm-view').hidden).toBe(false);
+    expect(document.getElementById('attempt-counter').hidden).toBe(false);
+    expect(document.getElementById('attempt-counter').textContent).toContain(
+      'remaining before lockout'
+    );
     expect(document.getElementById('deleting-view').hidden).toBe(true);
   });
 

@@ -149,7 +149,11 @@ def me(db: Session = Depends(get_db), sid: str | None = Cookie(default=None)):
         account_id,
         (time.monotonic() - start) * 1000,
     )
-    return {"email": account.email, "display_name": account.display_name}
+    return {
+        "email": account.email,
+        "display_name": account.display_name,
+        "active_sessions": sessions.count_active_for_account(db, account_id),
+    }
 
 
 @router.post("/api/account/delete")
@@ -190,7 +194,12 @@ def delete_account(
     logger.info("account_deleted account_id=%s", account_id)
 
     response = JSONResponse(status_code=200, content={"message": "Account deleted."})
-    response.delete_cookie(SESSION_COOKIE)
+    response.delete_cookie(
+        SESSION_COOKIE,
+        secure=os.environ.get("SECURE_COOKIES", "true").lower() != "false",
+        samesite="lax",
+        httponly=True,
+    )
     return response
 
 
@@ -200,5 +209,10 @@ def logout(db: Session = Depends(get_db), sid: str | None = Cookie(default=None)
         sessions.delete_session(db, sid)
     logger.info("logout")
     response = JSONResponse(status_code=200, content={"message": "Signed out."})
-    response.delete_cookie(SESSION_COOKIE)
+    response.delete_cookie(
+        SESSION_COOKIE,
+        secure=os.environ.get("SECURE_COOKIES", "true").lower() != "false",
+        samesite="lax",
+        httponly=True,
+    )
     return response

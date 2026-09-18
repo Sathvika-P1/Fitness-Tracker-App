@@ -1,6 +1,7 @@
 import datetime
 import secrets
 
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.store.models import SessionRow
@@ -43,3 +44,11 @@ def delete_session(db: Session, session_id: str) -> None:
     if row is not None:
         db.delete(row)
         db.commit()
+
+
+def count_active_for_account(db: Session, account_id: int) -> int:
+    return db.execute(
+        select(func.count())
+        .select_from(SessionRow)
+        .where(SessionRow.account_id == account_id, SessionRow.expires_at > _utcnow())
+    ).scalar_one()

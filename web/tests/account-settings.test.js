@@ -15,16 +15,21 @@ describe('account-settings', () => {
     global.fetch = vi.fn();
   });
 
-  it('renders the signed-in account email', async () => {
+  it('renders the signed-in account email and active session count', async () => {
     global.fetch.mockResolvedValue({
       status: 200,
-      json: async () => ({ email: 'jordan@example.com', display_name: 'Jordan' }),
+      json: async () => ({
+        email: 'jordan@example.com',
+        display_name: 'Jordan',
+        active_sessions: 3,
+      }),
     });
 
     const { loadAccountSummary } = await loadAccountSettingsPage();
     await loadAccountSummary();
 
     expect(document.getElementById('account-email').textContent).toBe('jordan@example.com');
+    expect(document.getElementById('active-sessions-count').textContent).toBe('3 devices');
   });
 
   it('redirects to login when not signed in', async () => {
