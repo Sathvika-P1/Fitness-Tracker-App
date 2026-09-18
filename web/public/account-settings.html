@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account settings — Fitness Tracker</title>
+<link rel="stylesheet" href="/design-system/tokens.css">
+<link rel="stylesheet" href="/design-system/prototype-utils.css">
+</head>
+<body>
+
+<div class="page-shell">
+  <div class="top-app-bar">
+    <span class="top-app-bar-title">Account settings</span>
+  </div>
+  <div class="content-pad" style="margin-top: var(--space-3);">
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title">Account</div>
+        <div class="row" style="justify-content: space-between; margin-top: var(--space-2);">
+          <span class="text-sm text-muted">Email</span>
+          <span class="text-sm" id="account-email"></span>
+        </div>
+        <div class="row" style="justify-content: space-between; margin-top: var(--space-1);">
+          <span class="text-sm text-muted">Active sessions</span>
+          <span class="text-sm" id="active-sessions-count"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="danger-zone-card">
+    <div class="row" style="align-items: center; gap: var(--space-1);">
+      <span aria-hidden="true">⚠️</span>
+      <span class="danger-zone-title">Danger zone</span>
+    </div>
+    <p class="text-sm" style="color: var(--color-fg); margin-top: var(--space-1);">
+      Deleting your account is permanent. Your credentials, profile, workout logs,
+      achievements, and posts will be erased immediately — this cannot be undone.
+    </p>
+    <a class="btn btn-primary btn-block" style="margin-top: var(--space-3);" href="delete-account.html">
+      Delete my account
+    </a>
+  </div>
+
+  <div class="bottom-tabs">
+    <a class="bottom-tab" href="dashboard.html">Today</a>
+    <div class="bottom-tab" role="button" aria-disabled="true">Log</div>
+    <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
+    <a class="bottom-tab active" href="profile.html">Profile</a>
+  </div>
+</div>
+
+<script type="module" src="/account-settings.js"></script>
+</body>
+</html>

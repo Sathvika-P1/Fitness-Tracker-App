@@ -5,7 +5,7 @@ from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.store.models import Account
+from app.store.models import Account, DeletionLockoutFailure, SessionRow
 
 logger = logging.getLogger(__name__)
 
@@ -55,3 +55,12 @@ def verify_credentials(db: Session, email: str, password: str) -> Account | None
 
 def count(db: Session) -> int:
     return db.execute(select(func.count()).select_from(Account)).scalar_one()
+
+
+def delete_account(db: Session, account: Account) -> None:
+    db.query(SessionRow).filter(SessionRow.account_id == account.id).delete()
+    db.query(DeletionLockoutFailure).filter(
+        DeletionLockoutFailure.account_id == account.id
+    ).delete()
+    db.delete(account)
+    db.commit()

@@ -1,5 +1,7 @@
+import hmac
 import logging
 import os
+import secrets
 import time
 
 from fastapi import APIRouter, Cookie, Depends
@@ -8,8 +10,8 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.db import get_db
-from app.store import accounts, sessions
-from app.store.models import Account
+from app.store import accounts, deletion_lockout, sessions
+from app.store.models import Account, AccountDeletionAudit
 from app.store.sessions import SESSION_TTL
 
 logger = logging.getLogger(__name__)
@@ -17,6 +19,17 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 SESSION_COOKIE = "sid"
+
+# Peppers the audit-log account reference so it can't be reversed via a
+# dictionary attack on low-entropy emails. If no secret is configured, a
+# random one is generated per process and is never persisted - references
+# are then intentionally non-correlatable across restarts/instances, which
+# is fine since the audit log only needs a non-identifying reference per
+# deletion, not a stable one across the account's lifetime.
+_AUDIT_SECRET = os.environ.get("DELETION_AUDIT_SECRET")
+_AUDIT_SECRET_BYTES = (
+    _AUDIT_SECRET.encode("utf-8") if _AUDIT_SECRET else secrets.token_bytes(32)
+)
 
 
 class SignupRequest(BaseModel):
@@ -27,6 +40,10 @@ class SignupRequest(BaseModel):
 
 class LoginRequest(BaseModel):
     email: str = ""
+    password: str = ""
+
+
+class DeleteAccountRequest(BaseModel):
     password: str = ""
 
 
@@ -144,7 +161,70 @@ def me(db: Session = Depends(get_db), sid: str | None = Cookie(default=None)):
         account_id,
         (time.monotonic() - start) * 1000,
     )
-    return {"email": account.email, "display_name": account.display_name}
+    return {
+        "email": account.email,
+        "display_name": account.display_name,
+        "active_sessions": sessions.count_active_for_account(db, account_id),
+    }
+
+
+@router.post("/api/account/delete")
+def delete_account(
+    payload: DeleteAccountRequest,
+    db: Session = Depends(get_db),
+    sid: str | None = Cookie(default=None),
+):
+    account_id = sessions.get_account_id_for_session(db, sid) if sid else None
+    if account_id is None:
+        logger.warning("account_delete_unauthorized")
+        return JSONResponse(
+            status_code=401,
+            content={"message": "Not signed in.", "reason": "not_signed_in"},
+        )
+
+    if deletion_lockout.is_locked(db, account_id):
+        logger.warning("account_delete_locked_out account_id=%s", account_id)
+        return JSONResponse(
+            status_code=423,
+            content={
+                "message": "Too many incorrect attempts. Try again later.",
+                "reason": "locked_out",
+                "remaining_attempts": 0,
+            },
+        )
+
+    account = db.get(Account, account_id)
+    if account is None or not accounts.verify_credentials(
+        db, account.email, payload.password
+    ):
+        deletion_lockout.record_failure(db, account_id)
+        logger.warning("account_delete_incorrect_password account_id=%s", account_id)
+        return JSONResponse(
+            status_code=401,
+            content={
+                "message": "Incorrect password. Your account has not been changed.",
+                "reason": "incorrect_password",
+                "remaining_attempts": deletion_lockout.remaining_attempts(
+                    db, account_id
+                ),
+            },
+        )
+
+    account_reference = hmac.new(
+        _AUDIT_SECRET_BYTES, account.email.encode("utf-8"), "sha256"
+    ).hexdigest()
+    db.add(AccountDeletionAudit(account_reference=account_reference))
+    accounts.delete_account(db, account)
+    logger.info("account_deleted account_id=%s", account_id)
+
+    response = JSONResponse(status_code=200, content={"message": "Account deleted."})
+    response.delete_cookie(
+        SESSION_COOKIE,
+        secure=os.environ.get("SECURE_COOKIES", "true").lower() != "false",
+        samesite="lax",
+        httponly=True,
+    )
+    return response
 
 
 @router.post("/api/logout")
@@ -153,5 +233,10 @@ def logout(db: Session = Depends(get_db), sid: str | None = Cookie(default=None)
         sessions.delete_session(db, sid)
     logger.info("logout")
     response = JSONResponse(status_code=200, content={"message": "Signed out."})
-    response.delete_cookie(SESSION_COOKIE)
+    response.delete_cookie(
+        SESSION_COOKIE,
+        secure=os.environ.get("SECURE_COOKIES", "true").lower() != "false",
+        samesite="lax",
+        httponly=True,
+    )
     return response

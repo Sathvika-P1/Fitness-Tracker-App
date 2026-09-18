@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTP-STORY-004 — Account Deletion</title>
+<style>
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1a1a1a; /** Primary body text color, used on color-bg. Contrast ratio ~17.4:1. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-surface: #f8fafc; /** Slightly recessed surface, distinct from color-bg, used for cards. */
+  --color-primary: #1d4ed8; /** Brand/interactive accent color. Meets 4.5:1 as text on color-bg (~6.7:1). */
+  --color-on-primary: #ffffff; /** Text/icon color placed on top of color-primary. */
+  --color-muted: #475569; /** Secondary/muted text color. */
+  --color-border: #e2e8f0; /** Default hairline border color. */
+  --color-danger: #dc2626; /** Destructive/error accent color. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 600;
+  --line-height-base: 1.5;
+  --button-primary-background: var(--color-primary);
+  --button-primary-foreground: var(--color-on-primary);
+  --button-primary-border-radius: var(--radius-md);
+  --button-secondary-background: var(--color-bg);
+  --button-secondary-foreground: var(--color-primary);
+  --button-secondary-border: var(--color-primary);
+  --card-default-background: var(--color-surface);
+  --card-default-border: var(--color-border);
+  --card-default-border-radius: var(--radius-lg);
+  --chip-default-background: var(--color-surface);
+  --chip-default-foreground: var(--color-muted);
+  --chip-default-border-radius: var(--radius-sm);
+  --input-default-background: var(--color-bg);
+  --input-default-border: var(--color-border);
+  --input-default-foreground: var(--color-fg);
+  --input-default-border-radius: var(--radius-sm);
+}
+
+</style>
+<style>
+/* Base layout / typography */
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-md);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-bold { font-weight: var(--font-weight-bold); }
+
+/* Layout utilities */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
+/* Buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-md);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-radius: var(--button-primary-border-radius);
+}
+
+.btn-secondary {
+  background: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-on-primary);
+}
+
+/* Card */
+
+.card {
+  background: var(--card-default-background);
+  border: var(--border-width-sm) solid var(--card-default-border);
+  border-radius: var(--card-default-border-radius);
+  padding: var(--space-4);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Chip */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  background: var(--chip-default-background);
+  color: var(--chip-default-foreground);
+  border-radius: var(--chip-default-border-radius);
+  font-size: var(--font-size-sm);
+}
+
+/* Form controls */
+
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  background: var(--input-default-background);
+  color: var(--input-default-foreground);
+  border: var(--border-width-sm) solid var(--input-default-border);
+  border-radius: var(--input-default-border-radius);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-md);
+  outline: none;
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-1);
+}
+
+/* Style-guide page helpers */
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.swatch-color {
+  height: var(--space-4);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-sm) solid var(--color-border);
+}
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.section {
+  margin-bottom: var(--space-4);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* Auth pages (signup / login) */
+
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+.auth-shell {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-3);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.field {
+  margin-bottom: var(--space-3);
+}
+
+.field-error-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.input.has-error {
+  border-color: var(--color-danger);
+  border-width: var(--border-width-md);
+}
+
+.helper-text {
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.btn-block {
+  width: 100%;
+  min-height: 44px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.banner {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  background: var(--color-bg);
+  border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.banner[hidden] {
+  display: none;
+}
+
+.banner-icon {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.banner-title {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+}
+
+.banner-body {
+  color: var(--color-fg);
+  font-size: var(--font-size-sm);
+}
+
+.link-inline {
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.center-note {
+  text-align: center;
+  margin-top: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+
+.banner-neutral {
+  border-color: var(--color-border);
+}
+
+.banner-neutral .banner-icon,
+.banner-neutral .banner-title {
+  color: var(--color-primary);
+}
+
+/* App shell (top bar, avatar, bottom tabs) */
+
+.page-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: var(--space-4);
+}
+
+.top-app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.bottom-tabs {
+  display: flex;
+  border-top: var(--border-width-sm) solid var(--color-border);
+  position: sticky;
+  bottom: 0;
+  background: var(--color-bg);
+}
+
+.bottom-tab {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.bottom-tab.active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Profile fields */
+
+.not-set {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.field-group-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.char-counter {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  text-align: right;
+  margin-top: var(--space-1);
+}
+
+.char-counter.over {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+}
+
+.content-pad {
+  padding: 0 var(--space-3);
+}
+
+</style>
+<!-- App nav: bottom tab bar — Today · Log · Progress · Profile; Profile active.
+     Matches FTP-STORY-002/003's dashboard shell (top app bar + bottom tabs, no sidebar).
+     Account deletion is reached from Profile > Account settings. -->
+<style>
+  html, body { height: 100%; }
+  body { min-height: 100dvh; }
+  .page-shell { max-width: 480px; margin: 0 auto; padding-bottom: var(--space-4); }
+  .top-app-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border-bottom: var(--border-width-sm) solid var(--color-border);
+  }
+  .back-btn {
+    background: none; border: none; cursor: pointer; color: var(--color-primary);
+    font-size: var(--font-size-md); min-height: 44px; min-width: 44px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .top-app-bar-title { font-weight: var(--font-weight-bold); font-size: var(--font-size-lg); }
+  .bottom-tabs {
+    display: flex;
+    border-top: var(--border-width-sm) solid var(--color-border);
+    position: sticky;
+    bottom: 0;
+    background: var(--color-bg);
+  }
+  .bottom-tab {
+    flex: 1;
+    text-align: center;
+    padding: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-muted);
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .bottom-tab.active { color: var(--color-primary); font-weight: var(--font-weight-bold); }
+  .content-pad { padding: 0 var(--space-3); }
+  .field { margin-bottom: var(--space-3); }
+  .field-error-text {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--color-danger);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-1);
+  }
+  .input.has-error { border-color: var(--color-danger); border-width: var(--border-width-md); }
+  .helper-text { color: var(--color-muted); font-size: var(--font-size-sm); margin-top: var(--space-1); }
+  .btn-block { width: 100%; min-height: 44px; }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; pointer-events: none; }
+  .danger-zone-card {
+    border: var(--border-width-sm) solid var(--color-danger);
+    border-radius: var(--card-default-border-radius);
+    background: var(--color-bg);
+    padding: var(--space-3);
+    margin: var(--space-3);
+  }
+  .danger-zone-title { color: var(--color-danger); font-weight: var(--font-weight-bold); margin-bottom: var(--space-1); }
+
+  .consequence-list { margin: var(--space-3) 0; padding-left: 0; list-style: none; }
+  .consequence-list li {
+    display: flex; gap: var(--space-2); align-items: flex-start;
+    padding: var(--space-1) 0; font-size: var(--font-size-sm); color: var(--color-fg);
+  }
+  .consequence-list li .mark { color: var(--color-danger); font-weight: var(--font-weight-bold); flex-shrink: 0; }
+
+  .checkbox-row {
+    display: flex; align-items: flex-start; gap: var(--space-2);
+    margin: var(--space-3) 0; min-height: 44px;
+  }
+  .checkbox-row input[type="checkbox"] {
+    width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; accent-color: var(--color-danger);
+  }
+  .checkbox-row label { font-size: var(--font-size-sm); color: var(--color-fg); }
+
+  .spinner {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--color-on-primary); border-top-color: transparent;
+    opacity: 0.85;
+    display: inline-block; animation: spin .7s linear infinite; margin-right: var(--space-2);
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .lockout-banner {
+    display: flex; gap: var(--space-2); align-items: flex-start;
+    background: var(--color-bg); border: var(--border-width-md) solid var(--color-danger);
+    border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-3);
+  }
+  .lockout-banner .banner-icon { color: var(--color-danger); font-weight: var(--font-weight-bold); }
+  .lockout-banner .banner-title { color: var(--color-danger); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+  .lockout-banner .banner-body { color: var(--color-fg); font-size: var(--font-size-sm); }
+
+  .empty-state {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: var(--space-4) var(--space-3); gap: var(--space-2);
+  }
+  .empty-state-icon {
+    width: 64px; height: 64px; border-radius: 50%; background: var(--color-surface);
+    display: flex; align-items: center; justify-content: center; font-size: var(--font-size-lg);
+    color: var(--color-danger);
+  }
+  .attempt-counter { font-size: var(--font-size-sm); color: var(--color-muted); margin-top: var(--space-1); }
+
+  .device-list { margin: var(--space-2) 0; }
+  .device-row { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) 0;
+    border-bottom: var(--border-width-sm) solid var(--color-border); font-size: var(--font-size-sm); }
+  .device-row:last-child { border-bottom: none; }
+  .device-icon { color: var(--color-muted); flex-shrink: 0; }
+  .device-status-revoked { color: var(--color-danger); font-size: var(--font-size-sm); margin-left: auto; font-weight: var(--font-weight-bold); }
+</style>
+</head>
+<body>
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--color-surface);border-bottom:1px solid var(--color-border);font-size:13px;font-family:var(--font-family-base)">
+  <span style="font-family:var(--font-family-base);color:var(--color-muted)">FTP-STORY-004</span>
+  <button id="prev-btn" style="background:none;border:none;color:var(--color-primary);cursor:pointer;min-height:32px;">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--color-fg)"></span>
+  <button id="next-btn" style="background:none;border:none;color:var(--color-primary);cursor:pointer;min-height:32px;">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+
+<div id="screens">
+
+  <!-- Screen: Account settings — danger zone
+       Notes:
+         - Entry point for account deletion, reached from Profile.
+         - Danger zone is visually separated (red border) but does not use color alone:
+           icon + "Danger zone" label + explicit consequence copy.
+  -->
+  <!-- State: danger-zone -->
+  <div class="screen" data-name="Account settings — Danger zone (entry point)">
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <span class="top-app-bar-title">Account settings</span>
+      </div>
+      <div class="content-pad" style="margin-top: var(--space-3);">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title">Account</div>
+            <div class="row" style="justify-content: space-between; margin-top: var(--space-2);">
+              <span class="text-sm text-muted">Email</span>
+              <span class="text-sm">jordan.miles@example.com</span>
+            </div>
+            <div class="row" style="justify-content: space-between; margin-top: var(--space-1);">
+              <span class="text-sm text-muted">Active sessions</span>
+              <span class="text-sm">3 devices</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="danger-zone-card">
+        <div class="row" style="align-items: center; gap: var(--space-1);">
+          <span aria-hidden="true">⚠️</span>
+          <span class="danger-zone-title">Danger zone</span>
+        </div>
+        <p class="text-sm" style="color: var(--color-fg); margin-top: var(--space-1);">
+          Deleting your account is permanent. Your credentials, profile, workout logs,
+          achievements, and posts will be erased immediately — this cannot be undone.
+        </p>
+        <button class="btn btn-primary btn-block" style="margin-top: var(--space-3);" onclick="show(1)">
+          Delete my account
+        </button>
+      </div>
+
+      <div class="bottom-tabs">
+        <div class="bottom-tab"><span>Today</span></div>
+        <div class="bottom-tab"><span>Log</span></div>
+        <div class="bottom-tab"><span>Progress</span></div>
+        <div class="bottom-tab active"><span>Profile</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Confirm deletion — consequences + password
+       Notes:
+         - AC1: names exactly what gets erased (credentials, profile, sessions, user-generated
+           content) with no grace period / undo language, satisfying the destructive-action
+           confirmation rule (§4).
+         - AC4: explicitly calls out that ALL active sessions on ALL devices are invalidated,
+           not just the current one.
+         - Password re-entry + explicit "I understand" checkbox are both required before the
+           destructive button is enabled — this is the primary confirmation gate for AC1/AC2.
+  -->
+  <!-- State: confirm-password -->
+  <div class="screen" data-name="Confirm deletion — password required (AC1, AC4)">
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <button class="back-btn" onclick="show(0)" aria-label="Back">←</button>
+        <span class="top-app-bar-title">Delete account</span>
+      </div>
+
+      <div class="content-pad" style="margin-top: var(--space-3);">
+        <div class="card" style="border-color: var(--color-danger);">
+          <div class="card-body">
+            <div class="card-title" style="color: var(--color-danger);">This action is permanent</div>
+            <p class="text-sm text-muted" style="margin-top: var(--space-1);">
+              Deleting your account will immediately and permanently erase:
+            </p>
+            <ul class="consequence-list">
+              <li><span class="mark" aria-hidden="true">✕</span><span>Your login credentials — you won't be able to sign back in</span></li>
+              <li><span class="mark" aria-hidden="true">✕</span><span>Your profile information (name, goals, height, weight, age)</span></li>
+              <li><span class="mark" aria-hidden="true">✕</span><span>All active sessions on every device, not just this one</span></li>
+              <li><span class="mark" aria-hidden="true">✕</span><span>Your workout logs, achievements, and posts</span></li>
+            </ul>
+            <p class="text-sm text-muted">
+              There is no grace period and no way to undo this once it completes.
+            </p>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top: var(--space-4);">
+          <label class="label" for="confirm-password">Enter your current password to confirm</label>
+          <input class="input" type="password" id="confirm-password" placeholder="Password" oninput="onPasswordInput()">
+          <div id="password-error" class="field-error-text" style="display:none;">
+            <span aria-hidden="true">⚠</span>
+            <span>Incorrect password. Your account has not been changed.</span>
+          </div>
+          <div id="attempt-counter" class="attempt-counter" style="display:none;"></div>
+          <div class="helper-text">Prototype: type "demo-ok" to simulate success; any other value simulates AC2's failure.</div>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="confirm-checkbox" onchange="updateDeleteButton()">
+          <label for="confirm-checkbox">I understand this permanently deletes my account and cannot be undone.</label>
+        </div>
+
+        <button id="delete-submit-btn" class="btn btn-primary btn-block" disabled onclick="attemptDelete()">
+          Permanently delete account
+        </button>
+        <button class="btn btn-secondary btn-block" style="margin-top: var(--space-2);" onclick="show(0)">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Incorrect password — deletion blocked
+       Notes:
+         - AC2: static reachable snapshot of the failure state — an incorrect password blocks
+           deletion and the account/data remain fully intact (no partial erasure, no session
+           invalidation, no lockout yet at this attempt count).
+  -->
+  <!-- State: password-incorrect -->
+  <div class="screen" data-name="Incorrect password — deletion blocked, account intact (AC2)">
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <button class="back-btn" onclick="show(0)" aria-label="Back">←</button>
+        <span class="top-app-bar-title">Delete account</span>
+      </div>
+      <div class="content-pad" style="margin-top: var(--space-3);">
+        <div class="field">
+          <label class="label" for="confirm-password-blocked">Enter your current password to confirm</label>
+          <input class="input has-error" type="password" id="confirm-password-blocked" value="••••••••">
+          <div class="field-error-text">
+            <span aria-hidden="true">⚠</span>
+            <span>Incorrect password. Your account has not been changed.</span>
+          </div>
+          <div class="attempt-counter">4 attempts remaining before lockout</div>
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="confirm-checkbox-blocked" checked disabled>
+          <label for="confirm-checkbox-blocked">I understand this permanently deletes my account and cannot be undone.</label>
+        </div>
+        <button class="btn btn-primary btn-block">Permanently delete account</button>
+        <button class="btn btn-secondary btn-block" style="margin-top: var(--space-2);" onclick="show(0)">Cancel</button>
+        <p class="text-sm text-muted" style="margin-top: var(--space-3);">
+          Nothing was deleted. Your credentials, profile, and sessions are all still active.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Deleting — in progress
+       Notes:
+         - §4/§5 loading state: submit button becomes a disabled, labeled pending state so the
+           user never wonders if the click registered and cannot double-submit.
+  -->
+  <!-- State: deleting -->
+  <div class="screen" data-name="Deleting… (in progress)">
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <span class="top-app-bar-title">Delete account</span>
+      </div>
+      <div class="content-pad" style="margin-top: var(--space-4);">
+        <div class="empty-state">
+          <div class="empty-state-icon" aria-hidden="true">⏳</div>
+          <div class="text-lg text-bold">Deleting your account…</div>
+          <p class="text-sm text-muted">
+            Erasing credentials, profile data, sessions, and content. This only takes a moment.
+          </p>
+          <button class="btn btn-primary btn-block" disabled style="margin-top: var(--space-3);">
+            <span class="spinner" aria-hidden="true"></span>Deleting account…
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Deletion complete
+       Notes:
+         - AC1: confirms immediate, permanent erasure of all listed data categories.
+         - AC4: explicitly lists that all 3 sessions were revoked, not just the current device.
+         - AC3: informs the user that former credentials will no longer work anywhere.
+         - AC7: one-line compliance note discloses that a minimal, anonymized audit record
+           (account reference + timestamp only) is retained; the previous standalone
+           internal/admin audit-log screen was removed since it had no in-app entry point.
+         - No "undo" or "restore" affordance is offered anywhere on this screen, by design.
+  -->
+  <!-- State: deletion-complete -->
+  <div class="screen" data-name="Deletion complete — logged out (AC1, AC3, AC4, AC7)">
+    <div class="page-shell">
+      <div class="content-pad" style="margin-top: var(--space-4);">
+        <div class="empty-state">
+          <div class="empty-state-icon" aria-hidden="true">✅</div>
+          <div class="text-lg text-bold">Your account has been deleted</div>
+          <p class="text-sm text-muted">
+            Your credentials, profile, workout logs, achievements, and posts have been
+            permanently erased. This cannot be undone.
+          </p>
+        </div>
+
+        <div class="card" style="margin-top: var(--space-2);">
+          <div class="card-body">
+            <div class="card-title">Sessions revoked</div>
+            <div class="device-list">
+              <div class="device-row"><span class="device-icon" aria-hidden="true">📱</span><span>This device</span><span class="device-status-revoked">Signed out</span></div>
+              <div class="device-row"><span class="device-icon" aria-hidden="true">💻</span><span>Laptop — Chrome</span><span class="device-status-revoked">Signed out</span></div>
+              <div class="device-row"><span class="device-icon" aria-hidden="true">📱</span><span>Tablet — Safari</span><span class="device-status-revoked">Signed out</span></div>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-sm text-muted" style="margin-top: var(--space-3);">
+          Signing in again with the old email and password will no longer work.
+        </p>
+        <p class="text-sm text-muted" style="margin-top: var(--space-2);">
+          A minimal, anonymized record (a non-identifying account reference and the deletion
+          timestamp) is kept for compliance purposes. It contains no personal information.
+        </p>
+        <button class="btn btn-primary btn-block" style="margin-top: var(--space-3);" onclick="show(5)">
+          Go to sign-in
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Login attempt after deletion fails
+       Notes:
+         - AC3: former credentials are rejected with a generic, non-account-confirming error,
+           consistent with standard login failure messaging (doesn't reveal whether the account
+           ever existed).
+  -->
+  <!-- State: login-after-deletion-fails -->
+  <div class="screen" data-name="Login with deleted account credentials fails (AC3)">
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <span class="top-app-bar-title">Log in</span>
+      </div>
+      <div class="content-pad" style="margin-top: var(--space-3);">
+        <div class="field">
+          <label class="label" for="login-email">Email</label>
+          <input class="input" type="email" id="login-email" value="jordan.miles@example.com" readonly>
+        </div>
+        <div class="field">
+          <label class="label" for="login-password">Password</label>
+          <input class="input has-error" type="password" id="login-password" value="••••••••••">
+          <div class="field-error-text">
+            <span aria-hidden="true">⚠</span>
+            <span>Incorrect email or password.</span>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block">Log in</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Password attempts exhausted — lockout
+       Notes:
+         - AC5: deletion confirmation attempts are subject to the platform's existing login
+           lockout policy — after repeated incorrect passwords, the form itself is locked,
+           not just individually-rejected each time.
+  -->
+  <!-- State: lockout -->
+  <div class="screen" data-name="Password attempts exhausted — lockout applied (AC5)">
+    <div class="page-shell">
+      <div class="top-app-bar">
+        <button class="back-btn" onclick="show(0)" aria-label="Back">←</button>
+        <span class="top-app-bar-title">Delete account</span>
+      </div>
+      <div class="content-pad" style="margin-top: var(--space-3);">
+        <div class="lockout-banner">
+          <span class="banner-icon" aria-hidden="true">🔒</span>
+          <div>
+            <div class="banner-title">Too many incorrect attempts</div>
+            <div class="banner-body">
+              Deletion confirmation is temporarily locked after 5 incorrect password attempts,
+              the same limit used for sign-in. Try again in 15 minutes.
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label" for="locked-password">Current password</label>
+          <input class="input" type="password" id="locked-password" disabled placeholder="Locked">
+        </div>
+        <button class="btn btn-primary btn-block" disabled>Permanently delete account</button>
+        <button class="btn btn-secondary btn-block" style="margin-top: var(--space-2);" onclick="show(0)">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Duplicate deletion request — idempotent response
+       Notes:
+         - AC6: a second deletion request against an account that is already deleted (or
+           whose deletion is already in progress, e.g. a retried request from a slow network)
+           returns the same "already deleted" outcome rather than an error, and never a second
+           deletion side-effect.
+  -->
+  <!-- State: idempotent-duplicate -->
+  <div class="screen" data-name="Duplicate deletion request — idempotent (AC6)">
+    <div class="page-shell">
+      <div class="content-pad" style="margin-top: var(--space-4);">
+        <div class="empty-state">
+          <div class="empty-state-icon" aria-hidden="true">ℹ️</div>
+          <div class="text-lg text-bold">This account was already deleted</div>
+          <p class="text-sm text-muted">
+            A deletion request for this account was already completed. No further action is
+            needed — your data was already erased.
+          </p>
+        </div>
+        <button class="btn btn-primary btn-block" style="margin-top: var(--space-3);" onclick="show(5)">
+          Go to sign-in
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Fixture data — simulated only, no network calls
+const FIXTURE = {
+  simulatedSuccessInput: "demo-ok",
+  maxAttempts: 5,
+  attempts: 0,
+};
+
+function onPasswordInput() {
+  document.getElementById('password-error').style.display = 'none';
+  updateDeleteButton();
+}
+
+function updateDeleteButton() {
+  const pw = document.getElementById('confirm-password').value;
+  const checked = document.getElementById('confirm-checkbox').checked;
+  document.getElementById('delete-submit-btn').disabled = !(pw.length > 0 && checked);
+}
+
+function attemptDelete() {
+  const pw = document.getElementById('confirm-password').value;
+  const btn = document.getElementById('delete-submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner" aria-hidden="true"></span>Verifying…';
+
+  setTimeout(() => {
+    btn.innerHTML = 'Permanently delete account';
+    if (pw === FIXTURE.simulatedSuccessInput) {
+      show(3);
+      setTimeout(() => show(4), 900);
+    } else {
+      FIXTURE.attempts += 1;
+      document.getElementById('password-error').style.display = 'flex';
+      const counter = document.getElementById('attempt-counter');
+      const remaining = FIXTURE.maxAttempts - FIXTURE.attempts;
+      if (remaining > 0) {
+        counter.style.display = 'block';
+        counter.textContent = remaining + ' attempt' + (remaining === 1 ? '' : 's') + ' remaining before lockout';
+      }
+      updateDeleteButton();
+      if (FIXTURE.attempts >= FIXTURE.maxAttempts) {
+        setTimeout(() => show(6), 600);
+      }
+    }
+  }, 350);
+}
+
+const screens = Array.from(document.querySelectorAll('.screen'));
+let cur = 0;
+function show(i) {
+  cur = Math.max(0, Math.min(screens.length - 1, i));
+  screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+  document.getElementById('screen-label').textContent =
+    `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+}
+document.getElementById('prev-btn').onclick = () => show(cur - 1);
+document.getElementById('next-btn').onclick = () => show(cur + 1);
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') show(cur + 1);
+  if (e.key === 'ArrowLeft') show(cur - 1);
+});
+show(0);
+</script>
+
+</body>
+</html>
+
+<!-- arc:css-inlined -->
