@@ -32,9 +32,14 @@
     <h1 class="text-bold" id="welcome-name" style="margin:0;font-size:inherit">Welcome</h1>
     <div class="text-sm text-muted" id="welcome-email"></div>
   </div>
-  <div style="display:flex;align-items:center;gap:var(--space-2);">
-    <div class="avatar" id="avatar-initials" aria-hidden="true"></div>
-    <button class="btn btn-secondary" id="logout-button" style="min-height:44px;">Log out</button>
+  <div class="avatar-menu" data-avatar-menu>
+    <button class="avatar-menu-trigger" type="button" aria-haspopup="true" aria-expanded="false" data-avatar-trigger>
+      <div class="avatar" id="avatar-initials" aria-hidden="true"></div>
+    </button>
+    <div class="avatar-menu-dropdown" role="menu" hidden data-avatar-dropdown>
+      <a class="avatar-menu-item" role="menuitem" href="profile.html">View profile</a>
+      <button class="avatar-menu-item danger" role="menuitem" type="button" id="logout-button">Logout</button>
+    </div>
   </div>
 </div>
 <div class="empty-state">
@@ -50,6 +55,7 @@
   <a class="bottom-tab" href="profile.html">Profile</a>
 </div>
 
+<script type="module" src="/avatar-menu.js"></script>
 <script type="module" src="/dashboard.js"></script>
 </body>
 </html>

@@ -54,6 +54,12 @@ describe('dashboard', () => {
     expect(window.location.href).toBe('login.html?logged_out=1');
   });
 
+  it('exposes the avatar-menu logout control that Profile/Account settings must mirror (AC16)', async () => {
+    await loadDashboardPage();
+    expect(document.querySelector('.avatar-menu .avatar-menu-trigger .avatar')).not.toBeNull();
+    expect(document.querySelector('.avatar-menu-dropdown .avatar-menu-item.danger')).not.toBeNull();
+  });
+
   it('clicking the logout button triggers the same logout flow', async () => {
     mockMeAndLogout();
     await loadDashboardPage();

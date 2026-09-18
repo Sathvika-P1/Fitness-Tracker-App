@@ -15,6 +15,7 @@ function setFieldValue(name, value) {
 export function renderProfile(data) {
   document.getElementById('header-name').textContent = data.display_name;
   document.getElementById('avatar-initial').textContent = initials(data.display_name);
+  document.getElementById('avatar-menu-initial').textContent = initials(data.display_name);
   FIELDS.forEach((field) => setFieldValue(field, data[field]));
   const counter = document.getElementById('display-name-counter');
   const len = (data.display_name || '').length;
@@ -112,6 +113,25 @@ form?.addEventListener('submit', async (event) => {
     saveButton.textContent = 'Save changes';
   }
 });
+
+export async function logout() {
+  const errorEl = document.getElementById('profile-logout-error');
+  errorEl.hidden = true;
+  try {
+    const res = await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+    if (res.status !== 200) {
+      errorEl.hidden = false;
+      return;
+    }
+  } catch (error) {
+    console.error('logout_fetch_failed', { error });
+    errorEl.hidden = false;
+    return;
+  }
+  window.location.href = 'login.html?logged_out=1';
+}
+
+document.getElementById('profile-logout-btn')?.addEventListener('click', logout);
 
 if (document.getElementById('profile-form')) {
   loadProfile();
