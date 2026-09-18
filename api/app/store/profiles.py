@@ -31,6 +31,10 @@ def serialize_profile(account: Account) -> dict:
 def update_profile(db: Session, account: Account, updates: dict) -> Account:
     for key, value in updates.items():
         setattr(account, key, value)
-    db.commit()
-    db.refresh(account)
+    try:
+        db.commit()
+        db.refresh(account)
+    except Exception:
+        db.rollback()
+        raise
     return account

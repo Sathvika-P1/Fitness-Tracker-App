@@ -1,5 +1,6 @@
 import logging
 import math
+import time
 
 from fastapi import APIRouter, Cookie, Depends
 from fastapi.responses import JSONResponse
@@ -47,9 +48,18 @@ def _validate_range(field_label: str, raw: str, minimum: float, maximum: float, 
 
 @router.get("/api/profile")
 def get_profile(db: Session = Depends(get_db), sid: str | None = Cookie(default=None)):
+    start = time.monotonic()
     account = _require_account(db, sid)
     if account is None:
+        logger.warning(
+            "profile_get_unauthorized duration_ms=%.1f", (time.monotonic() - start) * 1000
+        )
         return JSONResponse(status_code=401, content={"message": "Not signed in."})
+    logger.info(
+        "profile_get account_id=%s duration_ms=%.1f",
+        account.id,
+        (time.monotonic() - start) * 1000,
+    )
     return profiles.serialize_profile(account)
 
 
@@ -59,8 +69,12 @@ def update_profile(
     db: Session = Depends(get_db),
     sid: str | None = Cookie(default=None),
 ):
+    start = time.monotonic()
     account = _require_account(db, sid)
     if account is None:
+        logger.warning(
+            "profile_update_unauthorized duration_ms=%.1f", (time.monotonic() - start) * 1000
+        )
         return JSONResponse(status_code=401, content={"message": "Not signed in."})
 
     errors: dict[str, str] = {}
@@ -118,9 +132,30 @@ def update_profile(
             updates["gender"] = payload.gender
 
     if errors:
-        logger.warning("profile_validation_error fields=%s", list(errors))
+        logger.warning(
+            "profile_validation_error fields=%s duration_ms=%.1f",
+            list(errors),
+            (time.monotonic() - start) * 1000,
+        )
         return JSONResponse(status_code=400, content={"errors": errors})
 
-    updated = profiles.update_profile(db, account, updates)
-    logger.info("profile_updated account_id=%s", account.id)
+    try:
+        updated = profiles.update_profile(db, account, updates)
+    except Exception:
+        logger.exception(
+            "profile_update_failed account_id=%s fields=%s duration_ms=%.1f",
+            account.id,
+            list(updates),
+            (time.monotonic() - start) * 1000,
+        )
+        return JSONResponse(
+            status_code=500, content={"message": "Failed to save profile. Please try again."}
+        )
+
+    logger.info(
+        "profile_updated account_id=%s fields=%s duration_ms=%.1f",
+        account.id,
+        list(updates),
+        (time.monotonic() - start) * 1000,
+    )
     return profiles.serialize_profile(updated)

@@ -46,7 +46,7 @@
       <div class="field">
         <label class="label" for="display-name">Display name</label>
         <input class="input" id="display-name" name="display_name" type="text" maxlength="200">
-        <div class="char-counter" id="display-name-counter">0 / 50</div>
+        <div class="char-counter" id="display-name-counter" aria-live="polite">0 / 50</div>
         <p class="helper-text">Letters, numbers, spaces, and basic punctuation. Max 50 characters.</p>
         <p class="field-error-text" id="display-name-error" role="alert" hidden></p>
       </div>
@@ -110,8 +110,8 @@
 
   <div class="bottom-tabs">
     <a class="bottom-tab" href="dashboard.html">Today</a>
-    <div class="bottom-tab">Log</div>
-    <div class="bottom-tab">Progress</div>
+    <div class="bottom-tab" role="button" aria-disabled="true">Log</div>
+    <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
     <a class="bottom-tab active" href="profile.html">Profile</a>
   </div>
 </div>
