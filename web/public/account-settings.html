@@ -12,6 +12,16 @@
 <div class="page-shell">
   <div class="top-app-bar">
     <span class="top-app-bar-title">Account settings</span>
+    <div class="avatar-menu" data-avatar-menu>
+      <button class="avatar-menu-trigger" type="button" aria-haspopup="true" aria-expanded="false" data-avatar-trigger>
+        <div class="avatar" aria-hidden="true">👤</div>
+      </button>
+      <div class="avatar-menu-dropdown" role="menu" hidden data-avatar-dropdown>
+        <a class="avatar-menu-item" role="menuitem" href="profile.html">View profile</a>
+        <button class="avatar-menu-item danger" role="menuitem" type="button" id="settings-logout-btn">Logout</button>
+      </div>
+      <p class="inline-error avatar-menu-error" id="settings-logout-error" role="alert" hidden>Logout failed. Please try again.</p>
+    </div>
   </div>
   <div class="content-pad" style="margin-top: var(--space-3);">
     <div class="card">
@@ -51,6 +61,7 @@
   </div>
 </div>
 
+<script type="module" src="/avatar-menu.js"></script>
 <script type="module" src="/account-settings.js"></script>
 </body>
 </html>

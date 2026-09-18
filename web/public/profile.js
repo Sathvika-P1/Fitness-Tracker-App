@@ -113,6 +113,25 @@ form?.addEventListener('submit', async (event) => {
   }
 });
 
+export async function logout() {
+  const errorEl = document.getElementById('profile-logout-error');
+  errorEl.hidden = true;
+  try {
+    const res = await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+    if (res.status !== 200) {
+      errorEl.hidden = false;
+      return;
+    }
+  } catch (error) {
+    console.error('logout_fetch_failed', { error });
+    errorEl.hidden = false;
+    return;
+  }
+  window.location.href = 'login.html?logged_out=1';
+}
+
+document.getElementById('profile-logout-btn')?.addEventListener('click', logout);
+
 if (document.getElementById('profile-form')) {
   loadProfile();
 }
