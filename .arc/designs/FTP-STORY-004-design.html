@@ -547,10 +547,6 @@ body {
   }
   .attempt-counter { font-size: var(--font-size-sm); color: var(--color-muted); margin-top: var(--space-1); }
 
-  .audit-log-card { font-family: var(--font-family-base); font-size: var(--font-size-sm); background: var(--color-surface);
-    border: var(--border-width-sm) solid var(--color-border); border-radius: var(--radius-md);
-    padding: var(--space-2) var(--space-3); color: var(--color-muted); overflow-x: auto; }
-
   .device-list { margin: var(--space-2) 0; }
   .device-row { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) 0;
     border-bottom: var(--border-width-sm) solid var(--color-border); font-size: var(--font-size-sm); }
@@ -678,7 +674,7 @@ body {
           <label for="confirm-checkbox">I understand this permanently deletes my account and cannot be undone.</label>
         </div>
 
-        <button id="delete-submit-btn" class="btn btn-danger btn-block" disabled onclick="attemptDelete()">
+        <button id="delete-submit-btn" class="btn btn-primary btn-block" disabled onclick="attemptDelete()">
           Permanently delete account
         </button>
         <button class="btn btn-secondary btn-block" style="margin-top: var(--space-2);" onclick="show(0)">
@@ -715,7 +711,7 @@ body {
           <input type="checkbox" checked disabled>
           <label>I understand this permanently deletes my account and cannot be undone.</label>
         </div>
-        <button class="btn btn-danger btn-block">Permanently delete account</button>
+        <button class="btn btn-primary btn-block">Permanently delete account</button>
         <button class="btn btn-secondary btn-block" style="margin-top: var(--space-2);" onclick="show(0)">Cancel</button>
         <p class="text-sm text-muted" style="margin-top: var(--space-3);">
           Nothing was deleted. Your credentials, profile, and sessions are all still active.
@@ -742,7 +738,7 @@ body {
           <p class="text-sm text-muted">
             Erasing credentials, profile data, sessions, and content. This only takes a moment.
           </p>
-          <button class="btn btn-danger btn-block" disabled style="margin-top: var(--space-3);">
+          <button class="btn btn-primary btn-block" disabled style="margin-top: var(--space-3);">
             <span class="spinner" aria-hidden="true"></span>Deleting account…
           </button>
         </div>
@@ -755,10 +751,13 @@ body {
          - AC1: confirms immediate, permanent erasure of all listed data categories.
          - AC4: explicitly lists that all 3 sessions were revoked, not just the current device.
          - AC3: informs the user that former credentials will no longer work anywhere.
+         - AC7: one-line compliance note discloses that a minimal, anonymized audit record
+           (account reference + timestamp only) is retained; the previous standalone
+           internal/admin audit-log screen was removed since it had no in-app entry point.
          - No "undo" or "restore" affordance is offered anywhere on this screen, by design.
   -->
   <!-- State: deletion-complete -->
-  <div class="screen" data-name="Deletion complete — logged out (AC1, AC3, AC4)">
+  <div class="screen" data-name="Deletion complete — logged out (AC1, AC3, AC4, AC7)">
     <div class="page-shell">
       <div class="content-pad" style="margin-top: var(--space-4);">
         <div class="empty-state">
@@ -783,6 +782,10 @@ body {
 
         <p class="text-sm text-muted" style="margin-top: var(--space-3);">
           Signing in again with the old email and password will no longer work.
+        </p>
+        <p class="text-sm text-muted" style="margin-top: var(--space-2);">
+          A minimal, anonymized record (a non-identifying account reference and the deletion
+          timestamp) is kept for compliance purposes. It contains no personal information.
         </p>
         <button class="btn btn-primary btn-block" style="margin-top: var(--space-3);" onclick="show(5)">
           Go to sign-in
@@ -849,7 +852,7 @@ body {
           <label class="label" for="locked-password">Current password</label>
           <input class="input" type="password" id="locked-password" disabled placeholder="Locked">
         </div>
-        <button class="btn btn-danger btn-block" disabled>Permanently delete account</button>
+        <button class="btn btn-primary btn-block" disabled>Permanently delete account</button>
         <button class="btn btn-secondary btn-block" style="margin-top: var(--space-2);" onclick="show(0)">Cancel</button>
       </div>
     </div>
@@ -877,39 +880,6 @@ body {
         <button class="btn btn-primary btn-block" style="margin-top: var(--space-3);" onclick="show(5)">
           Go to sign-in
         </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Screen: Compliance audit log (internal/admin view)
-       Notes:
-         - AC7: illustrates the minimal, non-identifying record retained after deletion —
-           an anonymized account reference and timestamp only, no email/name/content. Shown
-           here for reviewer sign-off on the retained fields, not as an end-user-facing screen.
-  -->
-  <!-- State: audit-log -->
-  <div class="screen" data-name="Compliance audit log entry — internal view (AC7)">
-    <div class="page-shell">
-      <div class="top-app-bar">
-        <span class="top-app-bar-title">Audit log (internal)</span>
-      </div>
-      <div class="content-pad" style="margin-top: var(--space-3);">
-        <p class="text-sm text-muted">
-          After an account is deleted, one minimal audit record is retained for compliance.
-          It contains no personal or identifying information.
-        </p>
-        <div class="audit-log-card" style="margin-top: var(--space-2);">
-{<br>
-&nbsp;&nbsp;"event": "account_deleted",<br>
-&nbsp;&nbsp;"account_ref": "acct_9f21a7•••• (hashed)",<br>
-&nbsp;&nbsp;"deleted_at": "2026-09-18T14:32:07Z"<br>
-}
-        </div>
-        <ul class="consequence-list" style="margin-top: var(--space-3);">
-          <li><span class="mark" style="color: var(--color-primary);" aria-hidden="true">✓</span><span>No email, name, or profile content retained</span></li>
-          <li><span class="mark" style="color: var(--color-primary);" aria-hidden="true">✓</span><span>Account reference is a non-reversible hash, not the raw user ID</span></li>
-          <li><span class="mark" style="color: var(--color-primary);" aria-hidden="true">✓</span><span>Timestamp retained for compliance reporting only</span></li>
-        </ul>
       </div>
     </div>
   </div>
