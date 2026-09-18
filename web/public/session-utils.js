@@ -19,6 +19,7 @@ export async function logout(errorElId) {
   try {
     const res = await fetch('/api/logout', { method: 'POST', credentials: 'include' });
     if (res.status !== 200) {
+      console.error('logout_api_error', { status: res.status });
       if (errorEl) errorEl.hidden = false;
       return;
     }
@@ -37,6 +38,7 @@ export async function checkSessionAndReveal(revealFn) {
       window.location.href = 'dashboard.html';
       return;
     }
+    console.error('session_check_error', { status: res.status });
     revealFn();
   } catch (error) {
     console.error('session_check_failed', { error });
