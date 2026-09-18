@@ -831,7 +831,9 @@ body {
   <!-- Screen: Profile — logout failed (inline error)
        Notes:
          - Satisfies AC13, AC14: when /api/logout fails, an inline error shows near the logout control and the user stays on the page (no redirect)
-         - Error text sits directly under the button, right-aligned to match the control's position in the top app bar
+         - Round 3 revision: replaced the floating red caption under the avatar with the app's existing .banner
+           component (same treatment as profile.html's "Save failed" banner), placed at the top of the content
+           area right below the control that triggered it — reads as a proper error state instead of stray text
   -->
   <div class="screen" data-name="Profile — logout failed">
     <div class="device-frame">
@@ -848,11 +850,17 @@ body {
             <button class="avatar-menu-trigger" type="button" aria-haspopup="true" aria-expanded="false">
               <div class="avatar" aria-hidden="true">JD</div>
             </button>
-            <p class="inline-error avatar-menu-error">Logout failed. Please try again.</p>
           </div>
         </div>
         <div class="content-pad">
-          <p class="text-muted" style="margin-top:var(--space-3);">The rest of the profile page is unaffected — the user remains here, fully in control, and can retry.</p>
+          <div class="banner" role="alert" style="margin-top:var(--space-3);">
+            <span class="banner-icon" aria-hidden="true">⚠</span>
+            <div>
+              <div class="banner-title">Logout failed</div>
+              <div class="banner-body">Something went wrong. You're still logged in — please try again.</div>
+            </div>
+          </div>
+          <p class="text-muted">The rest of the profile page is unaffected — the user remains here, fully in control, and can retry.</p>
         </div>
         <div class="bottom-tabs">
           <a class="bottom-tab" href="#" data-goto-screen="Dashboard — avatar menu">Today</a>
