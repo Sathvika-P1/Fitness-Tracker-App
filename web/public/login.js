@@ -1,3 +1,5 @@
+import { checkSessionAndReveal } from './session-utils.js';
+
 function hideErrorBanner() {
   const banner = document.getElementById('error-banner');
   if (banner) banner.hidden = true;
@@ -78,17 +80,7 @@ function revealLoginForm() {
 }
 
 export async function checkExistingSession() {
-  try {
-    const res = await fetch('/api/me', { credentials: 'include' });
-    if (res.status === 200) {
-      window.location.href = 'dashboard.html';
-      return;
-    }
-    revealLoginForm();
-  } catch (error) {
-    console.error('session_check_failed', { error });
-    revealLoginForm();
-  }
+  return checkSessionAndReveal(revealLoginForm);
 }
 
 const form = document.getElementById('login-form');

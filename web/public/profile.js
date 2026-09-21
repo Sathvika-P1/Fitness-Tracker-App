@@ -1,5 +1,5 @@
 import { initials, clearFieldError, setFieldError } from './form-utils.js';
-import { fetchOrRedirect } from './session-utils.js';
+import { fetchOrRedirect, logout as sharedLogout } from './session-utils.js';
 
 const DISPLAY_NAME_MAX_LENGTH = 50;
 
@@ -14,7 +14,7 @@ function setFieldValue(name, value) {
 
 export function renderProfile(data) {
   document.getElementById('header-name').textContent = data.display_name;
-  document.getElementById('avatar-initial').textContent = initials(data.display_name);
+  document.getElementById('avatar-menu-initial').textContent = initials(data.display_name);
   FIELDS.forEach((field) => setFieldValue(field, data[field]));
   const counter = document.getElementById('display-name-counter');
   const len = (data.display_name || '').length;
@@ -112,6 +112,12 @@ form?.addEventListener('submit', async (event) => {
     saveButton.textContent = 'Save changes';
   }
 });
+
+export function logout() {
+  return sharedLogout('profile-logout-error');
+}
+
+document.getElementById('profile-logout-btn')?.addEventListener('click', logout);
 
 if (document.getElementById('profile-form')) {
   loadProfile();
