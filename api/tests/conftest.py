@@ -15,6 +15,7 @@ from app.store.models import (
     AccountDeletionAudit,
     DeletionLockoutFailure,
     SessionRow,
+    WorkoutEntry,
 )
 
 
@@ -38,6 +39,7 @@ def _clean_tables():
     db = SessionLocal()
     db.query(SessionRow).delete()
     db.query(DeletionLockoutFailure).delete()
+    db.query(WorkoutEntry).delete()
     db.query(Account).delete()
     db.query(AccountDeletionAudit).delete()
     db.commit()
