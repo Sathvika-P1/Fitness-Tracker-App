@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTP-STORY-007 — Create Workout Entry</title>
+<style>
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1a1a1a; /** Primary body text color, used on color-bg. Contrast ratio ~17.4:1. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-surface: #f8fafc; /** Slightly recessed surface, distinct from color-bg, used for cards. */
+  --color-primary: #1d4ed8; /** Brand/interactive accent color. Meets 4.5:1 as text on color-bg (~6.7:1). */
+  --color-on-primary: #ffffff; /** Text/icon color placed on top of color-primary. */
+  --color-muted: #475569; /** Secondary/muted text color. */
+  --color-border: #e2e8f0; /** Default hairline border color. */
+  --color-danger: #dc2626; /** Destructive/error accent color. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 600;
+  --line-height-base: 1.5;
+  --button-primary-background: var(--color-primary);
+  --button-primary-foreground: var(--color-on-primary);
+  --button-primary-border-radius: var(--radius-md);
+  --button-secondary-background: var(--color-bg);
+  --button-secondary-foreground: var(--color-primary);
+  --button-secondary-border: var(--color-primary);
+  --card-default-background: var(--color-surface);
+  --card-default-border: var(--color-border);
+  --card-default-border-radius: var(--radius-lg);
+  --chip-default-background: var(--color-surface);
+  --chip-default-foreground: var(--color-muted);
+  --chip-default-border-radius: var(--radius-sm);
+  --input-default-background: var(--color-bg);
+  --input-default-border: var(--color-border);
+  --input-default-foreground: var(--color-fg);
+  --input-default-border-radius: var(--radius-sm);
+}
+
+</style>
+<style>
+/* Base layout / typography */
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-md);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-bold { font-weight: var(--font-weight-bold); }
+
+/* Layout utilities */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
+/* Buttons */
+
+.btn {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-md);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-radius: var(--button-primary-border-radius);
+}
+
+.btn-secondary {
+  background: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-on-primary);
+}
+
+/* Card */
+
+.card {
+  background: var(--card-default-background);
+  border: var(--border-width-sm) solid var(--card-default-border);
+  border-radius: var(--card-default-border-radius);
+  padding: var(--space-4);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Chip */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  background: var(--chip-default-background);
+  color: var(--chip-default-foreground);
+  border-radius: var(--chip-default-border-radius);
+  font-size: var(--font-size-sm);
+}
+
+/* Form controls */
+
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  background: var(--input-default-background);
+  color: var(--input-default-foreground);
+  border: var(--border-width-sm) solid var(--input-default-border);
+  border-radius: var(--input-default-border-radius);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-md);
+  outline: none;
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-1);
+}
+
+/* Style-guide page helpers */
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.swatch-color {
+  height: var(--space-4);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-sm) solid var(--color-border);
+}
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.section {
+  margin-bottom: var(--space-4);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* Auth pages (signup / login) */
+
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+.auth-shell {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-3);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.field {
+  margin-bottom: var(--space-3);
+}
+
+.field-error-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.input.has-error {
+  border-color: var(--color-danger);
+  border-width: var(--border-width-md);
+}
+
+.helper-text {
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.btn-block {
+  width: 100%;
+  min-height: 44px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.banner {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  background: var(--color-bg);
+  border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.banner[hidden] {
+  display: none;
+}
+
+.banner-icon {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.banner-title {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+}
+
+.banner-body {
+  color: var(--color-fg);
+  font-size: var(--font-size-sm);
+}
+
+.link-inline {
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.center-note {
+  text-align: center;
+  margin-top: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+
+.banner-neutral {
+  border-color: var(--color-border);
+}
+
+.banner-neutral .banner-icon,
+.banner-neutral .banner-title {
+  color: var(--color-primary);
+}
+
+/* App shell (top bar, avatar, bottom tabs) */
+
+.page-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: var(--space-4);
+}
+
+.top-app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.bottom-tabs {
+  display: flex;
+  border-top: var(--border-width-sm) solid var(--color-border);
+  position: sticky;
+  bottom: 0;
+  background: var(--color-bg);
+}
+
+.bottom-tab {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.bottom-tab.active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Profile fields */
+
+.not-set {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.field-group-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.char-counter {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  text-align: right;
+  margin-top: var(--space-1);
+}
+
+.char-counter.over {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+}
+
+.content-pad {
+  padding: 0 var(--space-3);
+}
+
+/* Account deletion */
+
+.back-btn {
+  background: none; border: none; cursor: pointer; color: var(--color-primary);
+  font-size: var(--font-size-md); min-height: 44px; min-width: 44px;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+}
+
+.top-app-bar-title { font-weight: var(--font-weight-bold); font-size: var(--font-size-lg); }
+
+.danger-zone-card {
+  border: var(--border-width-sm) solid var(--color-danger);
+  border-radius: var(--card-default-border-radius);
+  background: var(--color-bg);
+  padding: var(--space-3);
+  margin: var(--space-3);
+}
+.danger-zone-title { color: var(--color-danger); font-weight: var(--font-weight-bold); margin-bottom: var(--space-1); }
+
+.consequence-list { margin: var(--space-3) 0; padding-left: 0; list-style: none; }
+.consequence-list li {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  padding: var(--space-1) 0; font-size: var(--font-size-sm); color: var(--color-fg);
+}
+.consequence-list li .mark { color: var(--color-danger); font-weight: var(--font-weight-bold); flex-shrink: 0; }
+
+.checkbox-row {
+  display: flex; align-items: flex-start; gap: var(--space-2);
+  margin: var(--space-3) 0; min-height: 44px;
+}
+.checkbox-row input[type="checkbox"] {
+  width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; accent-color: var(--color-danger);
+}
+.checkbox-row label { font-size: var(--font-size-sm); color: var(--color-fg); }
+
+.attempt-counter { font-size: var(--font-size-sm); color: var(--color-muted); margin-top: var(--space-1); }
+
+.lockout-banner {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  background: var(--color-bg); border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-3);
+}
+.lockout-banner .banner-icon { color: var(--color-danger); font-weight: var(--font-weight-bold); }
+.lockout-banner .banner-title { color: var(--color-danger); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+.lockout-banner .banner-body { color: var(--color-fg); font-size: var(--font-size-sm); }
+
+.account-empty-state {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: var(--space-4) var(--space-3); gap: var(--space-2);
+}
+.account-empty-state-icon {
+  width: 64px; height: 64px; border-radius: 50%; background: var(--color-surface);
+  display: flex; align-items: center; justify-content: center; font-size: var(--font-size-lg);
+  color: var(--color-danger);
+}
+
+/* Avatar menu — click the avatar to reveal View profile / Logout */
+.avatar-menu {
+  position: relative;
+}
+.avatar-menu-trigger {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  display: block;
+}
+.avatar-menu-trigger:focus-visible {
+  outline: var(--border-width-md) solid var(--color-primary);
+  outline-offset: 2px;
+}
+.avatar-menu-dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  min-width: 180px;
+  background: var(--color-bg);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-1);
+  z-index: 20;
+}
+.avatar-menu-dropdown[hidden] {
+  display: none;
+}
+.avatar-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.avatar-menu-item:hover,
+.avatar-menu-item:focus-visible {
+  background: var(--color-surface);
+}
+.avatar-menu-item.danger {
+  color: var(--color-danger);
+}
+.avatar-menu-error {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--space-1);
+  white-space: nowrap;
+}
+.inline-error {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+</style>
+<!--
+  App nav: top bar — Dashboard · Workouts · History · Profile (fitness-tracker app; no arc chrome)
+  Design system note: no color-success / positive-status token exists in tokens.json.
+  Confirmation state below uses color-primary for its accent instead of inventing a green.
+  Also no alert/banner/field-error utility class exists — banner, field errors and the
+  autocomplete listbox are built in this file's <style> block using only existing tokens.
+-->
+<style>
+  body { background: var(--color-bg); color: var(--color-fg); font-family: var(--font-family-base); }
+
+  .app-topbar {
+    display: flex; align-items: center; gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: var(--border-width-sm) solid var(--color-border);
+    background: var(--color-bg);
+  }
+  .app-topbar .brand { font-weight: var(--font-weight-bold); font-size: var(--font-size-lg); }
+  .app-topbar nav { display: flex; gap: var(--space-3); }
+  .app-topbar nav a { color: var(--color-muted); text-decoration: none; font-size: var(--font-size-sm); }
+  .app-topbar nav a.active { color: var(--color-primary); font-weight: var(--font-weight-bold); }
+
+  .page-wrap { max-width: 560px; margin: 0 auto; padding: var(--space-4); }
+
+  .field { margin-bottom: var(--space-3); position: relative; }
+  .field .label { display: block; margin-bottom: var(--space-1); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+  .field .hint { display: block; margin-top: var(--space-1); font-size: var(--font-size-sm); color: var(--color-muted); }
+  .field .input { width: 100%; box-sizing: border-box; padding: var(--space-2); font-size: var(--font-size-md); }
+  .field .input[aria-invalid="true"] { border-color: var(--color-danger); border-width: var(--border-width-md); }
+  .field-error {
+    display: flex; align-items: center; gap: var(--space-1);
+    margin-top: var(--space-1); color: var(--color-danger); font-size: var(--font-size-sm);
+  }
+  .field-error::before { content: "⚠"; }
+
+  .row-2 { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .row-2 > .field { flex: 1; }
+
+  .banner {
+    display: flex; align-items: flex-start; gap: var(--space-2);
+    padding: var(--space-3); margin-bottom: var(--space-3);
+    border: var(--border-width-md) solid var(--color-danger);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-danger);
+  }
+  .banner .icon { font-size: var(--font-size-lg); line-height: 1; }
+  .banner .body { color: var(--color-fg); font-size: var(--font-size-sm); }
+  .banner .body strong { color: var(--color-danger); display: block; margin-bottom: var(--space-1); }
+
+  .banner-info {
+    display: flex; align-items: flex-start; gap: var(--space-2);
+    padding: var(--space-3); margin-bottom: var(--space-3);
+    border: var(--border-width-md) solid var(--color-primary);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+  .banner-info .icon { font-size: var(--font-size-lg); line-height: 1; color: var(--color-primary); }
+  .banner-info .body strong { color: var(--color-primary); display: block; margin-bottom: var(--space-1); }
+  .banner-info .body { font-size: var(--font-size-sm); }
+
+  .autocomplete-list {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 20;
+    background: var(--color-bg); border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-sm); margin-top: var(--space-1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    max-height: 180px; overflow-y: auto;
+  }
+  .autocomplete-list[hidden] { display: none; }
+  .autocomplete-option {
+    padding: var(--space-3); font-size: var(--font-size-md);
+    cursor: pointer;
+  }
+  .autocomplete-option:hover, .autocomplete-option.active {
+    background: var(--color-surface); color: var(--color-primary);
+  }
+  .autocomplete-option mark { background: none; color: var(--color-primary); font-weight: var(--font-weight-bold); }
+
+  .confirm-box {
+    text-align: center; padding: var(--space-4);
+  }
+  .confirm-box .icon-circle {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: var(--border-width-md) solid var(--color-primary);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto var(--space-3); font-size: var(--font-size-lg); color: var(--color-primary);
+  }
+  .summary-list { text-align: left; list-style: none; margin: var(--space-3) 0; padding: 0; }
+  .summary-list li { display: flex; justify-content: space-between; padding: var(--space-1) 0; border-bottom: var(--border-width-sm) solid var(--color-border); font-size: var(--font-size-sm); }
+  .summary-list li span:first-child { color: var(--color-muted); }
+
+  .actions { display: flex; gap: var(--space-2); margin-top: var(--space-3); }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .btn[disabled] { opacity: 0.6; cursor: not-allowed; }
+  .screen[data-name] { animation: none; }
+</style>
+</head>
+<body>
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--color-surface);border-bottom:1px solid var(--color-border);font-size:13px;font-family:var(--font-family-base)">
+  <span style="font-family:monospace;color:var(--color-muted)">FTP-STORY-007</span>
+  <button id="prev-btn" style="background:none;border:none;color:var(--color-primary);cursor:pointer;font-size:13px;padding:4px 8px;">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--color-fg)"></span>
+  <button id="next-btn" style="background:none;border:none;color:var(--color-primary);cursor:pointer;font-size:13px;padding:4px 8px;">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+
+<div class="app-topbar">
+  <span class="brand">FitTrack</span>
+  <nav>
+    <a href="#" class="active">Dashboard</a>
+    <a href="#">Workouts</a>
+    <a href="#">History</a>
+    <a href="#">Profile</a>
+  </nav>
+</div>
+
+<div id="screens">
+
+  <!-- Screen: Entry Form — Default
+       Notes:
+         - Baseline state before any interaction; exercise name, date (defaults to today),
+           duration, and sets/reps all editable and empty.
+         - Date input has max=today (native affordance) but server-side validation is the
+           real enforcement demonstrated in the "Future date rejected" screen.
+  -->
+  <!-- State: default -->
+  <div class="screen" data-name="Entry Form — Default">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-1);">Log a workout</h1>
+      <p class="text-sm text-muted" style="margin-bottom: var(--space-4);">Record an exercise you did today or on a past date.</p>
+
+      <form data-form="default" novalidate>
+        <div class="field" style="position:relative;">
+          <label class="label" for="exercise-default">Exercise name</label>
+          <input class="input" id="exercise-default" type="text" placeholder="e.g. Back squat" autocomplete="off"
+                 role="combobox" aria-expanded="false" aria-controls="ac-list-default" aria-autocomplete="list">
+          <ul class="autocomplete-list" id="ac-list-default" role="listbox" hidden></ul>
+        </div>
+        <div class="field">
+          <label class="label" for="date-default">Date</label>
+          <input class="input" id="date-default" type="date" max="2026-09-22" value="2026-09-22">
+          <span class="hint">Today or earlier — future dates aren't allowed.</span>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="duration-default">Duration (minutes)</label>
+            <input class="input" id="duration-default" type="number" min="0" placeholder="e.g. 30">
+          </div>
+          <div class="field">
+            <label class="label" for="sets-default">Sets</label>
+            <input class="input" id="sets-default" type="number" min="0" placeholder="e.g. 3">
+          </div>
+          <div class="field">
+            <label class="label" for="reps-default">Reps</label>
+            <input class="input" id="reps-default" type="number" min="0" placeholder="e.g. 10">
+          </div>
+        </div>
+        <span class="hint" style="display:block; margin-bottom: var(--space-3);">Provide duration or sets/reps (or both). Zero is a valid value for sets/reps.</span>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="go('Autocomplete Suggestions')">Save workout →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Autocomplete Suggestions
+       Notes:
+         - Demonstrates AC7: partial text "b" surfaces the user's own past exercise names
+           as a listbox, but the field remains free text — nothing forces a selection.
+         - Options are clickable/keyboard-navigable; typing continues to work if no
+           suggestion matches.
+  -->
+  <!-- State: autocomplete-open -->
+  <div class="screen" data-name="Autocomplete Suggestions">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-1);">Log a workout</h1>
+      <p class="text-sm text-muted" style="margin-bottom: var(--space-4);">Suggestions are drawn from your own past entries — you can still type anything.</p>
+
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="exercise-ac">Exercise name</label>
+          <span class="hint" style="display:block; margin-bottom: var(--space-1);">Keep typing or pick a suggestion — free text is always accepted.</span>
+          <div style="position:relative;">
+            <input class="input" id="exercise-ac" type="text" value="B" autocomplete="off"
+                   role="combobox" aria-expanded="true" aria-controls="ac-list-open" aria-autocomplete="list">
+            <ul class="autocomplete-list" id="ac-list-open" role="listbox" aria-label="Suggestions from your past entries">
+              <li class="autocomplete-option active" role="option" aria-selected="true"><mark>B</mark>ack squat</li>
+              <li class="autocomplete-option" role="option" aria-selected="false"><mark>B</mark>ench press</li>
+              <li class="autocomplete-option" role="option" aria-selected="false"><mark>B</mark>ulgarian split squat</li>
+            </ul>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label" for="date-ac">Date</label>
+          <input class="input" id="date-ac" type="date" max="2026-09-22" value="2026-09-22">
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="duration-ac">Duration (minutes)</label>
+            <input class="input" id="duration-ac" type="number" min="0" placeholder="e.g. 30">
+          </div>
+          <div class="field">
+            <label class="label" for="sets-ac">Sets</label>
+            <input class="input" id="sets-ac" type="number" min="0" value="3">
+          </div>
+          <div class="field">
+            <label class="label" for="reps-ac">Reps</label>
+            <input class="input" id="reps-ac" type="number" min="0" value="8">
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="submitThen('Save Confirmed')">Save workout →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Submitting
+       Notes:
+         - Button disabled and re-labeled while the (simulated) save request is in flight.
+         - After ~350ms, auto-advances to the confirmation screen via setTimeout.
+  -->
+  <!-- State: submitting -->
+  <div class="screen" data-name="Submitting">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-1);">Log a workout</h1>
+      <form novalidate aria-busy="true">
+        <div class="field">
+          <label class="label" for="exercise-sub">Exercise name</label>
+          <input class="input" id="exercise-sub" type="text" value="Back squat" disabled>
+        </div>
+        <div class="field">
+          <label class="label" for="date-sub">Date</label>
+          <input class="input" id="date-sub" type="date" value="2026-09-22" disabled>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label">Duration (minutes)</label>
+            <input class="input" type="number" placeholder="—" disabled>
+          </div>
+          <div class="field">
+            <label class="label">Sets</label>
+            <input class="input" type="number" value="3" disabled>
+          </div>
+          <div class="field">
+            <label class="label">Reps</label>
+            <input class="input" type="number" value="8" disabled>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" disabled>Saving…</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Save Confirmed
+       Notes:
+         - Satisfies AC1/AC2: entry is saved to the user's log and now available in history.
+         - No color-success token exists in this design system — accent uses color-primary
+           plus an explicit checkmark glyph + text (never color alone, per guideline §3).
+  -->
+  <!-- State: saved -->
+  <div class="screen" data-name="Save Confirmed">
+    <div class="page-wrap">
+      <div class="card confirm-box">
+        <div class="icon-circle">✓</div>
+        <h2 class="text-lg text-bold">Workout saved</h2>
+        <p class="text-sm text-muted">This entry has been added to your log.</p>
+        <ul class="summary-list">
+          <li><span>Exercise</span><span>Back squat</span></li>
+          <li><span>Date</span><span>Sep 22, 2026</span></li>
+          <li><span>Sets × Reps</span><span>3 × 8</span></li>
+          <li><span>Duration</span><span>—</span></li>
+        </ul>
+        <div class="actions" style="justify-content:center;">
+          <button class="btn btn-primary" onclick="go('Entry Form — Default')">Log another workout</button>
+          <button class="btn btn-secondary" title="Viewing history is covered by FTP-STORY-008">View in history →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Validation — Both Duration and Sets/Reps Blank
+       Notes:
+         - AC3: cross-field validation error when duration and sets/reps are all empty.
+         - Entered exercise name and date are preserved.
+  -->
+  <!-- State: error-both-blank -->
+  <div class="screen" data-name="Validation — Both Duration and Sets/Reps Blank">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-3);">Log a workout</h1>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="exercise-blank">Exercise name</label>
+          <input class="input" id="exercise-blank" type="text" value="Deadlift">
+        </div>
+        <div class="field">
+          <label class="label" for="date-blank">Date</label>
+          <input class="input" id="date-blank" type="date" value="2026-09-20" max="2026-09-22">
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="duration-blank">Duration (minutes)</label>
+            <input class="input" id="duration-blank" type="number" min="0" placeholder="e.g. 30" aria-invalid="true" aria-describedby="err-blank">
+          </div>
+          <div class="field">
+            <label class="label" for="sets-blank">Sets</label>
+            <input class="input" id="sets-blank" type="number" min="0" placeholder="e.g. 3" aria-invalid="true" aria-describedby="err-blank">
+          </div>
+          <div class="field">
+            <label class="label" for="reps-blank">Reps</label>
+            <input class="input" id="reps-blank" type="number" min="0" placeholder="e.g. 10" aria-invalid="true" aria-describedby="err-blank">
+          </div>
+        </div>
+        <p class="field-error" id="err-blank" role="alert">Enter a duration, or sets and reps — at least one is required.</p>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="go('Entry Form — Default')">Save workout →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Validation — Negative Values
+       Notes:
+         - AC4: negative sets/reps and zero-or-negative duration are each rejected inline.
+         - All three fields show independent field-level errors simultaneously.
+  -->
+  <!-- State: error-negative -->
+  <div class="screen" data-name="Validation — Negative Values">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-3);">Log a workout</h1>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="exercise-neg">Exercise name</label>
+          <input class="input" id="exercise-neg" type="text" value="Bench press">
+        </div>
+        <div class="field">
+          <label class="label" for="date-neg">Date</label>
+          <input class="input" id="date-neg" type="date" value="2026-09-22" max="2026-09-22">
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="duration-neg">Duration (minutes)</label>
+            <input class="input" id="duration-neg" type="number" value="-5" aria-invalid="true" aria-describedby="err-duration-neg">
+            <p class="field-error" id="err-duration-neg" role="alert">Duration must be greater than zero.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="sets-neg">Sets</label>
+            <input class="input" id="sets-neg" type="number" value="-2" aria-invalid="true" aria-describedby="err-sets-neg">
+            <p class="field-error" id="err-sets-neg" role="alert">Sets can't be negative.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="reps-neg">Reps</label>
+            <input class="input" id="reps-neg" type="number" value="-1" aria-invalid="true" aria-describedby="err-reps-neg">
+            <p class="field-error" id="err-reps-neg" role="alert">Reps can't be negative.</p>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="go('Entry Form — Default')">Save workout →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Zero Sets/Reps — Valid
+       Notes:
+         - AC5: zero is explicitly valid for sets/reps; this otherwise-complete entry saves
+           successfully (no error shown, submit proceeds).
+  -->
+  <!-- State: zero-valid -->
+  <div class="screen" data-name="Zero Sets/Reps — Valid">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-1);">Log a workout</h1>
+      <p class="text-sm text-muted" style="margin-bottom: var(--space-3);">Zero sets/reps is accepted — e.g. logging a warm-up attempt with no completed reps.</p>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="exercise-zero">Exercise name</label>
+          <input class="input" id="exercise-zero" type="text" value="Pull-up">
+        </div>
+        <div class="field">
+          <label class="label" for="date-zero">Date</label>
+          <input class="input" id="date-zero" type="date" value="2026-09-22" max="2026-09-22">
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="duration-zero">Duration (minutes)</label>
+            <input class="input" id="duration-zero" type="number" min="0" placeholder="e.g. 30">
+          </div>
+          <div class="field">
+            <label class="label" for="sets-zero">Sets</label>
+            <input class="input" id="sets-zero" type="number" value="0">
+          </div>
+          <div class="field">
+            <label class="label" for="reps-zero">Reps</label>
+            <input class="input" id="reps-zero" type="number" value="0">
+          </div>
+        </div>
+        <span class="hint" style="display:block; margin-bottom:var(--space-3);">No validation error — 0 sets and 0 reps is a valid, saveable entry.</span>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="submitThen('Save Confirmed')">Save workout →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Validation — Future Date
+       Notes:
+         - AC6: user can still type/pick a future date (native max is a nicety, not the
+           enforcement) — server-side rejection is what's demonstrated here.
+  -->
+  <!-- State: error-future-date -->
+  <div class="screen" data-name="Validation — Future Date">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-3);">Log a workout</h1>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="exercise-future">Exercise name</label>
+          <input class="input" id="exercise-future" type="text" value="Row (rowing machine)">
+        </div>
+        <div class="field">
+          <label class="label" for="date-future">Date</label>
+          <input class="input" id="date-future" type="date" value="2026-09-25" aria-invalid="true" aria-describedby="err-future">
+          <p class="field-error" id="err-future" role="alert">Future dates aren't allowed — choose today or an earlier date.</p>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="duration-future">Duration (minutes)</label>
+            <input class="input" id="duration-future" type="number" value="20">
+          </div>
+          <div class="field">
+            <label class="label" for="sets-future">Sets</label>
+            <input class="input" id="sets-future" type="number" placeholder="—">
+          </div>
+          <div class="field">
+            <label class="label" for="reps-future">Reps</label>
+            <input class="input" id="reps-future" type="number" placeholder="—">
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="go('Entry Form — Default')">Save workout →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Validation — Exercise Name Blank
+       Notes:
+         - AC9: exercise name is required; date and duration are otherwise valid.
+  -->
+  <!-- State: error-name-blank -->
+  <div class="screen" data-name="Validation — Exercise Name Blank">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-3);">Log a workout</h1>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="exercise-empty">Exercise name</label>
+          <input class="input" id="exercise-empty" type="text" value="" placeholder="e.g. Back squat" aria-invalid="true" aria-describedby="err-name">
+          <p class="field-error" id="err-name" role="alert">Exercise name is required.</p>
+        </div>
+        <div class="field">
+          <label class="label" for="date-empty">Date</label>
+          <input class="input" id="date-empty" type="date" value="2026-09-22" max="2026-09-22">
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="duration-empty">Duration (minutes)</label>
+            <input class="input" id="duration-empty" type="number" value="45">
+          </div>
+          <div class="field">
+            <label class="label" for="sets-empty">Sets</label>
+            <input class="input" id="sets-empty" type="number" placeholder="—">
+          </div>
+          <div class="field">
+            <label class="label" for="reps-empty">Reps</label>
+            <input class="input" id="reps-empty" type="number" placeholder="—">
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="go('Entry Form — Default')">Save workout →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Save Failed — Network/Server Error
+       Notes:
+         - AC8: generic error banner shown; every entered value is still populated for retry
+           (nothing is cleared). Retry re-attempts the same simulated save.
+  -->
+  <!-- State: error-save-failed -->
+  <div class="screen" data-name="Save Failed — Network/Server Error">
+    <div class="page-wrap">
+      <div class="banner" role="alert">
+        <span class="icon">⚠</span>
+        <div class="body">
+          <strong>Something went wrong</strong>
+          We couldn't save your workout. Check your connection and try again — your entry hasn't been lost.
+        </div>
+      </div>
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-3);">Log a workout</h1>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="exercise-fail">Exercise name</label>
+          <input class="input" id="exercise-fail" type="text" value="Bulgarian split squat">
+        </div>
+        <div class="field">
+          <label class="label" for="date-fail">Date</label>
+          <input class="input" id="date-fail" type="date" value="2026-09-21" max="2026-09-22">
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="duration-fail">Duration (minutes)</label>
+            <input class="input" id="duration-fail" type="number" placeholder="—">
+          </div>
+          <div class="field">
+            <label class="label" for="sets-fail">Sets</label>
+            <input class="input" id="sets-fail" type="number" value="4">
+          </div>
+          <div class="field">
+            <label class="label" for="reps-fail">Reps</label>
+            <input class="input" id="reps-fail" type="number" value="12">
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="submitThen('Save Confirmed')">Retry save →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Session Expired — Unauthenticated Submit
+       Notes:
+         - AC10: submit is rejected with an authentication error; no entry is saved, and the
+           user's entered values remain intact so they can re-authenticate and retry without
+           re-typing.
+  -->
+  <!-- State: error-unauthenticated -->
+  <div class="screen" data-name="Session Expired — Unauthenticated Submit">
+    <div class="page-wrap">
+      <div class="banner" role="alert">
+        <span class="icon">⚠</span>
+        <div class="body">
+          <strong>Your session has expired</strong>
+          Please sign in again to save this workout. Nothing has been saved yet — your entry below is preserved.
+        </div>
+      </div>
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-3);">Log a workout</h1>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="exercise-auth">Exercise name</label>
+          <input class="input" id="exercise-auth" type="text" value="Back squat" disabled>
+        </div>
+        <div class="field">
+          <label class="label" for="date-auth">Date</label>
+          <input class="input" id="date-auth" type="date" value="2026-09-22" disabled>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label">Duration (minutes)</label>
+            <input class="input" type="number" placeholder="—" disabled>
+          </div>
+          <div class="field">
+            <label class="label">Sets</label>
+            <input class="input" type="number" value="5" disabled>
+          </div>
+          <div class="field">
+            <label class="label">Reps</label>
+            <input class="input" type="number" value="5" disabled>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="submitThen('Save Confirmed')">Sign in and retry →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Inline fixture: this user's own past exercise names, used to power the autocomplete demo.
+  const pastExerciseNames = [
+    "Back squat", "Bench press", "Bulgarian split squat",
+    "Deadlift", "Pull-up", "Row (rowing machine)"
+  ];
+
+  const screens = Array.from(document.querySelectorAll('.screen'));
+  let cur = 0;
+
+  function show(i) {
+    cur = Math.max(0, Math.min(screens.length - 1, i));
+    screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+    document.getElementById('screen-label').textContent =
+      `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+  }
+
+  function go(name) {
+    const idx = screens.findIndex(s => s.dataset.name === name);
+    if (idx !== -1) show(idx);
+  }
+
+  // Used by submit buttons only, so reviewer-bar Prev/Next always shows Submitting
+  // as a static state instead of auto-advancing.
+  function submitThen(target) {
+    go('Submitting');
+    setTimeout(() => {
+      if (screens[cur].dataset.name === 'Submitting') go(target);
+    }, 350);
+  }
+
+  document.getElementById('prev-btn').onclick = () => show(cur - 1);
+  document.getElementById('next-btn').onclick = () => show(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') show(cur + 1);
+    if (e.key === 'ArrowLeft') show(cur - 1);
+  });
+
+  show(0);
+</script>
+
+</body>
+</html>
+
+<!-- arc:css-inlined -->
