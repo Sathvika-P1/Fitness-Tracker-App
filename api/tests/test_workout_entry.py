@@ -50,6 +50,9 @@ def test_blank_duration_and_sets_reps_is_rejected(client_with_signed_up_account)
         ({"sets": "-2"}, "sets"),
         ({"reps": "-1"}, "reps"),
         ({"duration_minutes": "0"}, "duration_minutes"),
+        ({"duration_minutes": "nan"}, "duration_minutes"),
+        ({"duration_minutes": "inf"}, "duration_minutes"),
+        ({"duration_minutes": "-inf"}, "duration_minutes"),
     ],
 )
 def test_negative_sets_reps_and_nonpositive_duration_are_each_rejected(

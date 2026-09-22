@@ -9,7 +9,6 @@ from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.store import profiles, sessions
-from app.store.models import Account
 
 logger = logging.getLogger(__name__)
 
@@ -24,13 +23,6 @@ class ProfileUpdateRequest(BaseModel):
     weight_kg: str | None = None
     age: str | None = None
     gender: str | None = None
-
-
-def _require_account(db: Session, sid: str | None) -> Account | None:
-    account_id = sessions.get_account_id_for_session(db, sid) if sid else None
-    if account_id is None:
-        return None
-    return db.get(Account, account_id)
 
 
 def _validate_range(field_label: str, raw: str, minimum: float, maximum: float, unit: str, integer: bool):
@@ -49,7 +41,7 @@ def _validate_range(field_label: str, raw: str, minimum: float, maximum: float, 
 @router.get("/api/profile")
 def get_profile(db: Session = Depends(get_db), sid: str | None = Cookie(default=None)):
     start = time.monotonic()
-    account = _require_account(db, sid)
+    account = sessions.require_account(db, sid)
     if account is None:
         logger.warning(
             "profile_get_unauthorized duration_ms=%.1f", (time.monotonic() - start) * 1000
@@ -70,7 +62,7 @@ def update_profile(
     sid: str | None = Cookie(default=None),
 ):
     start = time.monotonic()
-    account = _require_account(db, sid)
+    account = sessions.require_account(db, sid)
     if account is None:
         logger.warning(
             "profile_update_unauthorized duration_ms=%.1f", (time.monotonic() - start) * 1000

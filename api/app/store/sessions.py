@@ -4,7 +4,7 @@ import secrets
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.store.models import SessionRow
+from app.store.models import Account, SessionRow
 
 SESSION_TTL = datetime.timedelta(hours=24)
 
@@ -44,6 +44,13 @@ def delete_session(db: Session, session_id: str) -> None:
     if row is not None:
         db.delete(row)
         db.commit()
+
+
+def require_account(db: Session, session_id: str | None) -> Account | None:
+    account_id = get_account_id_for_session(db, session_id) if session_id else None
+    if account_id is None:
+        return None
+    return db.get(Account, account_id)
 
 
 def count_active_for_account(db: Session, account_id: int) -> int:

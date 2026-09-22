@@ -1,4 +1,5 @@
 import datetime
+import math
 
 from sqlalchemy import distinct, select
 from sqlalchemy.orm import Session
@@ -51,7 +52,7 @@ def validate_entry(
         except ValueError:
             errors["duration_minutes"] = "Duration must be a number."
         else:
-            if duration <= 0:
+            if not math.isfinite(duration) or duration <= 0:
                 errors["duration_minutes"] = "Duration must be greater than zero."
             else:
                 cleaned["duration_minutes"] = duration

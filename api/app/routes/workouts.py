@@ -7,7 +7,6 @@ from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.store import sessions, workouts
-from app.store.models import Account
 
 router = APIRouter()
 
@@ -20,20 +19,13 @@ class WorkoutEntryRequest(BaseModel):
     reps: str | None = None
 
 
-def _require_account(db: Session, sid: str | None) -> Account | None:
-    account_id = sessions.get_account_id_for_session(db, sid) if sid else None
-    if account_id is None:
-        return None
-    return db.get(Account, account_id)
-
-
 @router.post("/api/workouts")
 def create_workout(
     payload: WorkoutEntryRequest,
     db: Session = Depends(get_db),
     sid: str | None = Cookie(default=None),
 ):
-    account = _require_account(db, sid)
+    account = sessions.require_account(db, sid)
     if account is None:
         return JSONResponse(status_code=401, content={"message": "Not signed in."})
 
@@ -59,7 +51,7 @@ def create_workout(
 def get_exercise_names(
     db: Session = Depends(get_db), sid: str | None = Cookie(default=None)
 ):
-    account = _require_account(db, sid)
+    account = sessions.require_account(db, sid)
     if account is None:
         return JSONResponse(status_code=401, content={"message": "Not signed in."})
     return {"names": workouts.list_exercise_names(db, account)}
