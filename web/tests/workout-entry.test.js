@@ -91,4 +91,37 @@ describe('workout-entry', () => {
 
     expect(result).toEqual({ ok: true, entry: { id: 1, exercise_name: 'Back squat' } });
   });
+
+  it('defaults the date field to the local date, not UTC, near a day boundary', async () => {
+    const originalTz = process.env.TZ;
+    process.env.TZ = 'America/New_York';
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-09-23T03:00:00Z'));
+
+    await loadWorkoutEntryPage();
+
+    expect(document.getElementById('entry-date').value).toBe('2026-09-22');
+    expect(document.getElementById('entry-date').max).toBe('2026-09-22');
+    vi.useRealTimers();
+    process.env.TZ = originalTz;
+  });
+
+  it('resets the date field to today when logging another workout after a save', async () => {
+    global.fetch.mockResolvedValue({
+      status: 201,
+      json: async () => ({ id: 1, exercise_name: 'Squat' }),
+    });
+    await loadWorkoutEntryPage();
+
+    document.getElementById('workout-form').dispatchEvent(
+      new Event('submit', { bubbles: true, cancelable: true })
+    );
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(document.getElementById('entry-date').value).toBe('');
+
+    document.getElementById('log-another-btn').click();
+
+    expect(document.getElementById('entry-date').value).not.toBe('');
+  });
 });

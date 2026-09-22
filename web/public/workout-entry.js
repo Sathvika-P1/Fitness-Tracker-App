@@ -150,9 +150,22 @@ form?.addEventListener('submit', async (event) => {
   }
 });
 
+function initializeDate() {
+  const dateInput = document.getElementById('entry-date');
+  if (!dateInput) return;
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const today = `${yyyy}-${mm}-${dd}`;
+  dateInput.value = today;
+  dateInput.max = today;
+}
+
 logAnotherBtn?.addEventListener('click', () => {
   confirmBox.hidden = true;
   form.hidden = false;
+  initializeDate();
 });
 
 export function logout() {
@@ -161,12 +174,7 @@ export function logout() {
 
 document.getElementById('workout-logout-btn')?.addEventListener('click', logout);
 
-const dateInput = document.getElementById('entry-date');
-if (dateInput && !dateInput.value) {
-  const today = new Date().toISOString().slice(0, 10);
-  dateInput.value = today;
-  dateInput.max = today;
-}
+initializeDate();
 
 if (exerciseInput) {
   loadExerciseNames();
