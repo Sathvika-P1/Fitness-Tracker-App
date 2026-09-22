@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import Column, Date, DateTime, Float, ForeignKey, Integer, String
 
 from app.db import Base
 
@@ -46,4 +46,17 @@ class DeletionLockoutFailure(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
+    created_at = Column(DateTime, nullable=False, default=_utcnow)
+
+
+class WorkoutEntry(Base):
+    __tablename__ = "workout_entries"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
+    exercise_name = Column(String(255), nullable=False)
+    entry_date = Column(Date, nullable=False)
+    duration_minutes = Column(Float, nullable=True)
+    sets = Column(Integer, nullable=True)
+    reps = Column(Integer, nullable=True)
     created_at = Column(DateTime, nullable=False, default=_utcnow)

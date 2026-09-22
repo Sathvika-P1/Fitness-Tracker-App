@@ -1,7 +1,26 @@
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.store.models import AccountDeletionAudit
+from app.store.models import AccountDeletionAudit, WorkoutEntry
+
+
+def test_deleting_an_account_with_a_logged_workout_removes_the_entry(
+    client_with_signed_up_account, db
+):
+    client_with_signed_up_account.post(
+        "/api/workouts",
+        json={
+            "exercise_name": "Squat",
+            "entry_date": "2026-09-20",
+            "duration_minutes": "10",
+        },
+    )
+    resp = client_with_signed_up_account.post(
+        "/api/account/delete", json={"password": "test-password"}
+    )
+    assert resp.status_code == 200
+    db.rollback()
+    assert db.query(WorkoutEntry).count() == 0
 
 
 def test_correct_password_deletes_account_and_clears_session(client_with_signed_up_account, db):

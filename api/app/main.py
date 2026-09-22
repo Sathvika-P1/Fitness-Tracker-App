@@ -6,6 +6,7 @@ from sqlalchemy import inspect, text
 from app.db import Base, engine
 from app.routes.auth import router as auth_router
 from app.routes.profile import router as profile_router
+from app.routes.workouts import router as workouts_router
 
 
 def _backfill_session_ttl_columns() -> None:
@@ -62,3 +63,4 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.include_router(auth_router)
 app.include_router(profile_router)
+app.include_router(workouts_router)

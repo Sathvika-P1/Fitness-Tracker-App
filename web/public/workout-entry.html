@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log a workout — Fitness Tracker</title>
+<link rel="stylesheet" href="/design-system/tokens.css">
+<link rel="stylesheet" href="/design-system/prototype-utils.css">
+<style>
+  .row-2 { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .row-2 > .field { flex: 1; min-width: 100px; }
+
+  .autocomplete-list {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 20;
+    background: var(--color-bg); border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-sm); margin-top: var(--space-1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    max-height: 180px; overflow-y: auto; list-style: none; padding: 0;
+  }
+  .autocomplete-list[hidden] { display: none; }
+  .autocomplete-option {
+    padding: var(--space-3); font-size: var(--font-size-md);
+    cursor: pointer;
+  }
+  .autocomplete-option:hover, .autocomplete-option.active {
+    background: var(--color-surface); color: var(--color-primary);
+  }
+
+  .confirm-box { text-align: center; padding: var(--space-4); }
+  .confirm-box .icon-circle {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: var(--border-width-md) solid var(--color-primary);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto var(--space-3); font-size: var(--font-size-lg); color: var(--color-primary);
+  }
+  .summary-list { text-align: left; list-style: none; margin: var(--space-3) 0; padding: 0; }
+  .summary-list li { display: flex; justify-content: space-between; padding: var(--space-1) 0; border-bottom: var(--border-width-sm) solid var(--color-border); font-size: var(--font-size-sm); }
+  .summary-list li span:first-child { color: var(--color-muted); }
+</style>
+</head>
+<body>
+
+<div class="page-shell">
+  <div class="top-app-bar">
+    <div>
+      <h1 class="text-bold" style="margin:0;font-size:inherit">Log a workout</h1>
+      <div class="text-sm text-muted">Record an exercise you did today or on a past date.</div>
+    </div>
+    <div class="avatar-menu" data-avatar-menu>
+      <button class="avatar-menu-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Account menu" data-avatar-trigger>
+        <div class="avatar" id="avatar-menu-initial" aria-hidden="true"></div>
+      </button>
+      <div class="avatar-menu-dropdown" role="menu" hidden data-avatar-dropdown>
+        <a class="avatar-menu-item" role="menuitem" href="profile.html">View profile</a>
+        <button class="avatar-menu-item danger" role="menuitem" type="button" id="workout-logout-btn">Logout</button>
+      </div>
+      <p class="inline-error avatar-menu-error" id="workout-logout-error" role="alert" hidden>Logout failed. Please try again.</p>
+    </div>
+  </div>
+
+  <div class="banner" role="alert" id="save-error-banner" hidden>
+    <span class="banner-icon" aria-hidden="true">⚠</span>
+    <div>
+      <div class="banner-title">Something went wrong</div>
+      <div class="banner-body">We couldn't save your workout. Check your connection and try again — your entry hasn't been lost.</div>
+    </div>
+  </div>
+
+  <div class="banner" role="alert" id="session-expired-banner" hidden>
+    <span class="banner-icon" aria-hidden="true">⚠</span>
+    <div>
+      <div class="banner-title">Your session has expired</div>
+      <div class="banner-body">Please sign in again to save this workout. Nothing has been saved yet — your entry below is preserved.</div>
+    </div>
+  </div>
+
+  <div class="content-pad">
+    <div id="confirm-box" class="card confirm-box" hidden>
+      <div class="icon-circle">✓</div>
+      <h2 class="text-lg text-bold">Workout saved</h2>
+      <p class="text-sm text-muted">This entry has been added to your log.</p>
+      <div class="row" style="justify-content:center; margin-top: var(--space-3);">
+        <button class="btn btn-primary" type="button" id="log-another-btn">Log another workout</button>
+        <button class="btn btn-secondary" type="button" title="Viewing history is covered by FTP-STORY-008" disabled>View in history →</button>
+      </div>
+    </div>
+
+    <form id="workout-form">
+      <div class="field" style="position:relative;">
+        <label class="label" for="exercise-name">Exercise name</label>
+        <input class="input" id="exercise-name" type="text" placeholder="e.g. Back squat" autocomplete="off"
+               role="combobox" aria-expanded="false" aria-controls="ac-list" aria-autocomplete="list">
+        <ul class="autocomplete-list" id="ac-list" role="listbox" aria-label="Suggestions from your past entries" hidden></ul>
+        <p class="field-error-text" id="exercise-name-error" role="alert" hidden></p>
+      </div>
+
+      <div class="field">
+        <label class="label" for="entry-date">Date</label>
+        <input class="input" id="entry-date" type="date">
+        <p class="helper-text">Today or earlier — future dates aren't allowed.</p>
+        <p class="field-error-text" id="entry-date-error" role="alert" hidden></p>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label class="label" for="duration">Duration (minutes)</label>
+          <input class="input" id="duration" type="number" min="1" placeholder="e.g. 30">
+          <p class="field-error-text" id="duration-error" role="alert" hidden></p>
+        </div>
+        <div class="field">
+          <label class="label" for="sets">Sets</label>
+          <input class="input" id="sets" type="number" min="0" placeholder="e.g. 3">
+          <p class="field-error-text" id="sets-error" role="alert" hidden></p>
+        </div>
+        <div class="field">
+          <label class="label" for="reps">Reps</label>
+          <input class="input" id="reps" type="number" min="0" placeholder="e.g. 10">
+          <p class="field-error-text" id="reps-error" role="alert" hidden></p>
+        </div>
+      </div>
+      <p class="helper-text">Provide duration or sets/reps (or both). Zero is a valid value for sets/reps.</p>
+      <p class="field-error-text" id="entry-error" role="alert" hidden></p>
+
+      <button class="btn btn-primary btn-block" type="submit" id="save-button">Save workout →</button>
+    </form>
+  </div>
+
+  <div class="bottom-tabs">
+    <a class="bottom-tab" href="dashboard.html">Today</a>
+    <div class="bottom-tab active" role="button" aria-disabled="true">Log</div>
+    <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
+    <a class="bottom-tab" href="profile.html">Profile</a>
+  </div>
+</div>
+
+<script type="module" src="/avatar-menu.js"></script>
+<script type="module" src="/workout-entry.js"></script>
+</body>
+</html>

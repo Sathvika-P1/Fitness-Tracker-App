@@ -5,7 +5,7 @@ from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.store.models import Account, DeletionLockoutFailure, SessionRow
+from app.store.models import Account, DeletionLockoutFailure, SessionRow, WorkoutEntry
 
 logger = logging.getLogger(__name__)
 
@@ -62,5 +62,6 @@ def delete_account(db: Session, account: Account) -> None:
     db.query(DeletionLockoutFailure).filter(
         DeletionLockoutFailure.account_id == account.id
     ).delete()
+    db.query(WorkoutEntry).filter(WorkoutEntry.account_id == account.id).delete()
     db.delete(account)
     db.commit()
