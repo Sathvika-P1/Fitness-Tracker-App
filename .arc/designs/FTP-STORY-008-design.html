@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTP-STORY-008 — View Workout History</title>
+<style>
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1a1a1a; /** Primary body text color, used on color-bg. Contrast ratio ~17.4:1. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-surface: #f8fafc; /** Slightly recessed surface, distinct from color-bg, used for cards. */
+  --color-primary: #1d4ed8; /** Brand/interactive accent color. Meets 4.5:1 as text on color-bg (~6.7:1). */
+  --color-on-primary: #ffffff; /** Text/icon color placed on top of color-primary. */
+  --color-muted: #475569; /** Secondary/muted text color. */
+  --color-border: #e2e8f0; /** Default hairline border color. */
+  --color-danger: #dc2626; /** Destructive/error accent color. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 600;
+  --line-height-base: 1.5;
+  --button-primary-background: var(--color-primary);
+  --button-primary-foreground: var(--color-on-primary);
+  --button-primary-border-radius: var(--radius-md);
+  --button-secondary-background: var(--color-bg);
+  --button-secondary-foreground: var(--color-primary);
+  --button-secondary-border: var(--color-primary);
+  --card-default-background: var(--color-surface);
+  --card-default-border: var(--color-border);
+  --card-default-border-radius: var(--radius-lg);
+  --chip-default-background: var(--color-surface);
+  --chip-default-foreground: var(--color-muted);
+  --chip-default-border-radius: var(--radius-sm);
+  --input-default-background: var(--color-bg);
+  --input-default-border: var(--color-border);
+  --input-default-foreground: var(--color-fg);
+  --input-default-border-radius: var(--radius-sm);
+}
+
+</style>
+<style>
+/* Base layout / typography */
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-md);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-bold { font-weight: var(--font-weight-bold); }
+
+/* Layout utilities */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
+/* Buttons */
+
+.btn {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-md);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-radius: var(--button-primary-border-radius);
+}
+
+.btn-secondary {
+  background: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-on-primary);
+}
+
+/* Card */
+
+.card {
+  background: var(--card-default-background);
+  border: var(--border-width-sm) solid var(--card-default-border);
+  border-radius: var(--card-default-border-radius);
+  padding: var(--space-4);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Chip */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  background: var(--chip-default-background);
+  color: var(--chip-default-foreground);
+  border-radius: var(--chip-default-border-radius);
+  font-size: var(--font-size-sm);
+}
+
+/* Form controls */
+
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  background: var(--input-default-background);
+  color: var(--input-default-foreground);
+  border: var(--border-width-sm) solid var(--input-default-border);
+  border-radius: var(--input-default-border-radius);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-md);
+  outline: none;
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-1);
+}
+
+/* Style-guide page helpers */
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.swatch-color {
+  height: var(--space-4);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-sm) solid var(--color-border);
+}
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.section {
+  margin-bottom: var(--space-4);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* Auth pages (signup / login) */
+
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+.auth-shell {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-3);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.field {
+  margin-bottom: var(--space-3);
+}
+
+.field-error-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.input.has-error {
+  border-color: var(--color-danger);
+  border-width: var(--border-width-md);
+}
+
+.helper-text {
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.btn-block {
+  width: 100%;
+  min-height: 44px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.banner {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  background: var(--color-bg);
+  border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.banner[hidden] {
+  display: none;
+}
+
+.banner-icon {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.banner-title {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+}
+
+.banner-body {
+  color: var(--color-fg);
+  font-size: var(--font-size-sm);
+}
+
+.link-inline {
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.center-note {
+  text-align: center;
+  margin-top: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+
+.banner-neutral {
+  border-color: var(--color-border);
+}
+
+.banner-neutral .banner-icon,
+.banner-neutral .banner-title {
+  color: var(--color-primary);
+}
+
+/* App shell (top bar, avatar, bottom tabs) */
+
+.page-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: var(--space-4);
+}
+
+.top-app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.bottom-tabs {
+  display: flex;
+  border-top: var(--border-width-sm) solid var(--color-border);
+  position: sticky;
+  bottom: 0;
+  background: var(--color-bg);
+}
+
+.bottom-tab {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.bottom-tab.active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Profile fields */
+
+.not-set {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.field-group-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.char-counter {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  text-align: right;
+  margin-top: var(--space-1);
+}
+
+.char-counter.over {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+}
+
+.content-pad {
+  padding: 0 var(--space-3);
+}
+
+/* Account deletion */
+
+.back-btn {
+  background: none; border: none; cursor: pointer; color: var(--color-primary);
+  font-size: var(--font-size-md); min-height: 44px; min-width: 44px;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+}
+
+.top-app-bar-title { font-weight: var(--font-weight-bold); font-size: var(--font-size-lg); }
+
+.danger-zone-card {
+  border: var(--border-width-sm) solid var(--color-danger);
+  border-radius: var(--card-default-border-radius);
+  background: var(--color-bg);
+  padding: var(--space-3);
+  margin: var(--space-3);
+}
+.danger-zone-title { color: var(--color-danger); font-weight: var(--font-weight-bold); margin-bottom: var(--space-1); }
+
+.consequence-list { margin: var(--space-3) 0; padding-left: 0; list-style: none; }
+.consequence-list li {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  padding: var(--space-1) 0; font-size: var(--font-size-sm); color: var(--color-fg);
+}
+.consequence-list li .mark { color: var(--color-danger); font-weight: var(--font-weight-bold); flex-shrink: 0; }
+
+.checkbox-row {
+  display: flex; align-items: flex-start; gap: var(--space-2);
+  margin: var(--space-3) 0; min-height: 44px;
+}
+.checkbox-row input[type="checkbox"] {
+  width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; accent-color: var(--color-danger);
+}
+.checkbox-row label { font-size: var(--font-size-sm); color: var(--color-fg); }
+
+.attempt-counter { font-size: var(--font-size-sm); color: var(--color-muted); margin-top: var(--space-1); }
+
+.lockout-banner {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  background: var(--color-bg); border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-3);
+}
+.lockout-banner .banner-icon { color: var(--color-danger); font-weight: var(--font-weight-bold); }
+.lockout-banner .banner-title { color: var(--color-danger); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+.lockout-banner .banner-body { color: var(--color-fg); font-size: var(--font-size-sm); }
+
+.account-empty-state {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: var(--space-4) var(--space-3); gap: var(--space-2);
+}
+.account-empty-state-icon {
+  width: 64px; height: 64px; border-radius: 50%; background: var(--color-surface);
+  display: flex; align-items: center; justify-content: center; font-size: var(--font-size-lg);
+  color: var(--color-danger);
+}
+
+/* Avatar menu — click the avatar to reveal View profile / Logout */
+.avatar-menu {
+  position: relative;
+}
+.avatar-menu-trigger {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  display: block;
+}
+.avatar-menu-trigger:focus-visible {
+  outline: var(--border-width-md) solid var(--color-primary);
+  outline-offset: 2px;
+}
+.avatar-menu-dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  min-width: 180px;
+  background: var(--color-bg);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-1);
+  z-index: 20;
+}
+.avatar-menu-dropdown[hidden] {
+  display: none;
+}
+.avatar-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.avatar-menu-item:hover,
+.avatar-menu-item:focus-visible {
+  background: var(--color-surface);
+}
+.avatar-menu-item.danger {
+  color: var(--color-danger);
+}
+.avatar-menu-error {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--space-1);
+  white-space: nowrap;
+}
+.inline-error {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+</style>
+<!--
+  App nav: top bar — Dashboard · Workouts · History · Profile (fitness-tracker app; no arc chrome)
+  Matches the nav pattern used in FTP-STORY-007's prototype for consistency across the app.
+  Design system note: no color-success / positive-status token exists in tokens.json, and no
+  table/list-row utility class exists yet. History rows, filter panel, and empty state are
+  built in this file's <style> block using only existing base tokens (color-*, space-*, radius-*).
+-->
+<style>
+  body { background: var(--color-bg); color: var(--color-fg); font-family: var(--font-family-base); }
+
+  .app-topbar {
+    display: flex; align-items: center; gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: var(--border-width-sm) solid var(--color-border);
+    background: var(--color-bg);
+  }
+  .app-topbar .brand { font-weight: var(--font-weight-bold); font-size: var(--font-size-lg); }
+  .app-topbar nav { display: flex; gap: var(--space-3); }
+  .app-topbar nav a { color: var(--color-muted); text-decoration: none; font-size: var(--font-size-sm); }
+  .app-topbar nav a.active { color: var(--color-primary); font-weight: var(--font-weight-bold); }
+  .app-topbar .current-user { margin-left: auto; display: flex; align-items: center; gap: var(--space-2); color: var(--color-muted); font-size: var(--font-size-sm); }
+  .app-topbar .avatar-sm {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--color-primary);
+    color: var(--color-on-primary); display: flex; align-items: center; justify-content: center;
+    font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); flex-shrink: 0;
+  }
+
+  .page-wrap { max-width: 640px; margin: 0 auto; padding: var(--space-4); }
+
+  .page-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--space-1); flex-wrap: wrap; gap: var(--space-2); }
+  .page-header h1 { margin: 0; }
+  .entry-count { color: var(--color-muted); font-size: var(--font-size-sm); }
+
+  /* Filter panel */
+  .filter-panel {
+    display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-3);
+    padding: var(--space-3); margin: var(--space-3) 0 var(--space-4);
+    background: var(--color-surface);
+    border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+  .filter-field { display: flex; flex-direction: column; gap: var(--space-1); min-width: 150px; flex: 1 1 150px; }
+  .filter-field .label { font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); margin: 0; }
+  .filter-field .input { padding: var(--space-2); font-size: var(--font-size-sm); min-height: 44px; box-sizing: border-box; }
+  .filter-actions { display: flex; gap: var(--space-2); flex-shrink: 0; }
+
+  .active-filters { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-3); }
+  .active-filters[hidden] { display: none; }
+  .filter-chip {
+    display: inline-flex; align-items: center; gap: var(--space-1);
+    background: var(--chip-default-background); color: var(--chip-default-foreground);
+    border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--chip-default-border-radius);
+    padding: var(--space-1) var(--space-2); font-size: var(--font-size-sm);
+  }
+  .filter-chip button {
+    background: none; border: none; cursor: pointer; color: var(--color-muted);
+    font-size: var(--font-size-md); line-height: 1; padding: 0; min-height: 44px; min-width: 44px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .filter-chip button:hover { color: var(--color-danger); }
+
+  /* History list */
+  .history-list { display: flex; flex-direction: column; gap: var(--space-2); list-style: none; margin: 0; padding: 0; }
+  .history-row {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--card-default-background);
+    border: var(--border-width-sm) solid var(--card-default-border);
+    border-radius: var(--radius-md);
+  }
+  .history-row-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .history-exercise { font-weight: var(--font-weight-bold); font-size: var(--font-size-md); }
+  .history-date { color: var(--color-muted); font-size: var(--font-size-sm); }
+  .history-metrics { display: flex; gap: var(--space-3); flex-shrink: 0; text-align: right; }
+  .history-metric { display: flex; flex-direction: column; align-items: flex-end; }
+  .history-metric .val { font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+  .history-metric .unit { color: var(--color-muted); font-size: var(--font-size-sm); }
+
+  mark { background: none; color: var(--color-primary); font-weight: var(--font-weight-bold); }
+
+  /* Empty states */
+  .empty-state {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: var(--space-4); gap: var(--space-2);
+    background: var(--color-surface);
+    border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    margin-top: var(--space-3);
+  }
+  .empty-state-icon {
+    width: 64px; height: 64px; border-radius: 50%; background: var(--color-bg);
+    border: var(--border-width-sm) solid var(--color-border);
+    display: flex; align-items: center; justify-content: center; font-size: var(--font-size-lg);
+    color: var(--color-muted);
+  }
+
+  /* Skeleton loading */
+  .skeleton-row {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--card-default-background);
+    border: var(--border-width-sm) solid var(--card-default-border);
+    border-radius: var(--radius-md);
+  }
+  .skeleton-block {
+    background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-border) 37%, var(--color-surface) 63%);
+    background-size: 400% 100%;
+    border-radius: var(--radius-sm);
+    animation: skeleton-shimmer 1.4s ease infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-block { animation: none; }
+  }
+  @keyframes skeleton-shimmer {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+  }
+
+  .banner {
+    display: flex; align-items: flex-start; gap: var(--space-2);
+    padding: var(--space-3); margin-bottom: var(--space-3);
+    border: var(--border-width-md) solid var(--color-danger);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-danger);
+  }
+  .banner .icon { font-size: var(--font-size-lg); line-height: 1; }
+  .banner .body { color: var(--color-fg); font-size: var(--font-size-sm); }
+  .banner .body strong { color: var(--color-danger); display: block; margin-bottom: var(--space-1); }
+
+  .actions { display: flex; gap: var(--space-2); margin-top: var(--space-3); flex-wrap: wrap; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .no-results-hint { color: var(--color-muted); font-size: var(--font-size-sm); margin-top: var(--space-1); }
+</style>
+</head>
+<body>
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--color-surface);border-bottom:1px solid var(--color-border);font-size:13px;font-family:var(--font-family-base)">
+  <span style="font-family:monospace;color:var(--color-muted)">FTP-STORY-008</span>
+  <button id="prev-btn" style="background:none;border:none;color:var(--color-primary);cursor:pointer;font-size:13px;padding:4px 8px;">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--color-fg)"></span>
+  <button id="next-btn" style="background:none;border:none;color:var(--color-primary);cursor:pointer;font-size:13px;padding:4px 8px;">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+
+<div class="app-topbar">
+  <span class="brand">FitTrack</span>
+  <nav>
+    <a href="#">Dashboard</a>
+    <a href="#">Workouts</a>
+    <a href="#" class="active">History</a>
+    <a href="#">Profile</a>
+  </nav>
+  <span class="current-user"><span class="avatar-sm">A</span> Alex</span>
+</div>
+
+<div id="screens">
+
+  <!-- Screen: History — Loading
+       Notes:
+         - Skeleton rows reserve the exact layout of real rows to avoid layout shift (§4/§9).
+         - Shown only briefly on real page load; included here as its own reviewable state.
+  -->
+  <!-- State: loading -->
+  <div class="screen" data-name="History — Loading">
+    <div class="page-wrap">
+      <div class="page-header">
+        <h1 class="text-lg text-bold">Workout history</h1>
+      </div>
+      <p class="text-sm text-muted" style="margin: 0 0 var(--space-3);">Loading your entries…</p>
+      <ul class="history-list" aria-busy="true" aria-label="Loading workout history">
+        <li class="skeleton-row">
+          <div class="stack" style="flex:1;">
+            <div class="skeleton-block" style="width:140px; height:16px;"></div>
+            <div class="skeleton-block" style="width:90px; height:12px;"></div>
+          </div>
+          <div class="skeleton-block" style="width:60px; height:32px;"></div>
+        </li>
+        <li class="skeleton-row">
+          <div class="stack" style="flex:1;">
+            <div class="skeleton-block" style="width:160px; height:16px;"></div>
+            <div class="skeleton-block" style="width:90px; height:12px;"></div>
+          </div>
+          <div class="skeleton-block" style="width:60px; height:32px;"></div>
+        </li>
+        <li class="skeleton-row">
+          <div class="stack" style="flex:1;">
+            <div class="skeleton-block" style="width:120px; height:16px;"></div>
+            <div class="skeleton-block" style="width:90px; height:12px;"></div>
+          </div>
+          <div class="skeleton-block" style="width:60px; height:32px;"></div>
+        </li>
+      </ul>
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" onclick="go('History — Full List (Newest First)')">Skip to loaded state →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: History — Full List (Newest First)
+       Notes:
+         - AC1: complete list of this user's entries, sorted newest-first by date
+           (Sep 22 at top, Aug 2 at bottom).
+         - AC2: list is scoped to the signed-in account (Alex, shown in the top bar); the
+           fixture contains no other user's rows — no cross-user data is shown.
+         - Filter panel is present but untouched — this is the baseline unfiltered view.
+  -->
+  <!-- State: default -->
+  <div class="screen" data-name="History — Full List (Newest First)">
+    <div class="page-wrap">
+      <div class="page-header">
+        <h1 class="text-lg text-bold">Workout history</h1>
+        <span class="entry-count">8 entries</span>
+      </div>
+      <p class="text-sm text-muted" style="margin: 0 0 var(--space-1);">Your complete log, newest first.</p>
+
+      <div class="filter-panel" role="search" aria-label="Filter workout history">
+        <div class="filter-field">
+          <label class="label" for="f-start-1">Start date</label>
+          <input class="input" id="f-start-1" type="date">
+        </div>
+        <div class="filter-field">
+          <label class="label" for="f-end-1">End date</label>
+          <input class="input" id="f-end-1" type="date">
+        </div>
+        <div class="filter-field">
+          <label class="label" for="f-name-1">Exercise name</label>
+          <input class="input" id="f-name-1" type="text" placeholder="e.g. squat">
+        </div>
+        <div class="filter-actions">
+          <button type="button" class="btn btn-primary" onclick="go('History — Date Range Filter Applied')">Apply</button>
+          <button type="button" class="btn btn-secondary" disabled title="No filter is currently active">Clear</button>
+        </div>
+      </div>
+
+      <ul class="history-list" aria-label="Workout history, newest first">
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Back squat</span><span class="history-date">Sep 22, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">3 × 8</span><span class="unit">sets × reps</span></div></div></li>
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Bench press</span><span class="history-date">Sep 20, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">45</span><span class="unit">minutes</span></div></div></li>
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Row (rowing machine)</span><span class="history-date">Sep 18, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">30</span><span class="unit">minutes</span></div></div></li>
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Bulgarian split squat</span><span class="history-date">Sep 12, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">4 × 12</span><span class="unit">sets × reps</span></div></div></li>
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Deadlift</span><span class="history-date">Sep 5, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">5 × 5</span><span class="unit">sets × reps</span></div></div></li>
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Pull-up</span><span class="history-date">Aug 29, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">0 × 0</span><span class="unit">sets × reps</span></div></div></li>
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Back squat</span><span class="history-date">Aug 15, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">3 × 5</span><span class="unit">sets × reps</span></div></div></li>
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Bench press</span><span class="history-date">Aug 2, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">20</span><span class="unit">minutes</span></div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Screen: History — Empty State
+       Notes:
+         - AC3: a new user, or a user with zero entries, sees a standard empty-state
+           invitation instead of a list — the filter panel is hidden since there is
+           nothing to filter yet.
+  -->
+  <!-- State: empty -->
+  <div class="screen" data-name="History — Empty State">
+    <div class="page-wrap">
+      <div class="page-header">
+        <h1 class="text-lg text-bold">Workout history</h1>
+      </div>
+      <div class="empty-state">
+        <div class="empty-state-icon">＋</div>
+        <h2 class="text-md text-bold" style="margin:0;">No workouts logged yet</h2>
+        <p class="text-sm text-muted" style="margin:0; max-width:40ch;">Once you log a workout, it'll show up here — newest first.</p>
+        <div class="actions" style="justify-content:center;">
+          <button type="button" class="btn btn-primary">Log your first workout →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: History — Date Range Filter Applied
+       Notes:
+         - AC4: start=Sep 12, end=Sep 20 (inclusive) — both boundary dates land on real
+           entries, so the Sep 12 and Sep 20 rows staying visible demonstrates
+           inclusiveness at both ends; Sep 22 (after end) and Sep 5 (before start)
+           are excluded.
+         - The active-filter chip is removable inline, and the panel's Clear button is
+           now enabled.
+  -->
+  <!-- State: filtered-date-range -->
+  <div class="screen" data-name="History — Date Range Filter Applied">
+    <div class="page-wrap">
+      <div class="page-header">
+        <h1 class="text-lg text-bold">Workout history</h1>
+        <span class="entry-count">3 of 8 entries</span>
+      </div>
+
+      <div class="filter-panel" role="search" aria-label="Filter workout history">
+        <div class="filter-field">
+          <label class="label" for="f-start-2">Start date</label>
+          <input class="input" id="f-start-2" type="date" value="2026-09-12">
+        </div>
+        <div class="filter-field">
+          <label class="label" for="f-end-2">End date</label>
+          <input class="input" id="f-end-2" type="date" value="2026-09-20">
+        </div>
+        <div class="filter-field">
+          <label class="label" for="f-name-2">Exercise name</label>
+          <input class="input" id="f-name-2" type="text" placeholder="e.g. squat">
+        </div>
+        <div class="filter-actions">
+          <button type="button" class="btn btn-primary" onclick="go('History — Both Filters Applied')">Apply</button>
+          <button type="button" class="btn btn-secondary" onclick="go('History — Full List (Newest First)')">Clear</button>
+        </div>
+      </div>
+
+      <div class="active-filters">
+        <span class="filter-chip">Sep 12 – Sep 20, 2026 <button type="button" onclick="go('History — Full List (Newest First)')" aria-label="Remove date range filter">✕</button></span>
+      </div>
+
+      <ul class="history-list" aria-label="Workout history, filtered by date range">
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Bench press</span><span class="history-date">Sep 20, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">45</span><span class="unit">minutes</span></div></div></li>
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Row (rowing machine)</span><span class="history-date">Sep 18, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">30</span><span class="unit">minutes</span></div></div></li>
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Bulgarian split squat</span><span class="history-date">Sep 12, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">4 × 12</span><span class="unit">sets × reps</span></div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Screen: History — Exercise Name Filter Applied
+       Notes:
+         - AC5: text "squat" matches case-insensitively — "Back squat", "Bulgarian split
+           squat" match; "Squat" capitalization is irrelevant to the match.
+  -->
+  <!-- State: filtered-name -->
+  <div class="screen" data-name="History — Exercise Name Filter Applied">
+    <div class="page-wrap">
+      <div class="page-header">
+        <h1 class="text-lg text-bold">Workout history</h1>
+        <span class="entry-count">3 of 8 entries</span>
+      </div>
+
+      <div class="filter-panel" role="search" aria-label="Filter workout history">
+        <div class="filter-field">
+          <label class="label" for="f-start-3">Start date</label>
+          <input class="input" id="f-start-3" type="date">
+        </div>
+        <div class="filter-field">
+          <label class="label" for="f-end-3">End date</label>
+          <input class="input" id="f-end-3" type="date">
+        </div>
+        <div class="filter-field">
+          <label class="label" for="f-name-3">Exercise name</label>
+          <input class="input" id="f-name-3" type="text" value="squat">
+        </div>
+        <div class="filter-actions">
+          <button type="button" class="btn btn-primary" onclick="go('History — Both Filters Applied')">Apply</button>
+          <button type="button" class="btn btn-secondary" onclick="go('History — Full List (Newest First)')">Clear</button>
+        </div>
+      </div>
+
+      <div class="active-filters">
+        <span class="filter-chip">Exercise contains "squat" <button type="button" onclick="go('History — Full List (Newest First)')" aria-label="Remove exercise name filter">✕</button></span>
+      </div>
+
+      <ul class="history-list" aria-label="Workout history, filtered by exercise name">
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Back <mark>squat</mark></span><span class="history-date">Sep 22, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">3 × 8</span><span class="unit">sets × reps</span></div></div></li>
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Bulgarian split <mark>squat</mark></span><span class="history-date">Sep 12, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">4 × 12</span><span class="unit">sets × reps</span></div></div></li>
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Back <mark>squat</mark></span><span class="history-date">Aug 15, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">3 × 5</span><span class="unit">sets × reps</span></div></div></li>
+      </ul>
+      <p class="no-results-hint">Matching is case-insensitive — "squat", "Squat" and "SQUAT" all match the same entries.</p>
+    </div>
+  </div>
+
+  <!-- Screen: History — Both Filters Applied
+       Notes:
+         - AC6: date range Sep 12–Sep 20 combined with exercise name "squat" — only entries
+           satisfying BOTH constraints remain. The Sep 22 "Back squat" and Aug 15
+           "Back squat" both match the name but are excluded by the date range, showing
+           the two filters are ANDed together, not ORed.
+         - Chip removal targets are consistent with the two single-filter screens: removing
+           the date chip lands on "Exercise Name Filter Applied" (still filtered by name
+           alone), and removing the name chip lands on "Date Range Filter Applied" (same
+           Sep 12–Sep 20 range, still filtered by date alone).
+  -->
+  <!-- State: filtered-both -->
+  <div class="screen" data-name="History — Both Filters Applied">
+    <div class="page-wrap">
+      <div class="page-header">
+        <h1 class="text-lg text-bold">Workout history</h1>
+        <span class="entry-count">1 of 8 entries</span>
+      </div>
+
+      <div class="filter-panel" role="search" aria-label="Filter workout history">
+        <div class="filter-field">
+          <label class="label" for="f-start-4">Start date</label>
+          <input class="input" id="f-start-4" type="date" value="2026-09-12">
+        </div>
+        <div class="filter-field">
+          <label class="label" for="f-end-4">End date</label>
+          <input class="input" id="f-end-4" type="date" value="2026-09-20">
+        </div>
+        <div class="filter-field">
+          <label class="label" for="f-name-4">Exercise name</label>
+          <input class="input" id="f-name-4" type="text" value="squat">
+        </div>
+        <div class="filter-actions">
+          <button type="button" class="btn btn-primary" onclick="go('History — Both Filters Applied')">Apply</button>
+          <button type="button" class="btn btn-secondary" onclick="go('History — Full List (Newest First)')">Clear</button>
+        </div>
+      </div>
+
+      <div class="active-filters">
+        <span class="filter-chip">Sep 12 – Sep 20, 2026 <button type="button" onclick="go('History — Exercise Name Filter Applied')" aria-label="Remove date range filter">✕</button></span>
+        <span class="filter-chip">Exercise contains "squat" <button type="button" onclick="go('History — Date Range Filter Applied')" aria-label="Remove exercise name filter">✕</button></span>
+      </div>
+
+      <ul class="history-list" aria-label="Workout history, filtered by date range and exercise name">
+        <li class="history-row"><div class="history-row-main"><span class="history-exercise">Bulgarian split <mark>squat</mark></span><span class="history-date">Sep 12, 2026</span></div><div class="history-metrics"><div class="history-metric"><span class="val">4 × 12</span><span class="unit">sets × reps</span></div></div></li>
+      </ul>
+      <p class="no-results-hint">Both "Back squat" entries (Sep 22 and Aug 15) match the name but fall outside Sep 12–Sep 20, so only Bulgarian split squat remains. Removing either chip re-applies the other filter alone; removing both restores the full list (AC7).</p>
+    </div>
+  </div>
+
+  <!-- Screen: History — No Results for Filter
+       Notes:
+         - Filter combination with zero matches — distinct from AC3's "no entries at all"
+           empty state; copy makes clear this is a filter outcome, not an empty account,
+           and offers a direct way to clear the filter.
+  -->
+  <!-- State: filtered-no-results -->
+  <div class="screen" data-name="History — No Results for Filter">
+    <div class="page-wrap">
+      <div class="page-header">
+        <h1 class="text-lg text-bold">Workout history</h1>
+        <span class="entry-count">0 of 8 entries</span>
+      </div>
+
+      <div class="filter-panel" role="search" aria-label="Filter workout history">
+        <div class="filter-field">
+          <label class="label" for="f-start-5">Start date</label>
+          <input class="input" id="f-start-5" type="date">
+        </div>
+        <div class="filter-field">
+          <label class="label" for="f-end-5">End date</label>
+          <input class="input" id="f-end-5" type="date">
+        </div>
+        <div class="filter-field">
+          <label class="label" for="f-name-5">Exercise name</label>
+          <input class="input" id="f-name-5" type="text" value="yoga">
+        </div>
+        <div class="filter-actions">
+          <button type="button" class="btn btn-primary" onclick="go('History — No Results for Filter')">Apply</button>
+          <button type="button" class="btn btn-secondary" onclick="go('History — Full List (Newest First)')">Clear</button>
+        </div>
+      </div>
+
+      <div class="active-filters">
+        <span class="filter-chip">Exercise contains "yoga" <button type="button" onclick="go('History — Full List (Newest First)')" aria-label="Remove exercise name filter">✕</button></span>
+      </div>
+
+      <div class="empty-state">
+        <div class="empty-state-icon">Ø</div>
+        <h2 class="text-md text-bold" style="margin:0;">No matching entries</h2>
+        <p class="text-sm text-muted" style="margin:0; max-width:40ch;">No workouts match "yoga" for the selected filters. Try a different name or clear the filter.</p>
+        <div class="actions" style="justify-content:center;">
+          <button type="button" class="btn btn-primary" onclick="go('History — Full List (Newest First)')">Clear filter →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: History — Load Error
+       Notes:
+         - Standard error state per §5: explains what happened and offers a retry, never a
+           raw stack trace.
+  -->
+  <!-- State: error -->
+  <div class="screen" data-name="History — Load Error">
+    <div class="page-wrap">
+      <div class="page-header">
+        <h1 class="text-lg text-bold">Workout history</h1>
+      </div>
+      <div class="banner" role="alert">
+        <span class="icon">⚠</span>
+        <div class="body">
+          <strong>Couldn't load your history</strong>
+          Something went wrong while fetching your entries. Check your connection and try again.
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-primary" onclick="loadThen('History — Full List (Newest First)')">Retry →</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Inline fixture: this signed-in user's ("Alex") 8 workout entries, already sorted
+  // newest-first. A second user's entries never appear in this fixture set at all —
+  // that scoping (AC2) happens server-side and is reflected here by simply never
+  // including any other user's data.
+  const historyFixture = [
+    { exercise: "Back squat", date: "2026-09-22", sets: 3, reps: 8 },
+    { exercise: "Bench press", date: "2026-09-20", minutes: 45 },
+    { exercise: "Row (rowing machine)", date: "2026-09-18", minutes: 30 },
+    { exercise: "Bulgarian split squat", date: "2026-09-12", sets: 4, reps: 12 },
+    { exercise: "Deadlift", date: "2026-09-05", sets: 5, reps: 5 },
+    { exercise: "Pull-up", date: "2026-08-29", sets: 0, reps: 0 },
+    { exercise: "Back squat", date: "2026-08-15", sets: 3, reps: 5 },
+    { exercise: "Bench press", date: "2026-08-02", minutes: 20 }
+  ];
+
+  const screens = Array.from(document.querySelectorAll('.screen'));
+  let cur = 0;
+
+  function show(i) {
+    cur = Math.max(0, Math.min(screens.length - 1, i));
+    screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+    document.getElementById('screen-label').textContent =
+      `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+  }
+
+  function go(name) {
+    const idx = screens.findIndex(s => s.dataset.name === name);
+    if (idx !== -1) show(idx);
+  }
+
+  // Used by Retry, so the reviewer bar's own Prev/Next always shows the error state
+  // as a static screen instead of auto-advancing past it.
+  function loadThen(target) {
+    go('History — Loading');
+    setTimeout(() => {
+      if (screens[cur].dataset.name === 'History — Loading') go(target);
+    }, 350);
+  }
+
+  document.getElementById('prev-btn').onclick = () => show(cur - 1);
+  document.getElementById('next-btn').onclick = () => show(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') show(cur + 1);
+    if (e.key === 'ArrowLeft') show(cur - 1);
+  });
+
+  show(0);
+</script>
+
+</body>
+</html>
+
+<!-- arc:css-inlined -->
