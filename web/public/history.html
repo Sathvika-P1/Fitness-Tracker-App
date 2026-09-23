@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workout history — Fitness Tracker</title>
+<link rel="stylesheet" href="/design-system/tokens.css">
+<link rel="stylesheet" href="/design-system/prototype-utils.css">
+<style>
+  .page-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--space-1); flex-wrap: wrap; gap: var(--space-2); }
+  .page-header h2 { margin: 0; }
+  .entry-count { color: var(--color-muted); font-size: var(--font-size-sm); }
+
+  .filter-panel {
+    display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-3);
+    padding: var(--space-3); margin: var(--space-3) 0 var(--space-4);
+    background: var(--color-surface);
+    border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+  .filter-field { display: flex; flex-direction: column; gap: var(--space-1); min-width: 150px; flex: 1 1 150px; }
+  .filter-field .label { font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); margin: 0; }
+  .filter-field .input { padding: var(--space-2); font-size: var(--font-size-sm); min-height: 44px; box-sizing: border-box; }
+  .filter-actions { display: flex; gap: var(--space-2); flex-shrink: 0; }
+
+  .history-list { display: flex; flex-direction: column; gap: var(--space-2); list-style: none; margin: 0; padding: 0; }
+  .history-row {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--card-default-background);
+    border: var(--border-width-sm) solid var(--card-default-border);
+    border-radius: var(--radius-md);
+  }
+  .history-row-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .history-exercise { font-weight: var(--font-weight-bold); font-size: var(--font-size-md); }
+  .history-date { color: var(--color-muted); font-size: var(--font-size-sm); }
+  .history-metrics { display: flex; gap: var(--space-3); flex-shrink: 0; text-align: right; }
+  .history-metric { display: flex; flex-direction: column; align-items: flex-end; }
+  .history-metric .val { font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+  .history-metric .unit { color: var(--color-muted); font-size: var(--font-size-sm); }
+
+  .empty-state {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: var(--space-4); gap: var(--space-2);
+    background: var(--color-surface);
+    border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    margin-top: var(--space-3);
+  }
+  .empty-state-icon {
+    width: 64px; height: 64px; border-radius: 50%; background: var(--color-bg);
+    border: var(--border-width-sm) solid var(--color-border);
+    display: flex; align-items: center; justify-content: center; font-size: var(--font-size-lg);
+    color: var(--color-muted);
+  }
+  .actions { display: flex; gap: var(--space-2); margin-top: var(--space-3); flex-wrap: wrap; justify-content: center; }
+  .no-results-hint { color: var(--color-muted); font-size: var(--font-size-sm); margin-top: var(--space-1); }
+</style>
+</head>
+<body>
+
+<div class="page-shell">
+  <div class="top-app-bar">
+    <div>
+      <h1 class="text-bold" style="margin:0;font-size:inherit">Workout history</h1>
+      <div class="text-sm text-muted">Your complete log, newest first.</div>
+    </div>
+    <div class="avatar-menu" data-avatar-menu>
+      <button class="avatar-menu-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Account menu" data-avatar-trigger>
+        <div class="avatar" id="avatar-menu-initial" aria-hidden="true"></div>
+      </button>
+      <div class="avatar-menu-dropdown" role="menu" hidden data-avatar-dropdown>
+        <a class="avatar-menu-item" role="menuitem" href="profile.html">View profile</a>
+        <button class="avatar-menu-item danger" role="menuitem" type="button" id="history-logout-btn">Logout</button>
+      </div>
+      <p class="inline-error avatar-menu-error" id="history-logout-error" role="alert" hidden>Logout failed. Please try again.</p>
+    </div>
+  </div>
+
+  <div class="banner" role="alert" id="load-error-banner" hidden>
+    <span class="banner-icon" aria-hidden="true">⚠</span>
+    <div>
+      <div class="banner-title">Couldn't load your history</div>
+      <div class="banner-body">Something went wrong while fetching your entries. Check your connection and try again.</div>
+    </div>
+    <button class="btn btn-primary" type="button" id="retry-btn" style="margin-left:auto;">Retry →</button>
+  </div>
+
+  <div class="content-pad">
+    <div class="page-header">
+      <span class="entry-count" id="entry-count" hidden></span>
+    </div>
+
+    <div class="filter-panel" role="search" aria-label="Filter workout history" id="filter-panel">
+      <div class="filter-field">
+        <label class="label" for="filter-start">Start date</label>
+        <input class="input" id="filter-start" type="date">
+      </div>
+      <div class="filter-field">
+        <label class="label" for="filter-end">End date</label>
+        <input class="input" id="filter-end" type="date">
+      </div>
+      <div class="filter-field">
+        <label class="label" for="filter-name">Exercise name</label>
+        <input class="input" id="filter-name" type="text" placeholder="e.g. squat">
+      </div>
+      <div class="filter-actions">
+        <button class="btn btn-primary" type="button" id="apply-filters-btn">Apply</button>
+        <button class="btn btn-secondary" type="button" id="clear-filters-btn" disabled title="No filter is currently active">Clear</button>
+      </div>
+    </div>
+
+    <ul class="history-list" id="history-list" aria-label="Workout history"></ul>
+
+    <div class="empty-state" id="empty-state" hidden>
+      <div class="empty-state-icon" id="empty-state-icon" aria-hidden="true">＋</div>
+      <h2 class="text-md text-bold" id="empty-state-title" style="margin:0;">No workouts logged yet</h2>
+      <p class="text-sm text-muted" id="empty-state-body" style="margin:0; max-width:40ch;">Once you log a workout, it'll show up here — newest first.</p>
+      <div class="actions">
+        <a class="btn btn-primary" id="empty-state-action" href="workout-entry.html">Log your first workout →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-tabs">
+    <a class="bottom-tab" href="dashboard.html">Today</a>
+    <a class="bottom-tab" href="workout-entry.html">Log</a>
+    <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
+    <a class="bottom-tab active" href="history.html">History</a>
+    <a class="bottom-tab" href="profile.html">Profile</a>
+  </div>
+</div>
+
+<script type="module" src="/avatar-menu.js"></script>
+<script type="module" src="/history.js"></script>
+</body>
+</html>

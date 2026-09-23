@@ -47,6 +47,56 @@ def create_workout(
     )
 
 
+@router.get("/api/workouts")
+def list_workouts(
+    start_date: str | None = None,
+    end_date: str | None = None,
+    exercise_name: str | None = None,
+    db: Session = Depends(get_db),
+    sid: str | None = Cookie(default=None),
+):
+    account = sessions.require_account(db, sid)
+    if account is None:
+        return JSONResponse(status_code=401, content={"message": "Not signed in."})
+
+    errors: dict[str, str] = {}
+    parsed_start = None
+    parsed_end = None
+    if start_date:
+        try:
+            parsed_start = datetime.date.fromisoformat(start_date)
+        except ValueError:
+            errors["start_date"] = "Enter a valid date."
+    if end_date:
+        try:
+            parsed_end = datetime.date.fromisoformat(end_date)
+        except ValueError:
+            errors["end_date"] = "Enter a valid date."
+    if errors:
+        return JSONResponse(status_code=400, content={"errors": errors})
+
+    entries = workouts.list_entries(
+        db,
+        account,
+        start_date=parsed_start,
+        end_date=parsed_end,
+        name_contains=exercise_name,
+    )
+    return {
+        "entries": [
+            {
+                "id": e.id,
+                "exercise_name": e.exercise_name,
+                "entry_date": e.entry_date.isoformat(),
+                "duration_minutes": e.duration_minutes,
+                "sets": e.sets,
+                "reps": e.reps,
+            }
+            for e in entries
+        ]
+    }
+
+
 @router.get("/api/workouts/exercise-names")
 def get_exercise_names(
     db: Session = Depends(get_db), sid: str | None = Cookie(default=None)

@@ -115,3 +115,21 @@ def list_exercise_names(db: Session, account: Account) -> list[str]:
         .order_by(WorkoutEntry.exercise_name)
     ).scalars()
     return list(rows)
+
+
+def list_entries(
+    db: Session,
+    account: Account,
+    start_date: datetime.date | None = None,
+    end_date: datetime.date | None = None,
+    name_contains: str | None = None,
+) -> list[WorkoutEntry]:
+    stmt = select(WorkoutEntry).where(WorkoutEntry.account_id == account.id)
+    if start_date is not None:
+        stmt = stmt.where(WorkoutEntry.entry_date >= start_date)
+    if end_date is not None:
+        stmt = stmt.where(WorkoutEntry.entry_date <= end_date)
+    if name_contains:
+        stmt = stmt.where(WorkoutEntry.exercise_name.icontains(name_contains, autoescape=True))
+    stmt = stmt.order_by(WorkoutEntry.entry_date.desc(), WorkoutEntry.id.desc())
+    return list(db.execute(stmt).scalars())
