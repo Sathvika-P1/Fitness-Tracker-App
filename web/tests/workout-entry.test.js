@@ -124,4 +124,11 @@ describe('workout-entry', () => {
 
     expect(document.getElementById('entry-date').value).not.toBe('');
   });
+
+  it('the "View in history" link is enabled and points at history.html', async () => {
+    await loadWorkoutEntryPage();
+    const link = document.getElementById('view-history-btn');
+    expect(link.hasAttribute('disabled')).toBe(false);
+    expect(link.getAttribute('href')).toBe('history.html');
+  });
 });

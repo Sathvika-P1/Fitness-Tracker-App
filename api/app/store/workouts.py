@@ -11,6 +11,17 @@ def _present(raw: str | None) -> bool:
     return raw is not None and raw.strip() != ""
 
 
+def parse_date_or_none(
+    value: str | None,
+) -> tuple[datetime.date | None, str | None]:
+    if not _present(value):
+        return None, None
+    try:
+        return datetime.date.fromisoformat(value.strip()), None
+    except ValueError:
+        return None, "Enter a valid date."
+
+
 def validate_entry(
     exercise_name: str | None,
     entry_date_str: str | None,
@@ -30,17 +41,15 @@ def validate_entry(
     if not _present(entry_date_str):
         errors["entry_date"] = "Date is required."
     else:
-        try:
-            entry_date = datetime.date.fromisoformat(entry_date_str.strip())
-        except ValueError:
-            errors["entry_date"] = "Enter a valid date."
+        entry_date, error = parse_date_or_none(entry_date_str)
+        if error:
+            errors["entry_date"] = error
+        elif entry_date > today:
+            errors["entry_date"] = (
+                "Future dates aren't allowed — choose today or an earlier date."
+            )
         else:
-            if entry_date > today:
-                errors["entry_date"] = (
-                    "Future dates aren't allowed — choose today or an earlier date."
-                )
-            else:
-                cleaned["entry_date"] = entry_date
+            cleaned["entry_date"] = entry_date
 
     duration_present = _present(duration_str)
     sets_present = _present(sets_str)
@@ -115,3 +124,29 @@ def list_exercise_names(db: Session, account: Account) -> list[str]:
         .order_by(WorkoutEntry.exercise_name)
     ).scalars()
     return list(rows)
+
+
+MAX_PAGE_SIZE = 100
+
+
+def list_entries(
+    db: Session,
+    account: Account,
+    start_date: datetime.date | None = None,
+    end_date: datetime.date | None = None,
+    name_contains: str | None = None,
+    limit: int = MAX_PAGE_SIZE,
+    offset: int = 0,
+) -> tuple[list[WorkoutEntry], bool]:
+    stmt = select(WorkoutEntry).where(WorkoutEntry.account_id == account.id)
+    if start_date is not None:
+        stmt = stmt.where(WorkoutEntry.entry_date >= start_date)
+    if end_date is not None:
+        stmt = stmt.where(WorkoutEntry.entry_date <= end_date)
+    if name_contains:
+        stmt = stmt.where(WorkoutEntry.exercise_name.icontains(name_contains, autoescape=True))
+    stmt = stmt.order_by(WorkoutEntry.entry_date.desc(), WorkoutEntry.id.desc())
+    stmt = stmt.offset(offset).limit(limit + 1)
+    rows = list(db.execute(stmt).scalars())
+    has_more = len(rows) > limit
+    return rows[:limit], has_more
