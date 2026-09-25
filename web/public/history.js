@@ -30,6 +30,10 @@ export async function fetchHistory(filters) {
     if (res.status === 401) {
       return { ok: false, sessionExpired: true };
     }
+    if (res.status === 400) {
+      const body = await res.json();
+      return { ok: false, fieldErrors: body.errors || {} };
+    }
     return { ok: false, networkError: true };
   } catch (error) {
     console.error('history_fetch_failed', { error });
@@ -58,6 +62,14 @@ const applyBtn = document.getElementById('apply-filters-btn');
 const clearBtn = document.getElementById('clear-filters-btn');
 const loadErrorBanner = document.getElementById('load-error-banner');
 const retryBtn = document.getElementById('retry-btn');
+const filterStartError = document.getElementById('filter-start-error');
+const filterEndError = document.getElementById('filter-end-error');
+
+function setFieldError(el, message) {
+  if (!el) return;
+  el.textContent = message || '';
+  el.hidden = !message;
+}
 
 function currentFilters() {
   return {
@@ -137,17 +149,38 @@ export function renderHistory(entries, filters = {}) {
   });
 }
 
+let requestInFlight = false;
+
 async function loadAndRender(filters) {
+  if (requestInFlight) return;
+  requestInFlight = true;
+  applyBtn?.setAttribute('disabled', 'true');
+  clearBtn?.setAttribute('disabled', 'true');
+  retryBtn?.setAttribute('disabled', 'true');
   loadErrorBanner.hidden = true;
-  const result = await fetchHistory(filters);
-  if (result.ok) {
-    renderHistory(result.entries, filters);
-    clearBtn.disabled = !hasActiveFilter(filters);
-    clearBtn.title = clearBtn.disabled ? 'No filter is currently active' : '';
-  } else if (result.sessionExpired) {
-    window.location.href = 'login.html';
-  } else {
-    loadErrorBanner.hidden = false;
+  setFieldError(filterStartError, '');
+  setFieldError(filterEndError, '');
+  try {
+    const result = await fetchHistory(filters);
+    if (result.ok) {
+      renderHistory(result.entries, filters);
+    } else if (result.sessionExpired) {
+      window.location.href = 'login.html';
+    } else if (result.fieldErrors && (result.fieldErrors.start_date || result.fieldErrors.end_date)) {
+      setFieldError(filterStartError, result.fieldErrors.start_date);
+      setFieldError(filterEndError, result.fieldErrors.end_date);
+    } else {
+      loadErrorBanner.hidden = false;
+    }
+  } finally {
+    requestInFlight = false;
+    applyBtn?.removeAttribute('disabled');
+    retryBtn?.removeAttribute('disabled');
+    const filterActive = hasActiveFilter(currentFilters());
+    if (clearBtn) {
+      clearBtn.disabled = !filterActive;
+      clearBtn.title = clearBtn.disabled ? 'No filter is currently active' : '';
+    }
   }
 }
 

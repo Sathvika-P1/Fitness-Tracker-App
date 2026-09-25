@@ -102,4 +102,41 @@ describe('history', () => {
     );
     expect(document.querySelectorAll('#history-list .history-row').length).toBe(2);
   });
+
+  it('surfaces a 400 field error on the filter inputs instead of the generic banner', async () => {
+    await loadHistoryPage();
+    await flush();
+
+    global.fetch.mockResolvedValueOnce({
+      status: 400,
+      json: async () => ({ errors: { start_date: 'Enter a valid date.' } }),
+    });
+    document.getElementById('filter-start').value = 'not-a-date';
+    document.getElementById('apply-filters-btn').click();
+    await flush();
+
+    expect(document.getElementById('filter-start-error').hidden).toBe(false);
+    expect(document.getElementById('filter-start-error').textContent).toBe('Enter a valid date.');
+    expect(document.getElementById('load-error-banner').hidden).toBe(true);
+  });
+
+  it('disables Apply/Clear/Retry while a request is in flight and re-enables after it settles', async () => {
+    await loadHistoryPage();
+    await flush();
+
+    let resolveFetch;
+    global.fetch.mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolveFetch = resolve;
+      })
+    );
+
+    document.getElementById('apply-filters-btn').click();
+    expect(document.getElementById('apply-filters-btn').disabled).toBe(true);
+
+    resolveFetch({ status: 200, json: async () => ({ entries: [] }) });
+    await flush();
+
+    expect(document.getElementById('apply-filters-btn').disabled).toBe(false);
+  });
 });

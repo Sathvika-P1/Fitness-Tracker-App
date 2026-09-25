@@ -60,18 +60,12 @@ def list_workouts(
         return JSONResponse(status_code=401, content={"message": "Not signed in."})
 
     errors: dict[str, str] = {}
-    parsed_start = None
-    parsed_end = None
-    if start_date:
-        try:
-            parsed_start = datetime.date.fromisoformat(start_date)
-        except ValueError:
-            errors["start_date"] = "Enter a valid date."
-    if end_date:
-        try:
-            parsed_end = datetime.date.fromisoformat(end_date)
-        except ValueError:
-            errors["end_date"] = "Enter a valid date."
+    parsed_start, start_error = workouts.parse_date_or_none(start_date)
+    if start_error:
+        errors["start_date"] = start_error
+    parsed_end, end_error = workouts.parse_date_or_none(end_date)
+    if end_error:
+        errors["end_date"] = end_error
     if errors:
         return JSONResponse(status_code=400, content={"errors": errors})
 

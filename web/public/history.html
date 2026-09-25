@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="/design-system/prototype-utils.css">
 <style>
   .page-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--space-1); flex-wrap: wrap; gap: var(--space-2); }
-  .page-header h2 { margin: 0; }
   .entry-count { color: var(--color-muted); font-size: var(--font-size-sm); }
 
   .filter-panel {
@@ -95,10 +94,12 @@
       <div class="filter-field">
         <label class="label" for="filter-start">Start date</label>
         <input class="input" id="filter-start" type="date">
+        <p class="field-error-text" id="filter-start-error" role="alert" hidden></p>
       </div>
       <div class="filter-field">
         <label class="label" for="filter-end">End date</label>
         <input class="input" id="filter-end" type="date">
+        <p class="field-error-text" id="filter-end-error" role="alert" hidden></p>
       </div>
       <div class="filter-field">
         <label class="label" for="filter-name">Exercise name</label>
