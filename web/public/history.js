@@ -11,30 +11,46 @@ export function formatMetrics(entry) {
   return metrics;
 }
 
-export function buildQueryString({ startDate, endDate, exerciseName } = {}) {
+export function buildQueryString({ startDate, endDate, exerciseName, offset } = {}) {
   const params = new URLSearchParams();
   if (startDate) params.set('start_date', startDate);
   if (endDate) params.set('end_date', endDate);
   if (exerciseName) params.set('exercise_name', exerciseName);
+  if (offset) params.set('offset', String(offset));
   const qs = params.toString();
   return qs ? `?${qs}` : '';
 }
 
+async function fetchPage(filters) {
+  const res = await fetch(`/api/workouts${buildQueryString(filters)}`, { credentials: 'include' });
+  if (res.status === 200) {
+    const body = await res.json();
+    return { ok: true, entries: body.entries || [], hasMore: Boolean(body.has_more) };
+  }
+  if (res.status === 401) {
+    return { ok: false, sessionExpired: true };
+  }
+  if (res.status === 400) {
+    const body = await res.json();
+    return { ok: false, fieldErrors: body.errors || {} };
+  }
+  return { ok: false, networkError: true };
+}
+
+// AC1 requires the complete list on load, so pages are fetched and merged here
+// rather than exposed as a "load more" control; pagination only bounds per-request cost.
 export async function fetchHistory(filters) {
   try {
-    const res = await fetch(`/api/workouts${buildQueryString(filters)}`, { credentials: 'include' });
-    if (res.status === 200) {
-      const body = await res.json();
-      return { ok: true, entries: body.entries || [] };
+    const entries = [];
+    let offset = 0;
+    for (;;) {
+      const page = await fetchPage({ ...filters, offset });
+      if (!page.ok) return page;
+      entries.push(...page.entries);
+      if (!page.hasMore || page.entries.length === 0) break;
+      offset += page.entries.length;
     }
-    if (res.status === 401) {
-      return { ok: false, sessionExpired: true };
-    }
-    if (res.status === 400) {
-      const body = await res.json();
-      return { ok: false, fieldErrors: body.errors || {} };
-    }
-    return { ok: false, networkError: true };
+    return { ok: true, entries };
   } catch (error) {
     console.error('history_fetch_failed', { error });
     return { ok: false, networkError: true };
@@ -53,6 +69,8 @@ const emptyStateIcon = document.getElementById('empty-state-icon');
 const emptyStateTitle = document.getElementById('empty-state-title');
 const emptyStateBody = document.getElementById('empty-state-body');
 const emptyStateAction = document.getElementById('empty-state-action');
+const emptyStateClearBtn = document.getElementById('empty-state-clear-btn');
+const historyStatus = document.getElementById('history-status');
 const filterPanel = document.getElementById('filter-panel');
 const entryCount = document.getElementById('entry-count');
 const filterStart = document.getElementById('filter-start');
@@ -94,16 +112,17 @@ export function renderHistory(entries, filters = {}) {
       emptyStateIcon.textContent = 'Ø';
       emptyStateTitle.textContent = 'No matching entries';
       emptyStateBody.textContent = 'No workouts match the selected filters. Try a different name or clear the filter.';
-      emptyStateAction.textContent = 'Clear filter →';
-      emptyStateAction.removeAttribute('href');
+      emptyStateAction.hidden = true;
+      emptyStateClearBtn.hidden = false;
     } else {
       emptyStateIcon.textContent = '＋';
       emptyStateTitle.textContent = 'No workouts logged yet';
       emptyStateBody.textContent = "Once you log a workout, it'll show up here — newest first.";
-      emptyStateAction.textContent = 'Log your first workout →';
-      emptyStateAction.setAttribute('href', 'workout-entry.html');
+      emptyStateAction.hidden = false;
+      emptyStateClearBtn.hidden = true;
     }
     entryCount.hidden = true;
+    historyStatus.textContent = emptyStateTitle.textContent;
     return;
   }
 
@@ -111,6 +130,7 @@ export function renderHistory(entries, filters = {}) {
   emptyState.hidden = true;
   entryCount.hidden = false;
   entryCount.textContent = `${entries.length} entr${entries.length === 1 ? 'y' : 'ies'}`;
+  historyStatus.textContent = entryCount.textContent;
 
   entries.forEach((entry) => {
     const li = document.createElement('li');
@@ -199,9 +219,7 @@ retryBtn?.addEventListener('click', () => {
   loadAndRender(currentFilters());
 });
 
-emptyStateAction?.addEventListener('click', (event) => {
-  if (emptyStateAction.hasAttribute('href')) return;
-  event.preventDefault();
+emptyStateClearBtn?.addEventListener('click', () => {
   clearBtn.click();
 });
 

@@ -126,13 +126,18 @@ def list_exercise_names(db: Session, account: Account) -> list[str]:
     return list(rows)
 
 
+MAX_PAGE_SIZE = 100
+
+
 def list_entries(
     db: Session,
     account: Account,
     start_date: datetime.date | None = None,
     end_date: datetime.date | None = None,
     name_contains: str | None = None,
-) -> list[WorkoutEntry]:
+    limit: int = MAX_PAGE_SIZE,
+    offset: int = 0,
+) -> tuple[list[WorkoutEntry], bool]:
     stmt = select(WorkoutEntry).where(WorkoutEntry.account_id == account.id)
     if start_date is not None:
         stmt = stmt.where(WorkoutEntry.entry_date >= start_date)
@@ -141,4 +146,7 @@ def list_entries(
     if name_contains:
         stmt = stmt.where(WorkoutEntry.exercise_name.icontains(name_contains, autoescape=True))
     stmt = stmt.order_by(WorkoutEntry.entry_date.desc(), WorkoutEntry.id.desc())
-    return list(db.execute(stmt).scalars())
+    stmt = stmt.offset(offset).limit(limit + 1)
+    rows = list(db.execute(stmt).scalars())
+    has_more = len(rows) > limit
+    return rows[:limit], has_more

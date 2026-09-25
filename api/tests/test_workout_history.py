@@ -113,3 +113,21 @@ def test_invalid_start_date_returns_400(client_with_signed_up_account):
     )
     assert res.status_code == 400
     assert "start_date" in res.json()["errors"]
+
+
+def test_limit_paginates_and_reports_has_more(client_with_signed_up_account):
+    client = client_with_signed_up_account
+    _create(client, "A", "2026-09-01")
+    _create(client, "B", "2026-09-02")
+    _create(client, "C", "2026-09-03")
+
+    first_page = client.get("/api/workouts", params={"limit": 2})
+    assert first_page.status_code == 200
+    body = first_page.json()
+    assert [e["exercise_name"] for e in body["entries"]] == ["C", "B"]
+    assert body["has_more"] is True
+
+    second_page = client.get("/api/workouts", params={"limit": 2, "offset": 2})
+    body = second_page.json()
+    assert [e["exercise_name"] for e in body["entries"]] == ["A"]
+    assert body["has_more"] is False

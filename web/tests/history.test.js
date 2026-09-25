@@ -139,4 +139,53 @@ describe('history', () => {
 
     expect(document.getElementById('apply-filters-btn').disabled).toBe(false);
   });
+
+  it('fetches and merges additional pages when has_more is true (perf pagination)', async () => {
+    global.fetch
+      .mockResolvedValueOnce({
+        status: 200,
+        json: async () => ({ entries: [fullFixture[0]], has_more: true }),
+      })
+      .mockResolvedValueOnce({
+        status: 200,
+        json: async () => ({ entries: [fullFixture[1]], has_more: false }),
+      });
+    await loadHistoryPage();
+    await flush();
+
+    expect(document.querySelectorAll('#history-list .history-row').length).toBe(2);
+    expect(fetch).toHaveBeenLastCalledWith(
+      '/api/workouts?offset=1',
+      expect.objectContaining({ credentials: 'include' })
+    );
+  });
+
+  it('announces the entry count in a live status region after render', async () => {
+    global.fetch.mockResolvedValue({ status: 200, json: async () => ({ entries: fullFixture }) });
+    await loadHistoryPage();
+    await flush();
+
+    expect(document.getElementById('history-status').textContent).toBe('2 entries');
+  });
+
+  it('shows a clear-filter button (not a href-less link) when a filter yields no matches', async () => {
+    global.fetch.mockResolvedValueOnce({ status: 200, json: async () => ({ entries: [] }) });
+    await loadHistoryPage();
+    await flush();
+
+    global.fetch.mockResolvedValueOnce({ status: 200, json: async () => ({ entries: [] }) });
+    document.getElementById('filter-name').value = 'squat';
+    document.getElementById('apply-filters-btn').click();
+    await flush();
+
+    expect(document.getElementById('empty-state-action').hidden).toBe(true);
+    expect(document.getElementById('empty-state-clear-btn').hidden).toBe(false);
+
+    global.fetch.mockResolvedValueOnce({ status: 200, json: async () => ({ entries: fullFixture }) });
+    document.getElementById('empty-state-clear-btn').click();
+    await flush();
+
+    expect(document.getElementById('filter-name').value).toBe('');
+    expect(document.querySelectorAll('#history-list .history-row').length).toBe(2);
+  });
 });
