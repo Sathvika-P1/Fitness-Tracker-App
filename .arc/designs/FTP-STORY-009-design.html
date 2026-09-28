@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTP-STORY-009 — Edit Workout Entry</title>
+<style>
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1a1a1a; /** Primary body text color, used on color-bg. Contrast ratio ~17.4:1. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-surface: #f8fafc; /** Slightly recessed surface, distinct from color-bg, used for cards. */
+  --color-primary: #1d4ed8; /** Brand/interactive accent color. Meets 4.5:1 as text on color-bg (~6.7:1). */
+  --color-on-primary: #ffffff; /** Text/icon color placed on top of color-primary. */
+  --color-muted: #475569; /** Secondary/muted text color. */
+  --color-border: #e2e8f0; /** Default hairline border color. */
+  --color-danger: #dc2626; /** Destructive/error accent color. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 600;
+  --line-height-base: 1.5;
+  --button-primary-background: var(--color-primary);
+  --button-primary-foreground: var(--color-on-primary);
+  --button-primary-border-radius: var(--radius-md);
+  --button-secondary-background: var(--color-bg);
+  --button-secondary-foreground: var(--color-primary);
+  --button-secondary-border: var(--color-primary);
+  --card-default-background: var(--color-surface);
+  --card-default-border: var(--color-border);
+  --card-default-border-radius: var(--radius-lg);
+  --chip-default-background: var(--color-surface);
+  --chip-default-foreground: var(--color-muted);
+  --chip-default-border-radius: var(--radius-sm);
+  --input-default-background: var(--color-bg);
+  --input-default-border: var(--color-border);
+  --input-default-foreground: var(--color-fg);
+  --input-default-border-radius: var(--radius-sm);
+}
+
+</style>
+<style>
+/* Base layout / typography */
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-md);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-bold { font-weight: var(--font-weight-bold); }
+
+/* Layout utilities */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
+/* Buttons */
+
+.btn {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-md);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-radius: var(--button-primary-border-radius);
+}
+
+.btn-secondary {
+  background: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-on-primary);
+}
+
+/* Card */
+
+.card {
+  background: var(--card-default-background);
+  border: var(--border-width-sm) solid var(--card-default-border);
+  border-radius: var(--card-default-border-radius);
+  padding: var(--space-4);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Chip */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  background: var(--chip-default-background);
+  color: var(--chip-default-foreground);
+  border-radius: var(--chip-default-border-radius);
+  font-size: var(--font-size-sm);
+}
+
+/* Form controls */
+
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  background: var(--input-default-background);
+  color: var(--input-default-foreground);
+  border: var(--border-width-sm) solid var(--input-default-border);
+  border-radius: var(--input-default-border-radius);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-md);
+  outline: none;
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-1);
+}
+
+/* Style-guide page helpers */
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.swatch-color {
+  height: var(--space-4);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-sm) solid var(--color-border);
+}
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.section {
+  margin-bottom: var(--space-4);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* Auth pages (signup / login) */
+
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+.auth-shell {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-3);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.field {
+  margin-bottom: var(--space-3);
+}
+
+.field-error-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.input.has-error {
+  border-color: var(--color-danger);
+  border-width: var(--border-width-md);
+}
+
+.helper-text {
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.btn-block {
+  width: 100%;
+  min-height: 44px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.banner {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  background: var(--color-bg);
+  border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.banner[hidden] {
+  display: none;
+}
+
+.banner-icon {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.banner-title {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+}
+
+.banner-body {
+  color: var(--color-fg);
+  font-size: var(--font-size-sm);
+}
+
+.link-inline {
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.center-note {
+  text-align: center;
+  margin-top: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+
+.banner-neutral {
+  border-color: var(--color-border);
+}
+
+.banner-neutral .banner-icon,
+.banner-neutral .banner-title {
+  color: var(--color-primary);
+}
+
+/* App shell (top bar, avatar, bottom tabs) */
+
+.page-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: var(--space-4);
+}
+
+.top-app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.bottom-tabs {
+  display: flex;
+  border-top: var(--border-width-sm) solid var(--color-border);
+  position: sticky;
+  bottom: 0;
+  background: var(--color-bg);
+}
+
+.bottom-tab {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.bottom-tab.active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Profile fields */
+
+.not-set {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.field-group-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.char-counter {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  text-align: right;
+  margin-top: var(--space-1);
+}
+
+.char-counter.over {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+}
+
+.content-pad {
+  padding: 0 var(--space-3);
+}
+
+/* Account deletion */
+
+.back-btn {
+  background: none; border: none; cursor: pointer; color: var(--color-primary);
+  font-size: var(--font-size-md); min-height: 44px; min-width: 44px;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+}
+
+.top-app-bar-title { font-weight: var(--font-weight-bold); font-size: var(--font-size-lg); }
+
+.danger-zone-card {
+  border: var(--border-width-sm) solid var(--color-danger);
+  border-radius: var(--card-default-border-radius);
+  background: var(--color-bg);
+  padding: var(--space-3);
+  margin: var(--space-3);
+}
+.danger-zone-title { color: var(--color-danger); font-weight: var(--font-weight-bold); margin-bottom: var(--space-1); }
+
+.consequence-list { margin: var(--space-3) 0; padding-left: 0; list-style: none; }
+.consequence-list li {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  padding: var(--space-1) 0; font-size: var(--font-size-sm); color: var(--color-fg);
+}
+.consequence-list li .mark { color: var(--color-danger); font-weight: var(--font-weight-bold); flex-shrink: 0; }
+
+.checkbox-row {
+  display: flex; align-items: flex-start; gap: var(--space-2);
+  margin: var(--space-3) 0; min-height: 44px;
+}
+.checkbox-row input[type="checkbox"] {
+  width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; accent-color: var(--color-danger);
+}
+.checkbox-row label { font-size: var(--font-size-sm); color: var(--color-fg); }
+
+.attempt-counter { font-size: var(--font-size-sm); color: var(--color-muted); margin-top: var(--space-1); }
+
+.lockout-banner {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  background: var(--color-bg); border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-3);
+}
+.lockout-banner .banner-icon { color: var(--color-danger); font-weight: var(--font-weight-bold); }
+.lockout-banner .banner-title { color: var(--color-danger); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+.lockout-banner .banner-body { color: var(--color-fg); font-size: var(--font-size-sm); }
+
+.account-empty-state {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: var(--space-4) var(--space-3); gap: var(--space-2);
+}
+.account-empty-state-icon {
+  width: 64px; height: 64px; border-radius: 50%; background: var(--color-surface);
+  display: flex; align-items: center; justify-content: center; font-size: var(--font-size-lg);
+  color: var(--color-danger);
+}
+
+/* Avatar menu — click the avatar to reveal View profile / Logout */
+.avatar-menu {
+  position: relative;
+}
+.avatar-menu-trigger {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  display: block;
+}
+.avatar-menu-trigger:focus-visible {
+  outline: var(--border-width-md) solid var(--color-primary);
+  outline-offset: 2px;
+}
+.avatar-menu-dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  min-width: 180px;
+  background: var(--color-bg);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-1);
+  z-index: 20;
+}
+.avatar-menu-dropdown[hidden] {
+  display: none;
+}
+.avatar-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.avatar-menu-item:hover,
+.avatar-menu-item:focus-visible {
+  background: var(--color-surface);
+}
+.avatar-menu-item.danger {
+  color: var(--color-danger);
+}
+.avatar-menu-error {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--space-1);
+  white-space: nowrap;
+}
+.inline-error {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+</style>
+<!-- App nav: top bar — History (current) · Log workout · Profile -->
+<!--
+  Token gap note for the design-system owner:
+  No "success" or "warning" semantic color token exists yet (only color-fg, color-bg,
+  color-surface, color-primary, color-on-primary, color-muted, color-border, color-danger).
+  "Changes saved" confirmations below use a check icon + color-fg/color-primary text
+  rather than green, since no success token is available to reference.
+-->
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: var(--font-family-base);
+    color: var(--color-fg);
+    background: var(--color-bg);
+    margin: 0;
+    line-height: var(--line-height-base);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+  a { color: var(--color-primary); }
+  :focus-visible {
+    outline: var(--border-width-md) solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .topnav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: var(--border-width-sm) solid var(--color-border);
+    background: var(--color-bg);
+  }
+  .topnav .brand { font-weight: var(--font-weight-bold); font-size: var(--font-size-md); }
+  .topnav nav { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .topnav nav a {
+    text-decoration: none;
+    color: var(--color-muted);
+    font-size: var(--font-size-sm);
+    padding: var(--space-2) var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+  .topnav nav a.active {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-bold);
+    background: var(--color-surface);
+  }
+
+  .page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: var(--space-4);
+  }
+  .page-narrow { max-width: 480px; }
+
+  h1.page-title { font-size: var(--font-size-lg); font-weight: var(--font-weight-bold); margin: 0 0 var(--space-3) 0; }
+  p.subtitle { color: var(--color-muted); font-size: var(--font-size-sm); margin: 0 0 var(--space-4) 0; max-width: 65ch; }
+
+  .entry-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    margin-bottom: var(--space-2);
+    flex-wrap: wrap;
+  }
+  .entry-row.updated {
+    border-color: var(--color-primary);
+    border-width: var(--border-width-md);
+  }
+  .entry-main { display: flex; flex-direction: column; gap: var(--space-1); }
+  .entry-name { font-weight: var(--font-weight-bold); }
+  .entry-meta { color: var(--color-muted); font-size: var(--font-size-sm); }
+
+  .btn {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-3);
+    min-height: 44px;
+    cursor: pointer;
+    border: var(--border-width-sm) solid transparent;
+  }
+  .btn-primary { background: var(--button-primary-background, var(--color-primary)); color: var(--button-primary-foreground, var(--color-on-primary)); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-secondary { background: var(--button-secondary-background, var(--color-bg)); color: var(--button-secondary-foreground, var(--color-primary)); border-color: var(--button-secondary-border, var(--color-primary)); }
+  .btn-danger { background: var(--color-bg); color: var(--color-danger); border-color: var(--color-danger); }
+  .btn-sm { min-height: 44px; padding: var(--space-2) var(--space-3); font-size: var(--font-size-sm); }
+
+  .field { margin-bottom: var(--space-3); }
+  .label { display: block; font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); margin-bottom: var(--space-1); }
+  .input {
+    width: 100%;
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-md);
+    padding: var(--space-2) var(--space-2);
+    border: var(--border-width-sm) solid var(--input-default-border, var(--color-border));
+    border-radius: var(--input-default-border-radius, var(--radius-sm));
+    background: var(--input-default-background, var(--color-bg));
+    color: var(--input-default-foreground, var(--color-fg));
+    min-height: 44px;
+  }
+  .input.error { border-color: var(--color-danger); border-width: var(--border-width-md); }
+  .hint { font-size: var(--font-size-sm); color: var(--color-muted); margin-top: var(--space-1); }
+  .field-error {
+    font-size: var(--font-size-sm);
+    color: var(--color-danger);
+    margin-top: var(--space-1);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+  .two-col { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .two-col > .field { flex: 1 1 200px; }
+
+  .banner {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-3);
+    font-size: var(--font-size-sm);
+  }
+  .banner-error { background: var(--color-bg); border: var(--border-width-md) solid var(--color-danger); color: var(--color-danger); }
+  .banner-info { background: var(--color-surface); border: var(--border-width-sm) solid var(--color-border); color: var(--color-fg); }
+  .banner-success { background: var(--color-bg); border: var(--border-width-md) solid var(--color-primary); color: var(--color-primary); }
+
+  .skeleton {
+    background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-border) 37%, var(--color-surface) 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease infinite;
+    border-radius: var(--radius-sm);
+  }
+  @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+  .skeleton-row { height: 64px; margin-bottom: var(--space-2); border-radius: var(--radius-md); }
+
+  .empty-state {
+    text-align: center;
+    padding: var(--space-4);
+    color: var(--color-muted);
+  }
+
+  .toggle-panel {
+    border: var(--border-width-sm) dashed var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    margin-bottom: var(--space-4);
+    background: var(--color-surface);
+  }
+  .toggle-panel h2 { font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); color: var(--color-muted); margin: 0 0 var(--space-2) 0; }
+  .toggle-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .toggle-row button { min-height: 44px; }
+
+  .modal-backdrop {
+    position: fixed; inset: 0; background: color-mix(in srgb, var(--color-fg) 50%, transparent);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 500; padding: var(--space-3);
+  }
+  .modal {
+    background: var(--color-bg);
+    border-radius: var(--radius-lg);
+    border: var(--border-width-sm) solid var(--color-border);
+    padding: var(--space-4);
+    max-width: 420px;
+    width: 100%;
+  }
+  .modal h3 { margin: 0 0 var(--space-2) 0; }
+  .modal-actions { display: flex; gap: var(--space-2); justify-content: flex-end; margin-top: var(--space-3); flex-wrap: wrap; }
+
+  .split-panels { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .split-panels > .panel {
+    flex: 1 1 260px;
+    border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+  }
+  .panel-label { font-weight: var(--font-weight-bold); margin-bottom: var(--space-2); }
+
+  .icon-check::before { content: "✓ "; }
+  .icon-warn::before { content: "⚠ "; }
+
+  @media (max-width: 400px) {
+    .two-col { flex-direction: column; }
+  }
+</style>
+<script>
+// Inline fixture data — simulated store, never a real API.
+const FIXTURES = {
+  currentUserId: "u_1",
+  entries: [
+    { id: "w_101", ownerId: "u_1", exercise: "Running", date: "2026-09-27", durationMin: 32, sets: null, reps: null, notes: "Easy pace, felt good." },
+    { id: "w_102", ownerId: "u_1", exercise: "Bench press", date: "2026-09-25", durationMin: null, sets: 4, reps: 8, notes: "" },
+    { id: "w_103", ownerId: "u_1", exercise: "Yoga", date: "2025-03-14", durationMin: 45, sets: null, reps: null, notes: "Created over a year ago — edit should work identically." },
+    { id: "w_104", ownerId: "u_2", exercise: "Cycling", date: "2026-09-20", durationMin: 60, sets: null, reps: null, notes: "Belongs to another user — not editable by u_1." }
+  ]
+};
+</script>
+</head>
+<body>
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--surface);border-bottom:1px solid var(--border);font-size:13px;font-family:var(--font-sans)">
+  <span style="font-family:var(--font-mono);color:var(--muted)">FTP-STORY-009</span>
+  <button id="prev-btn">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--fg)"></span>
+  <button id="next-btn">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+<style>
+  #review-bar button { background: none; border: none; color: var(--brand); cursor: pointer; font-size: 13px; padding: var(--space-1) var(--space-2); }
+  #review-bar button:hover { text-decoration: underline; }
+</style>
+
+<!-- ============================================================
+     SCREEN 1: Workout History (list) — entry point for edits
+     Notes:
+       - Loading skeleton, empty, error and success sub-states are
+         toggled via the buttons below (design-time only).
+       - Each owned entry has a 44px+ "Edit" button (AC1 entry point).
+       - w_103 (dated 2025-03-14, >1 year old) proves AC11: same
+         "Edit" affordance and behavior as any recent entry.
+       - No "edited" badge or "last edited" timestamp is shown on
+         any row — only current values are ever surfaced (AC12).
+     ============================================================ -->
+<div id="screens">
+<!-- State: history-success -->
+<div class="screen" data-name="1. History — List">
+  <div class="topnav">
+    <span class="brand">FitTrack</span>
+    <nav>
+      <a href="#" class="active">History</a>
+      <a href="#">Log workout</a>
+      <a href="#">Profile</a>
+    </nav>
+  </div>
+  <div class="page">
+    <h1 class="page-title">Your workout history</h1>
+    <p class="subtitle">Every workout you've logged. Select "Edit" to correct or update an entry.</p>
+
+    <div class="toggle-panel">
+      <h2>Reviewer: switch list state</h2>
+      <div class="toggle-row">
+        <button class="btn btn-secondary btn-sm" onclick="showSub('history','success')">Success</button>
+        <button class="btn btn-secondary btn-sm" onclick="showSub('history','loading')">Loading</button>
+        <button class="btn btn-secondary btn-sm" onclick="showSub('history','empty')">Empty</button>
+        <button class="btn btn-secondary btn-sm" onclick="showSub('history','error')">Error</button>
+        <button class="btn btn-secondary btn-sm" onclick="showSub('history','updated')">Just saved (AC3)</button>
+        <button class="btn btn-secondary btn-sm" onclick="showSub('history','deleted')">Entry deleted (AC14)</button>
+      </div>
+    </div>
+
+    <!-- State: history-loading -->
+    <div id="history-loading" style="display:none">
+      <div class="skeleton skeleton-row"></div>
+      <div class="skeleton skeleton-row"></div>
+      <div class="skeleton skeleton-row"></div>
+    </div>
+
+    <!-- State: history-empty -->
+    <div id="history-empty" style="display:none" class="empty-state">
+      <p><strong>No workouts logged yet.</strong></p>
+      <p>Once you log your first workout, it'll show up here.</p>
+      <button class="btn btn-primary">Log a workout</button>
+    </div>
+
+    <!-- State: history-error -->
+    <div id="history-error" style="display:none">
+      <div class="banner banner-error" role="alert">
+        <span class="icon-warn"></span>
+        <span>We couldn't load your workout history. Check your connection and try again.</span>
+      </div>
+      <button class="btn btn-secondary" onclick="showSub('history','success')">Retry</button>
+    </div>
+
+    <!-- State: history-success -->
+    <div id="history-success">
+      <div class="rows" id="rows-success"></div>
+    </div>
+
+    <!-- State: history-updated -->
+    <div id="history-updated" style="display:none">
+      <div class="banner banner-success" role="status">
+        <span class="icon-check"></span>
+        <span>Changes saved.</span>
+      </div>
+      <div class="rows" id="rows-updated"></div>
+    </div>
+
+    <!-- State: history-deleted -->
+    <div id="history-deleted" style="display:none">
+      <div class="banner banner-info" role="status">
+        <span>That workout no longer exists.</span>
+      </div>
+      <div class="rows" id="rows-deleted"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 2: Edit form — loading then pre-filled
+     Notes:
+       - Simulated fetch shows a brief loading skeleton before the
+         form renders with the selected entry's current values (AC1).
+       - Date input's max is today (2026-09-28) so a future date
+         can't be picked from the calendar widget; typed input is
+         still validated separately (AC2 rule: date today or earlier).
+       - Only one primary action: "Save changes". Cancel is secondary.
+       - No version history, no "last edited" indicator (AC12).
+       - The "simulate network/server error" checkbox is a reviewer-only
+         control (not real product copy) so a network failure with the
+         reviewer's own typed edits can be demonstrated on screen 4,
+         instead of only replaying a fixed example (AC6, AC7).
+     ============================================================ -->
+<!-- State: edit-loading -->
+<div class="screen" data-name="2. Edit Form — Loading then Pre-filled">
+  <div class="topnav">
+    <span class="brand">FitTrack</span>
+    <nav>
+      <a href="#" class="active">History</a>
+      <a href="#">Log workout</a>
+      <a href="#">Profile</a>
+    </nav>
+  </div>
+  <div class="page page-narrow">
+    <h1 class="page-title">Edit workout</h1>
+    <p class="subtitle">Update the details below. Fields marked * are required.</p>
+
+    <div class="toggle-panel">
+      <h2>Reviewer: form load state</h2>
+      <div class="toggle-row">
+        <button class="btn btn-secondary btn-sm" onclick="showSub('editload','loading')">Loading</button>
+        <button class="btn btn-secondary btn-sm" onclick="showSub('editload','loaded')">Pre-filled (AC1)</button>
+      </div>
+      <div style="display:flex; align-items:center; gap:var(--space-2); margin-top:var(--space-3);">
+        <input type="checkbox" id="simulate-network-fail" style="width:20px;height:20px;">
+        <label for="simulate-network-fail" style="font-size:var(--font-size-sm); color:var(--color-muted);">Reviewer: simulate network/server error on save</label>
+      </div>
+    </div>
+
+    <div id="editload-loading">
+      <div class="skeleton" style="height:20px;width:40%;margin-bottom:var(--space-2);"></div>
+      <div class="skeleton" style="height:44px;margin-bottom:var(--space-3);"></div>
+      <div class="skeleton" style="height:20px;width:30%;margin-bottom:var(--space-2);"></div>
+      <div class="skeleton" style="height:44px;margin-bottom:var(--space-3);"></div>
+    </div>
+
+    <div id="editload-loaded" style="display:none">
+      <div class="field">
+        <label class="label" for="ex1">Exercise name *</label>
+        <input class="input" id="ex1" type="text">
+      </div>
+      <div class="field">
+        <label class="label" for="date1">Date *</label>
+        <input class="input" id="date1" type="date" max="2026-09-28">
+        <p class="hint">Must be today (28 Sep 2026) or earlier.</p>
+      </div>
+      <div class="two-col">
+        <div class="field">
+          <label class="label" for="dur1">Duration (minutes)</label>
+          <input class="input" id="dur1" type="number" min="1">
+        </div>
+        <div class="field">
+          <label class="label" for="sets1">Sets</label>
+          <input class="input" id="sets1" type="number" min="0">
+        </div>
+        <div class="field">
+          <label class="label" for="reps1">Reps</label>
+          <input class="input" id="reps1" type="number" min="0">
+        </div>
+      </div>
+      <p class="hint">Provide duration, or sets and reps — at least one is required.</p>
+      <div class="field">
+        <label class="label" for="notes1">Notes (optional)</label>
+        <input class="input" id="notes1" type="text">
+      </div>
+      <div style="display:flex; gap:var(--space-2); flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="validateAndSave()">Save changes</button>
+        <button class="btn btn-secondary" onclick="openDiscardModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 3: Validation errors — inline, input preserved (AC4, AC5)
+     Notes:
+       - Toggle buttons simulate each individual broken rule plus a
+         combined example. Values typed by the user are always kept
+         on screen; nothing is cleared or silently corrected.
+       - "Back to history" returns to the unchanged history-success list
+         (AC5): the stored entry never reflected the rejected edit.
+     ============================================================ -->
+<!-- State: edit-validation-combined -->
+<div class="screen" data-name="3. Edit Form — Validation Errors">
+  <div class="topnav">
+    <span class="brand">FitTrack</span>
+    <nav>
+      <a href="#" class="active">History</a>
+      <a href="#">Log workout</a>
+      <a href="#">Profile</a>
+    </nav>
+  </div>
+  <div class="page page-narrow">
+    <h1 class="page-title">Edit workout</h1>
+
+    <div class="toggle-panel">
+      <h2>Reviewer: try a broken rule</h2>
+      <div class="toggle-row">
+        <button class="btn btn-secondary btn-sm" onclick="applyValidation('name')">Missing name</button>
+        <button class="btn btn-secondary btn-sm" onclick="applyValidation('date')">Missing date</button>
+        <button class="btn btn-secondary btn-sm" onclick="applyValidation('neither')">No duration or sets/reps</button>
+        <button class="btn btn-secondary btn-sm" onclick="applyValidation('negative')">Negative sets/reps</button>
+        <button class="btn btn-secondary btn-sm" onclick="applyValidation('duration')">Duration 0 or less</button>
+        <button class="btn btn-secondary btn-sm" onclick="applyValidation('future')">Future date</button>
+        <button class="btn btn-secondary btn-sm" onclick="applyValidation('combined')">Combined example</button>
+      </div>
+    </div>
+
+    <div class="banner banner-error" role="alert">
+      <span class="icon-warn"></span>
+      <span>Some details need fixing before this can be saved.</span>
+    </div>
+
+    <div class="field">
+      <label class="label" for="ex2-input">Exercise name *</label>
+      <input class="input" id="ex2-input" type="text" value="Running" aria-describedby="ex2-error">
+      <p class="field-error" id="ex2-error" style="display:none"><span class="icon-warn"></span>Enter an exercise name.</p>
+    </div>
+    <div class="field">
+      <label class="label" for="date2-input">Date *</label>
+      <input class="input" id="date2-input" type="date" value="2026-09-27" max="2026-09-28" aria-describedby="date2-error date2-future-error">
+      <p class="field-error" id="date2-error" style="display:none"><span class="icon-warn"></span>Enter a date.</p>
+      <p class="field-error" id="date2-future-error" style="display:none"><span class="icon-warn"></span>Date can't be in the future — choose today (28 Sep 2026) or earlier.</p>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <label class="label" for="dur2-input">Duration (minutes)</label>
+        <input class="input" id="dur2-input" type="number" value="32" aria-describedby="dur2-error">
+        <p class="field-error" id="dur2-error" style="display:none"><span class="icon-warn"></span>Duration must be greater than 0.</p>
+      </div>
+      <div class="field">
+        <label class="label" for="sets2-input">Sets</label>
+        <input class="input" id="sets2-input" type="number" value="" aria-describedby="sets2-error">
+        <p class="field-error" id="sets2-error" style="display:none"><span class="icon-warn"></span>Sets and reps can't be negative.</p>
+      </div>
+      <div class="field">
+        <label class="label" for="reps2-input">Reps</label>
+        <input class="input" id="reps2-input" type="number" value="" aria-describedby="sets2-error">
+      </div>
+    </div>
+    <p class="field-error" id="neither2-error" style="display:none"><span class="icon-warn"></span>Add a duration, or sets and reps, so there's something to log.</p>
+    <div style="display:flex; gap:var(--space-2); flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="validateAndSaveFromScreen3()">Save changes</button>
+      <button class="btn btn-secondary" onclick="show(0); showSub('history','success')">Back to history</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 4: Saving / network error / success
+     Notes:
+       - "Saving…" disables the button for 200–400ms (simulated).
+       - Network error keeps the user's edited values in the form
+         and offers Retry (AC6, AC7) — nothing is cleared.
+       - Success returns to history with the row highlighted, no
+         Undo and no version indicator (AC2, AC3, AC12).
+     ============================================================ -->
+<!-- State: edit-saving -->
+<div class="screen" data-name="4. Save — Pending, Error, Success">
+  <div class="topnav">
+    <span class="brand">FitTrack</span>
+    <nav>
+      <a href="#" class="active">History</a>
+      <a href="#">Log workout</a>
+      <a href="#">Profile</a>
+    </nav>
+  </div>
+  <div class="page page-narrow">
+    <h1 class="page-title">Edit workout</h1>
+
+    <div class="toggle-panel">
+      <h2>Reviewer: simulate save outcome</h2>
+      <div class="toggle-row">
+        <button class="btn btn-secondary btn-sm" onclick="showSub('save','pending')">Saving…</button>
+        <button class="btn btn-secondary btn-sm" onclick="seedNetworkErrorDemo()">Network/server error</button>
+        <button class="btn btn-secondary btn-sm" onclick="showSub('save','success')">Success</button>
+      </div>
+    </div>
+
+    <!-- State: save-pending -->
+    <div id="save-pending">
+      <div class="field">
+        <label class="label" for="pend-ex">Exercise name *</label>
+        <input class="input" id="pend-ex" type="text" value="Running" disabled>
+      </div>
+      <div class="field">
+        <label class="label" for="pend-date">Date *</label>
+        <input class="input" id="pend-date" type="date" value="2026-09-27" disabled>
+      </div>
+      <div class="two-col">
+        <div class="field">
+          <label class="label" for="pend-dur">Duration (minutes)</label>
+          <input class="input" id="pend-dur" type="number" value="40" disabled>
+        </div>
+        <div class="field">
+          <label class="label" for="pend-sets">Sets</label>
+          <input class="input" id="pend-sets" type="number" value="" disabled>
+        </div>
+        <div class="field">
+          <label class="label" for="pend-reps">Reps</label>
+          <input class="input" id="pend-reps" type="number" value="" disabled>
+        </div>
+      </div>
+      <button class="btn btn-primary" disabled>Saving…</button>
+    </div>
+
+    <!-- State: save-networkerror -->
+    <div id="save-networkerror" style="display:none">
+      <div class="banner banner-error" role="alert">
+        <span class="icon-warn"></span>
+        <span>Something went wrong and we couldn't save your changes. Check your connection and try again.</span>
+      </div>
+      <div class="field">
+        <label class="label" for="err-ex">Exercise name *</label>
+        <input class="input" id="err-ex" type="text" value="Running">
+      </div>
+      <div class="field">
+        <label class="label" for="err-date">Date *</label>
+        <input class="input" id="err-date" type="date" value="2026-09-27" max="2026-09-28">
+      </div>
+      <div class="two-col">
+        <div class="field">
+          <label class="label" for="err-dur">Duration (minutes)</label>
+          <input class="input" id="err-dur" type="number" value="40">
+        </div>
+        <div class="field">
+          <label class="label" for="err-sets">Sets</label>
+          <input class="input" id="err-sets" type="number" value="">
+        </div>
+        <div class="field">
+          <label class="label" for="err-reps">Reps</label>
+          <input class="input" id="err-reps" type="number" value="">
+        </div>
+      </div>
+      <p class="hint">Your edits above are unchanged — retry when you're ready.</p>
+      <div style="display:flex; gap:var(--space-2); flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="retrySave()">Retry save</button>
+        <button class="btn btn-secondary" onclick="show(0); showSub('history','success')">Back to history</button>
+      </div>
+    </div>
+
+    <!-- State: save-success -->
+    <div id="save-success" style="display:none">
+      <div class="banner banner-success" role="status">
+        <span class="icon-check"></span>
+        <span>Changes saved.</span>
+      </div>
+      <p class="hint">Taking you to your workout history…</p>
+      <button class="btn btn-secondary" onclick="goToUpdatedHistory()">View workout history</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 5: Discard changes confirmation (Esc closes it)
+     Notes:
+       - Shown only when Cancel is pressed with unsaved changes.
+       - Names the consequence directly: unsaved edits will be lost.
+     ============================================================ -->
+<!-- State: discard-confirm -->
+<div class="screen" data-name="5. Cancel — Discard Changes Confirmation">
+  <div class="topnav">
+    <span class="brand">FitTrack</span>
+    <nav>
+      <a href="#" class="active">History</a>
+      <a href="#">Log workout</a>
+      <a href="#">Profile</a>
+    </nav>
+  </div>
+  <div class="page page-narrow" style="position:relative; min-height:300px;">
+    <h1 class="page-title">Edit workout</h1>
+    <p class="subtitle">This is the underlying form; the confirmation dialog is layered above it. Press Esc or click outside to dismiss.</p>
+    <div class="modal-backdrop" id="discard-backdrop" tabindex="-1">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="discard-title">
+        <h3 id="discard-title">Discard your changes?</h3>
+        <p>You've made changes to this workout that haven't been saved. If you leave now, those edits will be lost.</p>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" id="keep-editing-btn" onclick="closeDiscardModal()">Keep editing</button>
+          <button class="btn btn-danger" onclick="discardAndReturnToHistory()">Discard changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 6: Refused — not the owner (AC8)
+     Notes:
+       - Generic refusal; doesn't reveal whether the entry exists
+         or who owns it, beyond "not yours to edit".
+       - Only reachable via the reviewer bar's Next/Prev in this
+         prototype: a real user's own history list never lists
+         another person's entries, so there's no in-app "Edit"
+         button that leads here. It exists to demonstrate the
+         refusal copy/layout, e.g. for a guessed or shared URL.
+     ============================================================ -->
+<!-- State: not-owner -->
+<div class="screen" data-name="6. Refused — Not Your Entry">
+  <div class="topnav">
+    <span class="brand">FitTrack</span>
+    <nav>
+      <a href="#" class="active">History</a>
+      <a href="#">Log workout</a>
+      <a href="#">Profile</a>
+    </nav>
+  </div>
+  <div class="page page-narrow">
+    <h1 class="page-title">Can't edit this workout</h1>
+    <div class="banner banner-error" role="alert">
+      <span class="icon-warn"></span>
+      <span>You can only edit workouts you've logged yourself.</span>
+    </div>
+    <button class="btn btn-secondary" onclick="show(0); showSub('history','success')">Back to history</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 7: Entry deleted mid-edit (AC13, AC14)
+     Notes:
+       - Save attempt returns a generic "not found" error, then the
+         user lands back on history where the entry is gone.
+     ============================================================ -->
+<!-- State: entry-deleted -->
+<div class="screen" data-name="7. Save Fails — Entry Deleted">
+  <div class="topnav">
+    <span class="brand">FitTrack</span>
+    <nav>
+      <a href="#" class="active">History</a>
+      <a href="#">Log workout</a>
+      <a href="#">Profile</a>
+    </nav>
+  </div>
+  <div class="page page-narrow">
+    <h1 class="page-title">Edit workout</h1>
+    <div id="deleted-form">
+      <div class="field">
+        <label class="label" for="del-ex">Exercise name *</label>
+        <input class="input" id="del-ex" type="text" value="Yoga">
+      </div>
+      <div class="field">
+        <label class="label" for="del-date">Date *</label>
+        <input class="input" id="del-date" type="date" value="2025-03-14" max="2026-09-28">
+      </div>
+      <button class="btn btn-primary" id="deleted-save-btn" onclick="runDeletedFlow()">Save changes</button>
+    </div>
+    <div id="deleted-banner" style="display:none" class="banner banner-error" role="alert">
+      <span class="icon-warn"></span>
+      <span>This workout no longer exists.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 8: Concurrent edits from two sessions (AC9, AC10)
+     Notes:
+       - Two independent "sessions" edit the same entry. Both submit
+         successfully; each sees only "Changes saved" — no conflict
+         warning is shown to either (this is the intended design).
+       - History (bottom) reflects only whichever save completed
+         last, proving last-write-wins with no merge/version UI.
+     ============================================================ -->
+<!-- State: concurrent-demo -->
+<div class="screen" data-name="8. Concurrent Edits — Two Sessions">
+  <div class="topnav">
+    <span class="brand">FitTrack</span>
+    <nav>
+      <a href="#" class="active">History</a>
+      <a href="#">Log workout</a>
+      <a href="#">Profile</a>
+    </nav>
+  </div>
+  <div class="page">
+    <h1 class="page-title">Concurrent edit demo</h1>
+    <p class="subtitle">Both sessions are editing the same "Bench press" entry at the same time. Click "Save" on each, in order — A first, then B. Neither session sees a conflict warning (AC10); the final stored values match whichever save landed last (AC9).</p>
+    <div class="split-panels">
+      <div class="panel">
+        <div class="panel-label">Session A</div>
+        <div class="field">
+          <label class="label" for="concA-sets">Sets</label>
+          <input class="input" type="number" value="3" id="concA-sets">
+        </div>
+        <div class="field">
+          <label class="label" for="concA-reps">Reps</label>
+          <input class="input" type="number" value="10" id="concA-reps">
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="concurrentSave('A')" id="concA-btn">Save changes</button>
+        <p class="hint" id="concA-status"></p>
+      </div>
+      <div class="panel">
+        <div class="panel-label">Session B</div>
+        <div class="field">
+          <label class="label" for="concB-sets">Sets</label>
+          <input class="input" type="number" value="5" id="concB-sets">
+        </div>
+        <div class="field">
+          <label class="label" for="concB-reps">Reps</label>
+          <input class="input" type="number" value="6" id="concB-reps">
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="concurrentSave('B')" id="concB-btn">Save changes</button>
+        <p class="hint" id="concB-status"></p>
+      </div>
+    </div>
+
+    <h2 class="section-title" style="font-size:var(--font-size-md); margin-top:var(--space-4);">Stored value (workout history)</h2>
+    <div class="entry-row" id="conc-stored">
+      <div class="entry-main">
+        <span class="entry-name">Bench press</span>
+        <span class="entry-meta" id="conc-stored-meta">25 Sep 2026 · 4 sets × 8 reps</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /#screens -->
+
+<script>
+const screens = Array.from(document.querySelectorAll('.screen'));
+let cur = 0;
+let loadedFor = null;
+let screen3Live = false;
+let currentEditId = 'w_101';
+let lastSavedId = 'w_101';
+function show(i) {
+  const prev = cur;
+  cur = Math.max(0, Math.min(screens.length - 1, i));
+  if (prev === 2 && cur !== 2) screen3Live = false;
+  screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+  if (cur === 0) ['success','updated','deleted'].forEach(k => renderHistoryRows(k));
+  if (cur === 1 && loadedFor !== currentEditId) loadEditForm(currentEditId || 'w_101');
+  if (cur === 2 && !screen3Live) applyValidation('combined');
+  if (cur === 4) document.getElementById('discard-backdrop').style.display = 'flex';
+  if (cur === 6) document.getElementById('deleted-banner').style.display = 'none';
+  document.getElementById('screen-label').textContent =
+    `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+}
+document.getElementById('prev-btn').onclick = () => show(cur - 1);
+document.getElementById('next-btn').onclick = () => show(cur + 1);
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' && document.activeElement.tagName !== 'INPUT') show(cur + 1);
+  if (e.key === 'ArrowLeft' && document.activeElement.tagName !== 'INPUT') show(cur - 1);
+  if (e.key === 'Escape' && cur === 4) {
+    const backdrop = document.getElementById('discard-backdrop');
+    if (backdrop && backdrop.style.display !== 'none') closeDiscardModal();
+  }
+});
+
+// Simple sub-state toggler used within a screen (design-time only).
+function showSub(group, activeKey) {
+  const keys = {
+    history: ['success','loading','empty','error','updated','deleted'],
+    editload: ['loading','loaded'],
+    save: ['pending','networkerror','success']
+  }[group];
+  keys.forEach(k => {
+    const el = document.getElementById(`${group}-${k}`);
+    if (el) el.style.display = (k === activeKey) ? 'block' : 'none';
+  });
+  if (group === 'history') renderHistoryRows(activeKey);
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function entryMeta(entry) {
+  const parts = [
+    entry.durationMin ? `${entry.durationMin} min` : null,
+    entry.sets != null ? `${entry.sets} sets` : null,
+    entry.reps != null ? `${entry.reps} reps` : null
+  ].filter(Boolean);
+  return parts.join(' · ');
+}
+
+function renderHistoryRows(activeKey) {
+  const owned = FIXTURES.entries.filter(e => e.ownerId === FIXTURES.currentUserId);
+  const rowsFor = (containerId, entries, highlightId) => {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = entries.map(e => `
+      <div class="entry-row${e.id === highlightId ? ' updated' : ''}">
+        <div class="entry-main">
+          <span class="entry-name">${escapeHtml(e.exercise)}</span>
+          <span class="entry-meta">${formatDate(e.date)} · ${escapeHtml(entryMeta(e))}</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="openEdit('${e.id}')">Edit</button>
+      </div>`).join('');
+  };
+  if (activeKey === 'success') rowsFor('rows-success', owned, null);
+  if (activeKey === 'updated') rowsFor('rows-updated', owned, lastSavedId);
+  if (activeKey === 'deleted') rowsFor('rows-deleted', owned.filter(e => e.id !== 'w_103'), null);
+}
+renderHistoryRows('success');
+show(0);
+
+function openEdit(entryId) {
+  const entry = FIXTURES.entries.find(e => e.id === entryId);
+  if (entry && entry.ownerId !== FIXTURES.currentUserId) {
+    show(5); // Screen 6: refused, not owner (AC8)
+    return;
+  }
+  currentEditId = entryId;
+  loadedFor = null;
+  show(1); // Screen 2: edit form, loading then pre-filled (AC1, AC11)
+}
+
+function loadEditForm(entryId) {
+  showSub('editload','loading');
+  const entry = FIXTURES.entries.find(e => e.id === entryId) || FIXTURES.entries[0];
+  setTimeout(() => {
+    document.getElementById('ex1').value = entry.exercise;
+    document.getElementById('date1').value = entry.date;
+    document.getElementById('dur1').value = entry.durationMin ?? '';
+    document.getElementById('sets1').value = entry.sets ?? '';
+    document.getElementById('reps1').value = entry.reps ?? '';
+    document.getElementById('notes1').value = entry.notes ?? '';
+    document.getElementById('simulate-network-fail').checked = false;
+    loadedFor = entryId;
+    showSub('editload','loaded');
+  }, 300);
+}
+
+// Shared validation rules, used for both the live form (screen 2/3) and reviewer presets.
+function validate({ name, date, dur, sets, reps }) {
+  const errors = [];
+  if (!name) errors.push('name');
+  if (!date) errors.push('date');
+  else if (date > '2026-09-28') errors.push('future');
+  if (!dur && !sets && !reps) errors.push('neither');
+  if (dur !== '' && Number(dur) <= 0) errors.push('duration');
+  if ((sets !== '' && Number(sets) < 0) || (reps !== '' && Number(reps) < 0)) errors.push('negative');
+  return errors;
+}
+
+function validateAndSave() {
+  const name = document.getElementById('ex1').value.trim();
+  const date = document.getElementById('date1').value;
+  const dur = document.getElementById('dur1').value;
+  const sets = document.getElementById('sets1').value;
+  const reps = document.getElementById('reps1').value;
+  const notes = document.getElementById('notes1').value;
+  const simulateFail = document.getElementById('simulate-network-fail').checked;
+
+  const errors = validate({ name, date, dur, sets, reps });
+  if (errors.length) {
+    screen3Live = true;
+    show(2); // Screen 3: validation errors, input preserved (AC4, AC5)
+    seedValidationScreen(name, date, dur, sets, reps, errors);
+    return;
+  }
+  runSave(currentEditId, name, date, dur, sets, reps, notes, simulateFail);
+}
+
+function validateAndSaveFromScreen3() {
+  const name = document.getElementById('ex2-input').value.trim();
+  const date = document.getElementById('date2-input').value;
+  const dur = document.getElementById('dur2-input').value;
+  const sets = document.getElementById('sets2-input').value;
+  const reps = document.getElementById('reps2-input').value;
+
+  const errors = validate({ name, date, dur, sets, reps });
+  if (errors.length) {
+    seedValidationScreen(name, date, dur, sets, reps, errors); // AC4/AC5: input kept, save rejected
+    return;
+  }
+  const notes = screen3Live ? document.getElementById('notes1').value : undefined;
+  const simulateFail = document.getElementById('simulate-network-fail').checked;
+  screen3Live = false;
+  runSave(currentEditId, name, date, dur, sets, reps, notes, simulateFail);
+}
+
+function runSave(entryId, name, date, dur, sets, reps, notes, simulateFail) {
+  show(3); // Screen 4: saving
+  showSub('save','pending');
+  document.getElementById('pend-ex').value = name;
+  document.getElementById('pend-date').value = date;
+  document.getElementById('pend-dur').value = dur;
+  document.getElementById('pend-sets').value = sets;
+  document.getElementById('pend-reps').value = reps;
+  setTimeout(() => {
+    if (simulateFail) {
+      showSub('save','networkerror'); // AC6, AC7: generic error, edits preserved for retry
+      document.getElementById('err-ex').value = name;
+      document.getElementById('err-date').value = date;
+      document.getElementById('err-dur').value = dur;
+      document.getElementById('err-sets').value = sets;
+      document.getElementById('err-reps').value = reps;
+      pendingRetry = { entryId, name, date, dur, sets, reps, notes };
+      return;
+    }
+    finishSave(entryId, name, date, dur, sets, reps, notes);
+  }, 350);
+}
+
+function finishSave(entryId, name, date, dur, sets, reps, notes) {
+  const entry = FIXTURES.entries.find(e => e.id === entryId);
+  Object.assign(entry, {
+    exercise: name,
+    date,
+    durationMin: dur !== '' ? Number(dur) : null,
+    sets: sets !== '' ? Number(sets) : null,
+    reps: reps !== '' ? Number(reps) : null,
+    notes: notes ?? entry.notes
+  });
+  lastSavedId = entryId;
+  showSub('save','success');
+  setTimeout(() => { if (cur === 3) goToUpdatedHistory(); }, 800); // AC3: updated entry appears immediately
+}
+
+function goToUpdatedHistory() {
+  show(0);
+  showSub('history','updated');
+}
+
+let pendingRetry = null;
+function seedNetworkErrorDemo() {
+  pendingRetry = { entryId: currentEditId, notes: undefined };
+  const entry = FIXTURES.entries.find(e => e.id === currentEditId) || FIXTURES.entries[0];
+  document.getElementById('err-ex').value = entry.exercise;
+  document.getElementById('err-date').value = entry.date;
+  document.getElementById('err-dur').value = entry.durationMin ?? '';
+  document.getElementById('err-sets').value = entry.sets ?? '';
+  document.getElementById('err-reps').value = entry.reps ?? '';
+  showSub('save','networkerror');
+}
+function retrySave() {
+  if (!pendingRetry) return;
+  const { entryId, notes } = pendingRetry;
+  // Read whatever the reviewer typed into the network-error form before retrying (AC7).
+  const name = document.getElementById('err-ex').value.trim();
+  const date = document.getElementById('err-date').value;
+  const dur = document.getElementById('err-dur').value;
+  const sets = document.getElementById('err-sets').value;
+  const reps = document.getElementById('err-reps').value;
+
+  const errors = validate({ name, date, dur, sets, reps });
+  if (errors.length) {
+    screen3Live = true;
+    show(2); // fields changed since the failed save no longer validate
+    seedValidationScreen(name, date, dur, sets, reps, errors);
+    return;
+  }
+  showSub('save','pending');
+  document.getElementById('pend-ex').value = name;
+  document.getElementById('pend-date').value = date;
+  document.getElementById('pend-dur').value = dur;
+  document.getElementById('pend-sets').value = sets;
+  document.getElementById('pend-reps').value = reps;
+  setTimeout(() => finishSave(entryId, name, date, dur, sets, reps, notes), 300);
+}
+
+function hasUnsavedChanges() {
+  const entry = FIXTURES.entries.find(e => e.id === currentEditId);
+  if (!entry) return false;
+  return document.getElementById('ex1').value.trim() !== entry.exercise
+    || document.getElementById('date1').value !== entry.date
+    || document.getElementById('dur1').value !== String(entry.durationMin ?? '')
+    || document.getElementById('sets1').value !== String(entry.sets ?? '')
+    || document.getElementById('reps1').value !== String(entry.reps ?? '')
+    || document.getElementById('notes1').value !== (entry.notes ?? '');
+}
+function openDiscardModal() {
+  if (!hasUnsavedChanges()) {
+    discardAndReturnToHistory();
+    return;
+  }
+  show(4); // Screen 5
+  document.getElementById('discard-backdrop').style.display = 'flex';
+  document.getElementById('keep-editing-btn').focus();
+}
+function closeDiscardModal() {
+  document.getElementById('discard-backdrop').style.display = 'none';
+  show(1); // back to the edit form underneath, values untouched (loadedFor guard skips reload)
+}
+function discardAndReturnToHistory() {
+  loadedFor = null;
+  show(0);
+  showSub('history','success');
+}
+
+function formatDate(iso) {
+  const [y,m,d] = iso.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${d} ${months[Number(m)-1]} ${y}`;
+}
+
+function seedValidationScreen(name, date, dur, sets, reps, errors) {
+  document.getElementById('ex2-input').value = name;
+  document.getElementById('date2-input').value = date;
+  document.getElementById('dur2-input').value = dur;
+  document.getElementById('sets2-input').value = sets;
+  document.getElementById('reps2-input').value = reps;
+  applyValidationErrors(errors);
+}
+
+const VALIDATION_ERRORS = {
+  name: ['ex2-error'],
+  date: ['date2-error'],
+  neither: ['neither2-error'],
+  negative: ['sets2-error'],
+  duration: ['dur2-error'],
+  future: ['date2-future-error']
+};
+const VALIDATION_INPUTS = {
+  name: 'ex2-input', date: 'date2-input', duration: 'dur2-input',
+  negative: 'sets2-input', future: 'date2-input', neither: 'dur2-input'
+};
+function clearValidationDisplay() {
+  document.querySelectorAll('.screen[data-name="3. Edit Form — Validation Errors"] .field-error')
+    .forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.screen[data-name="3. Edit Form — Validation Errors"] .input')
+    .forEach(el => { el.classList.remove('error'); el.removeAttribute('aria-invalid'); });
+}
+function applyValidationErrors(kinds) {
+  clearValidationDisplay();
+  kinds.forEach(kind => {
+    (VALIDATION_ERRORS[kind] || []).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'flex';
+    });
+    const inputId = VALIDATION_INPUTS[kind];
+    if (inputId) {
+      const el = document.getElementById(inputId);
+      el.classList.add('error');
+      el.setAttribute('aria-invalid', 'true');
+    }
+    if (kind === 'negative') {
+      const repsEl = document.getElementById('reps2-input');
+      repsEl.classList.add('error');
+      repsEl.setAttribute('aria-invalid', 'true');
+    }
+  });
+}
+// Reviewer preset toggles: demonstrate each rule with representative sample input (design-time only).
+function applyValidation(kind) {
+  const presets = {
+    name: { name: '', date: '2026-09-27', dur: '32', sets: '', reps: '', entryId: 'w_101' },
+    date: { name: 'Running', date: '', dur: '32', sets: '', reps: '', entryId: 'w_101' },
+    neither: { name: 'Running', date: '2026-09-27', dur: '', sets: '', reps: '', entryId: 'w_101' },
+    negative: { name: 'Bench press', date: '2026-09-25', dur: '', sets: '-2', reps: '8', entryId: 'w_102' },
+    duration: { name: 'Running', date: '2026-09-27', dur: '0', sets: '', reps: '', entryId: 'w_101' },
+    future: { name: 'Running', date: '2026-10-05', dur: '32', sets: '', reps: '', entryId: 'w_101' },
+    combined: { name: '', date: '2026-09-27', dur: '0', sets: '', reps: '', entryId: 'w_101' }
+  };
+  const p = presets[kind] || presets.combined;
+  currentEditId = p.entryId;
+  seedValidationScreen(p.name, p.date, p.dur, p.sets, p.reps, validate(p));
+}
+
+function runDeletedFlow() {
+  const btn = document.getElementById('deleted-save-btn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  document.getElementById('deleted-banner').style.display = 'none';
+  setTimeout(() => {
+    document.getElementById('deleted-banner').style.display = 'flex';
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = 'Save changes';
+      show(0);
+      showSub('history','deleted'); // AC13, AC14
+    }, 900);
+  }, 300);
+}
+
+let concStoredValue = { sets: 4, reps: 8, order: 0 };
+function concurrentSave(session) {
+  const btn = document.getElementById(`conc${session}-btn`);
+  const status = document.getElementById(`conc${session}-status`);
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  status.textContent = '';
+  setTimeout(() => {
+    const sets = document.getElementById(`conc${session}-sets`).value;
+    const reps = document.getElementById(`conc${session}-reps`).value;
+    concStoredValue.order += 1;
+    concStoredValue.sets = sets;
+    concStoredValue.reps = reps;
+    concStoredValue.last = session;
+    const benchPress = FIXTURES.entries.find(e => e.id === 'w_102');
+    Object.assign(benchPress, { sets: Number(sets), reps: Number(reps), durationMin: null });
+    lastSavedId = 'w_102';
+    document.getElementById('conc-stored-meta').textContent = `25 Sep 2026 · ${sets} sets × ${reps} reps`;
+    btn.disabled = false;
+    btn.textContent = 'Save changes';
+    status.innerHTML = '<span class="icon-check"></span>Changes saved.'; // no conflict warning — AC10
+  }, 300);
+}
+</script>
+
+</body>
+</html>
+
+<!-- arc:css-inlined -->
