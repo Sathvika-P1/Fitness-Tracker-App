@@ -73,6 +73,35 @@ describe('edit-workout', () => {
     expect(window.location.href).toBe('history.html?updated=1');
   });
 
+  it('redirects with the edited entry\'s own id, not a hardcoded one (AC3)', async () => {
+    global.fetch
+      .mockResolvedValueOnce({
+        status: 200,
+        json: async () => ({
+          id: 42,
+          exercise_name: 'Back squat',
+          entry_date: '2026-09-20',
+          duration_minutes: 30,
+          sets: null,
+          reps: null,
+        }),
+      })
+      .mockResolvedValueOnce({
+        status: 200,
+        json: async () => ({ id: 42, exercise_name: 'Front squat' }),
+      });
+
+    await loadEditWorkoutPage('?id=42');
+    await flush();
+
+    document.getElementById('edit-form').dispatchEvent(
+      new Event('submit', { bubbles: true, cancelable: true })
+    );
+    await flush();
+
+    expect(window.location.href).toBe('history.html?updated=42');
+  });
+
   it('renders inline validation errors and keeps typed values on a rejected save (AC4, AC5)', async () => {
     global.fetch
       .mockResolvedValueOnce({
