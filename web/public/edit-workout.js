@@ -3,6 +3,7 @@ import {
   collectFormValues,
   renderValidationErrors,
   clearValidationErrors,
+  todayIsoDate,
 } from './workout-form.js';
 
 export function entryIdFromLocation(location) {
@@ -19,6 +20,9 @@ export async function fetchEntry(entryId) {
   }
   if (res.status === 200) {
     return { ok: true, entry: await res.json() };
+  }
+  if (res.status === 401) {
+    return { ok: false, sessionExpired: true };
   }
   if (res.status === 403 || res.status === 404) {
     const body = await res.json();
@@ -42,6 +46,9 @@ export async function submitUpdate(entryId, values) {
   }
   if (res.status === 200) {
     return { ok: true, entry: await res.json() };
+  }
+  if (res.status === 401) {
+    return { ok: false, sessionExpired: true };
   }
   if (res.status === 400) {
     const body = await res.json();
@@ -74,18 +81,10 @@ const repsInput = document.getElementById('reps');
 let entryId = null;
 let formDirty = false;
 
-function localToday() {
-  const now = new Date();
-  const yyyy = now.getFullYear();
-  const mm = String(now.getMonth() + 1).padStart(2, '0');
-  const dd = String(now.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
-}
-
 function fillForm(entry) {
   exerciseInput.value = entry.exercise_name || '';
   dateInput.value = entry.entry_date || '';
-  dateInput.max = localToday();
+  dateInput.max = todayIsoDate();
   durationInput.value = entry.duration_minutes != null ? entry.duration_minutes : '';
   setsInput.value = entry.sets != null ? entry.sets : '';
   repsInput.value = entry.reps != null ? entry.reps : '';
@@ -115,6 +114,8 @@ export async function loadEntry() {
   if (result.ok) {
     fillForm(result.entry);
     form.hidden = false;
+  } else if (result.sessionExpired) {
+    window.location.href = 'login.html';
   } else if (result.status === 404) {
     goToHistoryDeleted();
   } else if (result.status === 403) {
@@ -146,6 +147,8 @@ form?.addEventListener('submit', async (event) => {
     if (result.ok) {
       formDirty = false;
       window.location.href = `history.html?updated=${encodeURIComponent(entryId)}`;
+    } else if (result.sessionExpired) {
+      window.location.href = 'login.html';
     } else if (result.status === 404) {
       goToHistoryDeleted();
     } else if (result.status === 403) {

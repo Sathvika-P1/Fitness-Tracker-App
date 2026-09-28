@@ -216,6 +216,7 @@ async function loadAndRender(filters) {
     const result = await fetchHistory(filters);
     if (result.ok) {
       renderHistory(result.entries, filters, highlightEntryId);
+      highlightEntryId = null;
     } else if (result.sessionExpired) {
       window.location.href = 'login.html';
     } else if (result.fieldErrors && (result.fieldErrors.start_date || result.fieldErrors.end_date)) {

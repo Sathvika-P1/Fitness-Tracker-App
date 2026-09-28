@@ -23,6 +23,14 @@ export function collectFormValues() {
   return values;
 }
 
+export function todayIsoDate() {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
 export function filterSuggestions(names, query) {
   const q = query.trim().toLowerCase();
   if (!q) return [];

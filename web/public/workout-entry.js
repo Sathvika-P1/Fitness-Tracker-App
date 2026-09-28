@@ -4,6 +4,7 @@ import {
   filterSuggestions,
   renderValidationErrors,
   clearValidationErrors,
+  todayIsoDate,
 } from './workout-form.js';
 
 export {
@@ -117,11 +118,7 @@ form?.addEventListener('submit', async (event) => {
 function initializeDate() {
   const dateInput = document.getElementById('entry-date');
   if (!dateInput) return;
-  const now = new Date();
-  const yyyy = now.getFullYear();
-  const mm = String(now.getMonth() + 1).padStart(2, '0');
-  const dd = String(now.getDate()).padStart(2, '0');
-  const today = `${yyyy}-${mm}-${dd}`;
+  const today = todayIsoDate();
   dateInput.value = today;
   dateInput.max = today;
 }

@@ -297,6 +297,25 @@ body {
   color: var(--color-primary);
 }
 
+.banner-success {
+  border-color: var(--color-primary);
+}
+
+.banner-success .banner-icon,
+.banner-success .banner-title {
+  color: var(--color-primary);
+}
+
+.banner-info {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+}
+
+.banner-info .banner-icon,
+.banner-info .banner-title {
+  color: var(--color-fg);
+}
+
 /* App shell (top bar, avatar, bottom tabs) */
 
 .page-shell {
