@@ -22,6 +22,7 @@ const fullFixture = [
 describe('history', () => {
   beforeEach(() => {
     global.fetch = vi.fn().mockResolvedValue({ status: 200, json: async () => ({ entries: [] }) });
+    window.history.replaceState(null, '', '/history.html');
   });
 
   it('formatMetrics renders zero sets/reps instead of falling back to minutes (falsy-zero guard)', async () => {
@@ -187,5 +188,37 @@ describe('history', () => {
 
     expect(document.getElementById('filter-name').value).toBe('');
     expect(document.querySelectorAll('#history-list .history-row').length).toBe(2);
+  });
+
+  it('links each row to its edit page (AC1 entry point)', async () => {
+    global.fetch.mockResolvedValue({ status: 200, json: async () => ({ entries: fullFixture }) });
+    await loadHistoryPage();
+    await flush();
+
+    const editLinks = document.querySelectorAll('.history-edit-link');
+    expect(editLinks.length).toBe(2);
+    expect(editLinks[0].getAttribute('href')).toBe('edit-workout.html?id=1');
+  });
+
+  it('shows a success banner and highlights the updated row after a just-saved edit (AC3)', async () => {
+    window.history.replaceState(null, '', '/history.html?updated=1');
+    global.fetch.mockResolvedValue({ status: 200, json: async () => ({ entries: fullFixture }) });
+    await loadHistoryPage();
+    await flush();
+
+    expect(document.getElementById('updated-banner').hidden).toBe(false);
+    const rows = document.querySelectorAll('#history-list .history-row');
+    expect(rows[0].classList.contains('updated')).toBe(true);
+    expect(window.location.search).toBe('');
+  });
+
+  it('shows an info banner when returning from a deleted-entry edit attempt (AC14)', async () => {
+    window.history.replaceState(null, '', '/history.html?deleted=1');
+    global.fetch.mockResolvedValue({ status: 200, json: async () => ({ entries: fullFixture }) });
+    await loadHistoryPage();
+    await flush();
+
+    expect(document.getElementById('deleted-banner').hidden).toBe(false);
+    expect(window.location.search).toBe('');
   });
 });
