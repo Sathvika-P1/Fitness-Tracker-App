@@ -127,3 +127,68 @@ def get_exercise_names(
     if account is None:
         return JSONResponse(status_code=401, content={"message": "Not signed in."})
     return {"names": workouts.list_exercise_names(db, account)}
+
+
+@router.get("/api/workouts/{entry_id}")
+def get_workout(
+    entry_id: int,
+    db: Session = Depends(get_db),
+    sid: str | None = Cookie(default=None),
+):
+    account = sessions.require_account(db, sid)
+    if account is None:
+        return JSONResponse(status_code=401, content={"message": "Not signed in."})
+    entry, status = workouts.get_entry_for_account(db, account, entry_id)
+    if status == "not_found":
+        return JSONResponse(
+            status_code=404, content={"message": "This workout no longer exists."}
+        )
+    if status == "forbidden":
+        return JSONResponse(
+            status_code=403,
+            content={"message": "You can only edit workouts you've logged yourself."},
+        )
+    return {
+        "id": entry.id,
+        "exercise_name": entry.exercise_name,
+        "entry_date": entry.entry_date.isoformat(),
+        "duration_minutes": entry.duration_minutes,
+        "sets": entry.sets,
+        "reps": entry.reps,
+    }
+
+
+@router.put("/api/workouts/{entry_id}")
+def update_workout(
+    entry_id: int,
+    payload: WorkoutEntryRequest,
+    db: Session = Depends(get_db),
+    sid: str | None = Cookie(default=None),
+):
+    account = sessions.require_account(db, sid)
+    if account is None:
+        return JSONResponse(status_code=401, content={"message": "Not signed in."})
+    entry, status = workouts.get_entry_for_account(db, account, entry_id)
+    if status == "not_found":
+        return JSONResponse(
+            status_code=404, content={"message": "This workout no longer exists."}
+        )
+    if status == "forbidden":
+        return JSONResponse(
+            status_code=403,
+            content={"message": "You can only edit workouts you've logged yourself."},
+        )
+
+    cleaned, errors = workouts.validate_entry(
+        payload.exercise_name,
+        payload.entry_date,
+        payload.duration_minutes,
+        payload.sets,
+        payload.reps,
+        datetime.date.today(),
+    )
+    if errors:
+        return JSONResponse(status_code=400, content={"errors": errors})
+
+    updated = workouts.update_entry(db, entry, cleaned)
+    return {"id": updated.id, "exercise_name": updated.exercise_name}

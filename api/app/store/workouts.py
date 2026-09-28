@@ -1,5 +1,6 @@
 import datetime
 import math
+from typing import Literal
 
 from sqlalchemy import distinct, select
 from sqlalchemy.orm import Session
@@ -112,6 +113,28 @@ def create_entry(db: Session, account: Account, cleaned: dict) -> WorkoutEntry:
         reps=cleaned.get("reps"),
     )
     db.add(entry)
+    db.commit()
+    db.refresh(entry)
+    return entry
+
+
+def get_entry_for_account(
+    db: Session, account: Account, entry_id: int
+) -> tuple[WorkoutEntry | None, Literal["ok", "not_found", "forbidden"]]:
+    entry = db.get(WorkoutEntry, entry_id)
+    if entry is None:
+        return None, "not_found"
+    if entry.account_id != account.id:
+        return None, "forbidden"
+    return entry, "ok"
+
+
+def update_entry(db: Session, entry: WorkoutEntry, cleaned: dict) -> WorkoutEntry:
+    entry.exercise_name = cleaned["exercise_name"]
+    entry.entry_date = cleaned["entry_date"]
+    entry.duration_minutes = cleaned.get("duration_minutes")
+    entry.sets = cleaned.get("sets")
+    entry.reps = cleaned.get("reps")
     db.commit()
     db.refresh(entry)
     return entry
