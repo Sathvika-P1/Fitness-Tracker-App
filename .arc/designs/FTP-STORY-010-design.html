@@ -920,7 +920,7 @@ function buildRow(entry, opts = {}) {
   const editLink = document.createElement('a');
   editLink.className = 'btn btn-secondary history-edit-link';
   editLink.href = '#';
-  editLink.textContent = 'Edit';
+  editLink.innerHTML = '<span aria-hidden="true">✏️</span> Edit';
   editLink.onclick = (e) => e.preventDefault();
 
   const deleteBtn = document.createElement('button');
@@ -929,9 +929,9 @@ function buildRow(entry, opts = {}) {
 
   if (opts.pending) {
     deleteBtn.disabled = true;
-    deleteBtn.textContent = 'Deleting…';
+    deleteBtn.innerHTML = '<span aria-hidden="true">🗑️</span> Deleting…';
   } else {
-    deleteBtn.textContent = 'Delete';
+    deleteBtn.innerHTML = '<span aria-hidden="true">🗑️</span> Delete';
     deleteBtn.onclick = opts.onDelete || (() => show(1));
   }
 
