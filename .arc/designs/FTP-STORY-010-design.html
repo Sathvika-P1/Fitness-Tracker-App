@@ -608,6 +608,12 @@ body {
   .history-metric .val { font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
   .history-metric .unit { color: var(--color-muted); font-size: var(--font-size-sm); }
   .history-row-actions { display: flex; gap: var(--space-2); flex-shrink: 0; }
+  .icon-only-btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: var(--space-2);
+    font-size: var(--font-size-md);
+  }
 
   .history-row.row-error {
     border-color: var(--color-danger);
@@ -674,9 +680,12 @@ body {
   Notes:
     - Mirrors the real history.html layout/classes exactly (history-list, history-row, banners)
       so the build can extend history.js's renderHistory() instead of a new component.
-    - Each row now has an actions group: "Edit" (existing) + "Delete" (new). Delete uses
-      btn-secondary at rest (quiet, since it's a per-row action, not a page-level warning) —
-      btn-danger is reserved for the modal's confirm button where the destructive intent is explicit.
+    - Each row now has an actions group: a pencil icon (Edit, existing) + a trash-bin icon
+      (Delete, new). Icon-only per PO request; each button keeps an aria-label/title of "Edit" /
+      "Delete" so the accessible name and 44x44 touch target are unaffected by dropping the
+      visible text. Delete uses btn-secondary at rest (quiet, since it's a per-row action, not a
+      page-level warning) — btn-danger is reserved for the modal's confirm button where the
+      destructive intent is explicit.
     - AC6-8 (403/404/ownership check) are backend behaviour with no dedicated screen: a 404 on
       DELETE is treated the same as edit-workout's vanished-entry case (redirect to this list with
       ?deleted=1 / screen 4); a 403 surfaces via the same inline row error as screen 5.
@@ -918,20 +927,26 @@ function buildRow(entry, opts = {}) {
   actions.className = 'history-row-actions';
 
   const editLink = document.createElement('a');
-  editLink.className = 'btn btn-secondary history-edit-link';
+  editLink.className = 'btn btn-secondary history-edit-link icon-only-btn';
   editLink.href = '#';
-  editLink.innerHTML = '<span aria-hidden="true">✏️</span> Edit';
+  editLink.setAttribute('aria-label', 'Edit');
+  editLink.title = 'Edit';
+  editLink.innerHTML = '<span aria-hidden="true">✏️</span>';
   editLink.onclick = (e) => e.preventDefault();
 
   const deleteBtn = document.createElement('button');
-  deleteBtn.className = 'btn btn-secondary history-delete-btn';
+  deleteBtn.className = 'btn btn-secondary history-delete-btn icon-only-btn';
   deleteBtn.type = 'button';
 
   if (opts.pending) {
     deleteBtn.disabled = true;
-    deleteBtn.innerHTML = '<span aria-hidden="true">🗑️</span> Deleting…';
+    deleteBtn.setAttribute('aria-label', 'Deleting…');
+    deleteBtn.title = 'Deleting…';
+    deleteBtn.innerHTML = '<span aria-hidden="true">🗑️</span>';
   } else {
-    deleteBtn.innerHTML = '<span aria-hidden="true">🗑️</span> Delete';
+    deleteBtn.setAttribute('aria-label', 'Delete');
+    deleteBtn.title = 'Delete';
+    deleteBtn.innerHTML = '<span aria-hidden="true">🗑️</span>';
     deleteBtn.onclick = opts.onDelete || (() => show(1));
   }
 
