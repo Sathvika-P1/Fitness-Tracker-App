@@ -148,7 +148,7 @@ form?.addEventListener('submit', async (event) => {
     const result = await submitUpdate(entryId, collectFormValues());
     if (result.ok) {
       formDirty = false;
-      window.location.href = `history.html?updated=${entryId}`;
+      window.location.href = `history.html?updated=${encodeURIComponent(entryId)}`;
     } else if (result.status === 404) {
       goToHistoryDeleted();
     } else if (result.status === 403) {

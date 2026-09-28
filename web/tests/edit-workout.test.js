@@ -102,6 +102,35 @@ describe('edit-workout', () => {
     expect(window.location.href).toBe('history.html?updated=42');
   });
 
+  it('URL-encodes the entry id from the query string before it goes back into the redirect (query param injection guard)', async () => {
+    global.fetch
+      .mockResolvedValueOnce({
+        status: 200,
+        json: async () => ({
+          id: '1&foo=bar',
+          exercise_name: 'Back squat',
+          entry_date: '2026-09-20',
+          duration_minutes: 30,
+          sets: null,
+          reps: null,
+        }),
+      })
+      .mockResolvedValueOnce({
+        status: 200,
+        json: async () => ({ id: '1&foo=bar', exercise_name: 'Front squat' }),
+      });
+
+    await loadEditWorkoutPage('?id=1%26foo%3Dbar');
+    await flush();
+
+    document.getElementById('edit-form').dispatchEvent(
+      new Event('submit', { bubbles: true, cancelable: true })
+    );
+    await flush();
+
+    expect(window.location.href).toBe('history.html?updated=1%26foo%3Dbar');
+  });
+
   it('renders inline validation errors and keeps typed values on a rejected save (AC4, AC5)', async () => {
     global.fetch
       .mockResolvedValueOnce({
