@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit workout — Fitness Tracker</title>
+<link rel="stylesheet" href="/design-system/tokens.css">
+<link rel="stylesheet" href="/design-system/prototype-utils.css">
+<style>
+  .row-2 { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .row-2 > .field { flex: 1; min-width: 100px; }
+
+  .banner-success { border-color: var(--color-primary); }
+  .banner-success .banner-icon, .banner-success .banner-title { color: var(--color-primary); }
+  .banner-info { border-color: var(--color-border); background: var(--color-surface); }
+  .banner-info .banner-icon, .banner-info .banner-title { color: var(--color-fg); }
+
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 500; padding: var(--space-3);
+  }
+  .modal-backdrop[hidden] { display: none; }
+  .modal {
+    background: var(--color-bg);
+    border-radius: var(--radius-lg);
+    border: var(--border-width-sm) solid var(--color-border);
+    padding: var(--space-4);
+    max-width: 420px;
+    width: 100%;
+  }
+  .modal h2 { margin: 0 0 var(--space-2) 0; font-size: var(--font-size-lg); }
+  .modal-actions { display: flex; gap: var(--space-2); justify-content: flex-end; margin-top: var(--space-3); flex-wrap: wrap; }
+
+  .skeleton {
+    background: var(--color-surface);
+    border-radius: var(--radius-sm);
+    height: 44px;
+    margin-bottom: var(--space-3);
+  }
+</style>
+</head>
+<body>
+
+<div class="page-shell">
+  <div class="top-app-bar">
+    <div>
+      <h1 class="text-bold" style="margin:0;font-size:inherit">Edit workout</h1>
+      <div class="text-sm text-muted">Update the details below.</div>
+    </div>
+    <div class="avatar-menu" data-avatar-menu>
+      <button class="avatar-menu-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Account menu" data-avatar-trigger>
+        <div class="avatar" id="avatar-menu-initial" aria-hidden="true"></div>
+      </button>
+      <div class="avatar-menu-dropdown" role="menu" hidden data-avatar-dropdown>
+        <a class="avatar-menu-item" role="menuitem" href="profile.html">View profile</a>
+        <button class="avatar-menu-item danger" role="menuitem" type="button" id="edit-logout-btn">Logout</button>
+      </div>
+      <p class="inline-error avatar-menu-error" id="edit-logout-error" role="alert" hidden>Logout failed. Please try again.</p>
+    </div>
+  </div>
+
+  <div class="content-pad">
+    <div class="banner banner-error" role="alert" id="load-error-banner" hidden>
+      <span class="banner-icon" aria-hidden="true">⚠</span>
+      <div>
+        <div class="banner-title" id="load-error-title">Something went wrong</div>
+        <div class="banner-body" id="load-error-body">Couldn't load this workout. Check your connection and try again.</div>
+      </div>
+      <button class="btn btn-secondary" type="button" id="load-retry-btn" style="margin-left:auto;">Retry →</button>
+    </div>
+
+    <div class="banner banner-error" role="alert" id="save-error-banner" hidden>
+      <span class="banner-icon" aria-hidden="true">⚠</span>
+      <div>
+        <div class="banner-title">Something went wrong</div>
+        <div class="banner-body">We couldn't save your changes. Check your connection and try again — your edits haven't been lost.</div>
+      </div>
+    </div>
+
+    <div id="loading-skeleton">
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+    </div>
+
+    <form id="edit-form" hidden>
+      <div class="field" style="position:relative;">
+        <label class="label" for="exercise-name">Exercise name</label>
+        <input class="input" id="exercise-name" type="text" placeholder="e.g. Back squat" autocomplete="off">
+        <p class="field-error-text" id="exercise-name-error" role="alert" hidden></p>
+      </div>
+
+      <div class="field">
+        <label class="label" for="entry-date">Date</label>
+        <input class="input" id="entry-date" type="date">
+        <p class="helper-text" id="entry-date-hint">Today or earlier — future dates aren't allowed.</p>
+        <p class="field-error-text" id="entry-date-error" role="alert" hidden></p>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label class="label" for="duration">Duration (minutes)</label>
+          <input class="input" id="duration" type="number" min="1" placeholder="e.g. 30">
+          <p class="field-error-text" id="duration-error" role="alert" hidden></p>
+        </div>
+        <div class="field">
+          <label class="label" for="sets">Sets</label>
+          <input class="input" id="sets" type="number" min="0" placeholder="e.g. 3">
+          <p class="field-error-text" id="sets-error" role="alert" hidden></p>
+        </div>
+        <div class="field">
+          <label class="label" for="reps">Reps</label>
+          <input class="input" id="reps" type="number" min="0" placeholder="e.g. 10">
+          <p class="field-error-text" id="reps-error" role="alert" hidden></p>
+        </div>
+      </div>
+      <p class="helper-text">Provide duration or sets/reps (or both). Zero is a valid value for sets/reps.</p>
+      <p class="field-error-text" id="entry-error" role="alert" hidden></p>
+
+      <div style="display:flex; gap:var(--space-2); flex-wrap:wrap;">
+        <button class="btn btn-primary" type="submit" id="save-button">Save changes</button>
+        <button class="btn btn-secondary" type="button" id="cancel-btn">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-backdrop" id="discard-backdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="discard-title">
+      <h2 id="discard-title">Discard your changes?</h2>
+      <p class="text-sm text-muted">You've made changes to this workout that haven't been saved. If you leave now, those edits will be lost.</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" type="button" id="keep-editing-btn">Keep editing</button>
+        <a class="btn btn-danger" id="discard-btn" href="history.html">Discard changes</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-tabs">
+    <a class="bottom-tab" href="dashboard.html">Today</a>
+    <a class="bottom-tab" href="workout-entry.html">Log</a>
+    <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
+    <a class="bottom-tab active" href="history.html">History</a>
+    <a class="bottom-tab" href="profile.html">Profile</a>
+  </div>
+</div>
+
+<script type="module" src="/avatar-menu.js"></script>
+<script type="module" src="/edit-workout.js"></script>
+</body>
+</html>

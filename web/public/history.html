@@ -30,6 +30,17 @@
     border: var(--border-width-sm) solid var(--card-default-border);
     border-radius: var(--radius-md);
   }
+  .history-row.updated {
+    border-color: var(--color-primary);
+    border-width: var(--border-width-md);
+  }
+  .history-edit-link {
+    flex-shrink: 0;
+  }
+  .banner-success { border-color: var(--color-primary); }
+  .banner-success .banner-icon, .banner-success .banner-title { color: var(--color-primary); }
+  .banner-info { border-color: var(--color-border); background: var(--color-surface); }
+  .banner-info .banner-icon, .banner-info .banner-title { color: var(--color-fg); }
   .history-row-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .history-exercise { font-weight: var(--font-weight-bold); font-size: var(--font-size-md); }
   .history-date { color: var(--color-muted); font-size: var(--font-size-sm); }
@@ -78,6 +89,16 @@
       </div>
       <p class="inline-error avatar-menu-error" id="history-logout-error" role="alert" hidden>Logout failed. Please try again.</p>
     </div>
+  </div>
+
+  <div class="banner banner-success" role="status" id="updated-banner" hidden>
+    <span class="banner-icon" aria-hidden="true">✓</span>
+    <div class="banner-title">Changes saved.</div>
+  </div>
+
+  <div class="banner banner-info" role="status" id="deleted-banner" hidden>
+    <span class="banner-icon" aria-hidden="true">ⓘ</span>
+    <div class="banner-title">That workout no longer exists.</div>
   </div>
 
   <div class="banner" role="alert" id="load-error-banner" hidden>

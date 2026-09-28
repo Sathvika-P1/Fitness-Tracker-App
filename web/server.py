@@ -35,6 +35,11 @@ class Handler(SimpleHTTPRequestHandler):
             return self._proxy("POST")
         return super().do_POST()
 
+    def do_PUT(self):
+        if self.path.startswith("/api/"):
+            return self._proxy("PUT")
+        self.send_error(501, "Unsupported method (PUT)")
+
     def _proxy(self, method):
         content_length = int(self.headers.get("Content-Length", 0))
         body = self.rfile.read(content_length) if content_length else None

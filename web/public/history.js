@@ -101,7 +101,7 @@ function hasActiveFilter(filters) {
   return Boolean(filters.startDate || filters.endDate || filters.exerciseName);
 }
 
-export function renderHistory(entries, filters = {}) {
+export function renderHistory(entries, filters = {}, highlightId = null) {
   historyList.innerHTML = '';
   const filterActive = hasActiveFilter(filters);
 
@@ -135,6 +135,9 @@ export function renderHistory(entries, filters = {}) {
   entries.forEach((entry) => {
     const li = document.createElement('li');
     li.className = 'history-row';
+    if (highlightId != null && entry.id === highlightId) {
+      li.classList.add('updated');
+    }
 
     const main = document.createElement('div');
     main.className = 'history-row-main';
@@ -163,13 +166,42 @@ export function renderHistory(entries, filters = {}) {
       metricsEl.appendChild(metric);
     });
 
+    const editLink = document.createElement('a');
+    editLink.className = 'btn btn-secondary history-edit-link';
+    editLink.href = `edit-workout.html?id=${entry.id}`;
+    editLink.textContent = 'Edit';
+
     li.appendChild(main);
     li.appendChild(metricsEl);
+    li.appendChild(editLink);
     historyList.appendChild(li);
   });
 }
 
 let requestInFlight = false;
+let highlightEntryId = null;
+
+const updatedBanner = document.getElementById('updated-banner');
+const deletedBanner = document.getElementById('deleted-banner');
+
+function consumeOneShotBanners() {
+  const params = new URLSearchParams(window.location.search);
+  const updatedId = params.get('updated');
+  const deleted = params.get('deleted');
+  if (updatedId) {
+    updatedBanner.hidden = false;
+    highlightEntryId = Number(updatedId) || null;
+  }
+  if (deleted) {
+    deletedBanner.hidden = false;
+  }
+  if (updatedId || deleted) {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('updated');
+    url.searchParams.delete('deleted');
+    window.history.replaceState(null, '', url.pathname + url.search);
+  }
+}
 
 async function loadAndRender(filters) {
   if (requestInFlight) return;
@@ -183,7 +215,7 @@ async function loadAndRender(filters) {
   try {
     const result = await fetchHistory(filters);
     if (result.ok) {
-      renderHistory(result.entries, filters);
+      renderHistory(result.entries, filters, highlightEntryId);
     } else if (result.sessionExpired) {
       window.location.href = 'login.html';
     } else if (result.fieldErrors && (result.fieldErrors.start_date || result.fieldErrors.end_date)) {
@@ -230,5 +262,6 @@ export function logout() {
 document.getElementById('history-logout-btn')?.addEventListener('click', logout);
 
 if (historyList) {
+  consumeOneShotBanners();
   loadAndRender(currentFilters());
 }

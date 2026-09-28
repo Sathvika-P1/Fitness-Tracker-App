@@ -22,6 +22,7 @@ const fullFixture = [
 describe('history', () => {
   beforeEach(() => {
     global.fetch = vi.fn().mockResolvedValue({ status: 200, json: async () => ({ entries: [] }) });
+    window.history.replaceState(null, '', '/history.html');
   });
 
   it('formatMetrics renders zero sets/reps instead of falling back to minutes (falsy-zero guard)', async () => {
@@ -166,6 +167,39 @@ describe('history', () => {
     await flush();
 
     expect(document.getElementById('history-status').textContent).toBe('2 entries');
+  });
+
+  it('links each row to its edit page (AC1 entry point)', async () => {
+    global.fetch.mockResolvedValue({ status: 200, json: async () => ({ entries: fullFixture }) });
+    await loadHistoryPage();
+    await flush();
+
+    const links = document.querySelectorAll('#history-list .history-row a.history-edit-link');
+    expect(links[0].getAttribute('href')).toBe('edit-workout.html?id=1');
+  });
+
+  it('shows a success banner and highlights the updated row after a just-saved edit (AC3)', async () => {
+    window.history.replaceState(null, '', '/history.html?updated=1');
+    global.fetch.mockResolvedValue({
+      status: 200,
+      json: async () => ({ entries: [fullFixture[0]] }),
+    });
+
+    await loadHistoryPage();
+    await flush();
+
+    expect(document.querySelector('.banner-success').hidden).toBe(false);
+    expect(document.querySelector('.history-row.updated .history-exercise').textContent).toBe(
+      'Back squat'
+    );
+  });
+
+  it('shows an info banner when returning from a deleted-entry edit attempt (AC14)', async () => {
+    window.history.replaceState(null, '', '/history.html?deleted=1');
+    await loadHistoryPage();
+    await flush();
+
+    expect(document.querySelector('.banner-info').hidden).toBe(false);
   });
 
   it('shows a clear-filter button (not a href-less link) when a filter yields no matches', async () => {
