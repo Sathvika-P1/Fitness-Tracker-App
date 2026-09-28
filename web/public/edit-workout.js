@@ -15,7 +15,7 @@ export async function fetchEntry(entryId) {
   try {
     res = await fetch(`/api/workouts/${encodeURIComponent(entryId)}`, { credentials: 'include' });
   } catch (error) {
-    console.error('workout_edit_load_failed', { error });
+    console.error('workout_edit_load_failed:', error);
     return { ok: false, networkError: true };
   }
   if (res.status === 200) {
@@ -41,7 +41,7 @@ export async function submitUpdate(entryId, values) {
       body: JSON.stringify(values),
     });
   } catch (error) {
-    console.error('workout_edit_save_failed', { error });
+    console.error('workout_edit_save_failed:', error);
     return { ok: false, networkError: true };
   }
   if (res.status === 200) {
@@ -67,6 +67,8 @@ const loadErrorBanner = document.getElementById('load-error-banner');
 const loadErrorBody = document.getElementById('load-error-body');
 const loadRetryBtn = document.getElementById('load-retry-btn');
 const saveErrorBanner = document.getElementById('save-error-banner');
+const saveNotFoundBanner = document.getElementById('save-not-found-banner');
+const saveNotFoundBtn = document.getElementById('save-not-found-btn');
 const saveButton = document.getElementById('save-button');
 const cancelBtn = document.getElementById('cancel-btn');
 const discardBackdrop = document.getElementById('discard-backdrop');
@@ -140,6 +142,7 @@ form?.addEventListener('submit', async (event) => {
   event.preventDefault();
   clearValidationErrors();
   saveErrorBanner.hidden = true;
+  saveNotFoundBanner.hidden = true;
   saveButton.disabled = true;
   saveButton.textContent = 'Saving…';
   try {
@@ -150,7 +153,8 @@ form?.addEventListener('submit', async (event) => {
     } else if (result.sessionExpired) {
       window.location.href = 'login.html';
     } else if (result.status === 404) {
-      goToHistoryDeleted();
+      saveNotFoundBanner.hidden = false;
+      form.hidden = true;
     } else if (result.status === 403) {
       loadErrorBody.textContent = result.message;
       loadErrorBanner.hidden = false;
@@ -167,12 +171,18 @@ form?.addEventListener('submit', async (event) => {
   }
 });
 
+function modalFocusableElements() {
+  return Array.from(discardBackdrop.querySelectorAll('button, a[href]'));
+}
+
 function openDiscardModal() {
   discardBackdrop.hidden = false;
+  keepEditingBtn?.focus();
 }
 
 function closeDiscardModal() {
   discardBackdrop.hidden = true;
+  cancelBtn?.focus();
 }
 
 cancelBtn?.addEventListener('click', () => {
@@ -185,9 +195,27 @@ cancelBtn?.addEventListener('click', () => {
 
 keepEditingBtn?.addEventListener('click', closeDiscardModal);
 
+saveNotFoundBtn?.addEventListener('click', goToHistoryDeleted);
+
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && !discardBackdrop.hidden) {
+  if (discardBackdrop.hidden) return;
+  if (event.key === 'Escape') {
     closeDiscardModal();
+    return;
+  }
+  if (event.key !== 'Tab') return;
+
+  const focusable = modalFocusableElements();
+  if (focusable.length === 0) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
   }
 });
 

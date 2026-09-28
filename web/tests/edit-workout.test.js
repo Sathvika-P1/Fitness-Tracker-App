@@ -110,7 +110,7 @@ describe('edit-workout', () => {
     expect(window.location.href).toBe('history.html?deleted=1');
   });
 
-  it('redirects to history with a deleted flag when a save finds the entry gone (AC13, AC14)', async () => {
+  it("shows a generic not-found error on the edit page when a save finds the entry gone, then returns to history on request (AC13, AC14)", async () => {
     global.fetch
       .mockResolvedValueOnce({ status: 200, json: async () => entryFixture })
       .mockResolvedValueOnce({
@@ -123,6 +123,11 @@ describe('edit-workout', () => {
     document.getElementById('edit-form').dispatchEvent(new Event('submit', { cancelable: true }));
     await flush();
 
+    expect(document.getElementById('save-not-found-banner').hidden).toBe(false);
+    expect(document.getElementById('edit-form').hidden).toBe(true);
+    expect(window.location.href).toBe('');
+
+    document.getElementById('save-not-found-btn').click();
     expect(window.location.href).toBe('history.html?deleted=1');
   });
 

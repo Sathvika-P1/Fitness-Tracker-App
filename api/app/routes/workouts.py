@@ -135,19 +135,43 @@ def get_workout(
     db: Session = Depends(get_db),
     sid: str | None = Cookie(default=None),
 ):
+    start = time.monotonic()
     account = sessions.require_account(db, sid)
     if account is None:
+        logger.warning(
+            "workout_get_unauthorized entry_id=%s duration_ms=%.1f",
+            entry_id,
+            (time.monotonic() - start) * 1000,
+        )
         return JSONResponse(status_code=401, content={"message": "Not signed in."})
     entry, status = workouts.get_entry_for_account(db, account, entry_id)
     if status == "not_found":
+        logger.warning(
+            "workout_get_not_found account_id=%s entry_id=%s duration_ms=%.1f",
+            account.id,
+            entry_id,
+            (time.monotonic() - start) * 1000,
+        )
         return JSONResponse(
             status_code=404, content={"message": "This workout no longer exists."}
         )
     if status == "forbidden":
+        logger.warning(
+            "workout_get_forbidden account_id=%s entry_id=%s duration_ms=%.1f",
+            account.id,
+            entry_id,
+            (time.monotonic() - start) * 1000,
+        )
         return JSONResponse(
             status_code=403,
             content={"message": "You can only edit workouts you've logged yourself."},
         )
+    logger.info(
+        "workout_get account_id=%s entry_id=%s duration_ms=%.1f",
+        account.id,
+        entry_id,
+        (time.monotonic() - start) * 1000,
+    )
     return {
         "id": entry.id,
         "exercise_name": entry.exercise_name,
@@ -165,15 +189,33 @@ def update_workout(
     db: Session = Depends(get_db),
     sid: str | None = Cookie(default=None),
 ):
+    start = time.monotonic()
     account = sessions.require_account(db, sid)
     if account is None:
+        logger.warning(
+            "workout_update_unauthorized entry_id=%s duration_ms=%.1f",
+            entry_id,
+            (time.monotonic() - start) * 1000,
+        )
         return JSONResponse(status_code=401, content={"message": "Not signed in."})
     entry, status = workouts.get_entry_for_account(db, account, entry_id)
     if status == "not_found":
+        logger.warning(
+            "workout_update_not_found account_id=%s entry_id=%s duration_ms=%.1f",
+            account.id,
+            entry_id,
+            (time.monotonic() - start) * 1000,
+        )
         return JSONResponse(
             status_code=404, content={"message": "This workout no longer exists."}
         )
     if status == "forbidden":
+        logger.warning(
+            "workout_update_forbidden account_id=%s entry_id=%s duration_ms=%.1f",
+            account.id,
+            entry_id,
+            (time.monotonic() - start) * 1000,
+        )
         return JSONResponse(
             status_code=403,
             content={"message": "You can only edit workouts you've logged yourself."},
@@ -188,7 +230,20 @@ def update_workout(
         datetime.date.today(),
     )
     if errors:
+        logger.warning(
+            "workout_update_validation_error account_id=%s entry_id=%s fields=%s duration_ms=%.1f",
+            account.id,
+            entry_id,
+            list(errors),
+            (time.monotonic() - start) * 1000,
+        )
         return JSONResponse(status_code=400, content={"errors": errors})
 
     updated = workouts.update_entry(db, entry, cleaned)
+    logger.info(
+        "workout_update account_id=%s entry_id=%s duration_ms=%.1f",
+        account.id,
+        entry_id,
+        (time.monotonic() - start) * 1000,
+    )
     return {"id": updated.id, "exercise_name": updated.exercise_name}
