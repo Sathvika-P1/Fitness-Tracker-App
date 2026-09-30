@@ -95,6 +95,7 @@ def list_meals(
         return JSONResponse(status_code=401, content={"message": "Not signed in."})
 
     entries, has_more = meals.list_entries(db, account, limit=limit, offset=offset)
+    total_count = meals.count_entries(db, account)
     logger.info(
         "meals_list account_id=%s count=%s has_more=%s duration_ms=%.1f",
         account.id,
@@ -102,4 +103,8 @@ def list_meals(
         has_more,
         (time.monotonic() - start) * 1000,
     )
-    return {"entries": [_serialize(entry) for entry in entries], "has_more": has_more}
+    return {
+        "entries": [_serialize(entry) for entry in entries],
+        "has_more": has_more,
+        "total_count": total_count,
+    }

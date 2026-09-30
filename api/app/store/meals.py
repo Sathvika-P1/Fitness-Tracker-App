@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.store.models import Account, MealEntry
@@ -120,3 +120,8 @@ def list_entries(
         .order_by(MealEntry.eaten_at_utc.desc(), MealEntry.id.desc())
     )
     return paginate(db, stmt, limit, offset)
+
+
+def count_entries(db: Session, account: Account) -> int:
+    stmt = select(func.count()).select_from(MealEntry).where(MealEntry.account_id == account.id)
+    return db.scalar(stmt) or 0
