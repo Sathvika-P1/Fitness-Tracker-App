@@ -4,7 +4,6 @@ import {
   collectFormValues,
   renderValidationErrors,
   clearValidationErrors,
-  fieldElementId,
   formatMealDateTime,
 } from './meal-form.js';
 
@@ -66,38 +65,6 @@ function renderConfirmSummary(entry) {
   );
 }
 
-function renderErrors(errors) {
-  if (errors.date && errors.date === errors.time) {
-    const combined = {};
-    Object.entries(errors).forEach(([field, message]) => {
-      if (field !== 'date' && field !== 'time') combined[field] = message;
-    });
-    renderValidationErrors(combined);
-    const dateInput = document.getElementById(fieldElementId('date'));
-    const timeInput = document.getElementById(fieldElementId('time'));
-    if (dateInput) {
-      dateInput.setAttribute('aria-invalid', 'true');
-      dateInput.classList.add('has-error');
-    }
-    if (timeInput) {
-      timeInput.setAttribute('aria-invalid', 'true');
-      timeInput.classList.add('has-error');
-    }
-    const dateErrorEl = document.getElementById(`${fieldElementId('date')}-error`);
-    if (dateErrorEl) {
-      dateErrorEl.textContent = `⚠ ${errors.date}`;
-      dateErrorEl.hidden = false;
-    }
-    const timeErrorEl = document.getElementById(`${fieldElementId('time')}-error`);
-    if (timeErrorEl) {
-      timeErrorEl.textContent = `⚠ ${errors.time}`;
-      timeErrorEl.hidden = false;
-    }
-    return;
-  }
-  renderValidationErrors(errors);
-}
-
 form?.addEventListener('submit', async (event) => {
   event.preventDefault();
   clearValidationErrors();
@@ -121,7 +88,7 @@ form?.addEventListener('submit', async (event) => {
       saveErrorBanner.hidden = false;
       saveButton.textContent = 'Retry save →';
     } else {
-      renderErrors(result.errors);
+      renderValidationErrors(result.errors);
       saveButton.textContent = 'Save meal →';
     }
   } finally {

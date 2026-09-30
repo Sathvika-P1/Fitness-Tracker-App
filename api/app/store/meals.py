@@ -4,15 +4,12 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.store.models import Account, MealEntry
+from app.store.workouts import _present, parse_date_or_none
 
 FUTURE_DATETIME_MESSAGE = (
     "This meal's date and time are in the future — choose the actual date and "
     "time it was eaten."
 )
-
-
-def _present(raw: str | None) -> bool:
-    return raw is not None and raw.strip() != ""
 
 
 def _validate_amount(raw: str | None, label: str) -> tuple[int | None, str | None]:
@@ -59,10 +56,9 @@ def validate_entry(
     if not _present(date_str):
         errors["date"] = "Date is required."
     else:
-        try:
-            parsed_date = datetime.date.fromisoformat(date_str.strip())
-        except ValueError:
-            errors["date"] = "Enter a valid date."
+        parsed_date, date_error = parse_date_or_none(date_str)
+        if date_error:
+            errors["date"] = date_error
 
     parsed_time: datetime.time | None = None
     if not _present(time_str):
