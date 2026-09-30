@@ -132,6 +132,29 @@ def test_unauthenticated_submit_is_rejected_and_nothing_saved(db):
     assert db.query(MealEntry).count() == 0
 
 
+def test_food_name_and_quantity_are_saved_and_returned_when_captured(
+    client_with_signed_up_account,
+):
+    client = client_with_signed_up_account
+    client.post(
+        "/api/meals",
+        json=valid_payload(food_name="Grilled chicken & rice bowl", quantity="1 bowl"),
+    )
+    res = client.get("/api/meals")
+    entry = res.json()["entries"][0]
+    assert entry["food_name"] == "Grilled chicken & rice bowl"
+    assert entry["quantity"] == "1 bowl"
+
+
+def test_food_name_and_quantity_are_null_when_not_captured(client_with_signed_up_account):
+    client = client_with_signed_up_account
+    client.post("/api/meals", json=valid_payload())
+    res = client.get("/api/meals")
+    entry = res.json()["entries"][0]
+    assert entry["food_name"] is None
+    assert entry["quantity"] is None
+
+
 def test_limit_paginates_and_reports_has_more(client_with_signed_up_account):
     client = client_with_signed_up_account
     client.post("/api/meals", json=valid_payload(calories="1"))

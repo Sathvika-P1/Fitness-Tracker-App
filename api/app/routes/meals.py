@@ -23,6 +23,8 @@ class MealEntryRequest(BaseModel):
     date: str | None = None
     time: str | None = None
     utc_offset_minutes: str | None = None
+    food_name: str | None = None
+    quantity: str | None = None
 
 
 def _serialize(entry) -> dict:
@@ -32,6 +34,8 @@ def _serialize(entry) -> dict:
         "carbs_g": entry.carbs_g,
         "protein_g": entry.protein_g,
         "fat_g": entry.fat_g,
+        "food_name": entry.food_name,
+        "quantity": entry.quantity,
         "eaten_at_utc": entry.eaten_at_utc.isoformat() + "Z",
     }
 
@@ -59,6 +63,8 @@ def create_meal(
         payload.time,
         payload.utc_offset_minutes,
         datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None),
+        payload.food_name,
+        payload.quantity,
     )
     if errors:
         logger.warning(

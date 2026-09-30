@@ -71,5 +71,7 @@ class MealEntry(Base):
     carbs_g = Column(BigInteger, nullable=False)
     protein_g = Column(BigInteger, nullable=False)
     fat_g = Column(BigInteger, nullable=False)
+    food_name = Column(String(200), nullable=True)
+    quantity = Column(String(100), nullable=True)
     eaten_at_utc = Column(DateTime, nullable=False)
     created_at = Column(DateTime, nullable=False, default=_utcnow)

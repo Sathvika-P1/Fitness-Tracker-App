@@ -44,6 +44,31 @@ describe('diet-history', () => {
     expect(document.getElementById('no-actions-note').hidden).toBe(false);
   });
 
+  it('shows the "Meal" fallback title when no food name was captured (AC2)', async () => {
+    global.fetch.mockResolvedValueOnce({
+      status: 200,
+      json: async () => ({ entries: [mealFixture], has_more: false, total_count: 1 }),
+    });
+    await loadDietHistoryPage();
+    await flush();
+
+    expect(document.querySelector('.history-title').textContent.trim()).toBe('Meal');
+  });
+
+  it('shows the captured food name and quantity when present (AC2)', async () => {
+    const namedMeal = { ...mealFixture, food_name: 'Grilled chicken & rice bowl', quantity: '1 bowl' };
+    global.fetch.mockResolvedValueOnce({
+      status: 200,
+      json: async () => ({ entries: [namedMeal], has_more: false, total_count: 1 }),
+    });
+    await loadDietHistoryPage();
+    await flush();
+
+    const title = document.querySelector('.history-title').textContent;
+    expect(title).toContain('Grilled chicken & rice bowl');
+    expect(title).toContain('1 bowl');
+  });
+
   it('lists meal entries with all captured fields and no totals (AC2, AC12)', async () => {
     global.fetch.mockResolvedValueOnce({
       status: 200,

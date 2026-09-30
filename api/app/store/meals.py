@@ -36,9 +36,14 @@ def validate_entry(
     time_str: str | None,
     utc_offset_minutes_str: str | None,
     now_utc: datetime.datetime,
+    food_name: str | None = None,
+    quantity: str | None = None,
 ) -> tuple[dict, dict]:
     errors: dict[str, str] = {}
     cleaned: dict = {}
+
+    cleaned["food_name"] = food_name.strip() if _present(food_name) else None
+    cleaned["quantity"] = quantity.strip() if _present(quantity) else None
 
     for field, raw, label in [
         ("calories", calories_str, "Calories"),
@@ -100,6 +105,8 @@ def create_entry(db: Session, account: Account, cleaned: dict) -> MealEntry:
         carbs_g=cleaned["carbs_g"],
         protein_g=cleaned["protein_g"],
         fat_g=cleaned["fat_g"],
+        food_name=cleaned.get("food_name"),
+        quantity=cleaned.get("quantity"),
         eaten_at_utc=cleaned["eaten_at_utc"],
     )
     db.add(entry)

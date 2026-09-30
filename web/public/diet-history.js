@@ -104,7 +104,13 @@ export function renderHistory(entries, page, totalCount) {
 
     const titleEl = document.createElement('span');
     titleEl.className = 'history-title';
-    titleEl.textContent = 'Meal';
+    titleEl.textContent = entry.food_name ? entry.food_name : 'Meal';
+    if (entry.quantity) {
+      const qtyEl = document.createElement('span');
+      qtyEl.className = 'text-muted text-sm';
+      qtyEl.textContent = ` (${entry.quantity})`;
+      titleEl.appendChild(qtyEl);
+    }
 
     const dateEl = document.createElement('span');
     dateEl.className = 'history-datetime';

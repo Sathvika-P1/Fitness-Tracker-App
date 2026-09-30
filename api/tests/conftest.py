@@ -9,7 +9,12 @@ import pytest
 from sqlalchemy import create_engine, text
 
 from app.db import Base, DATABASE_URL, SessionLocal, engine
-from app.main import _backfill_profile_columns, _backfill_session_ttl_columns, app
+from app.main import (
+    _backfill_meal_columns,
+    _backfill_profile_columns,
+    _backfill_session_ttl_columns,
+    app,
+)
 from app.store.models import (
     Account,
     AccountDeletionAudit,
@@ -32,6 +37,7 @@ def _create_test_database():
     Base.metadata.create_all(engine)
     _backfill_session_ttl_columns()
     _backfill_profile_columns()
+    _backfill_meal_columns()
     yield
 
 
