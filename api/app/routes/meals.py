@@ -4,7 +4,7 @@ import time
 
 from fastapi import APIRouter, Cookie, Depends, Query
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from app.db import get_db
@@ -23,8 +23,8 @@ class MealEntryRequest(BaseModel):
     date: str | None = None
     time: str | None = None
     utc_offset_minutes: str | None = None
-    food_name: str | None = None
-    quantity: str | None = None
+    food_name: str | None = Field(default=None, max_length=200)
+    quantity: str | None = Field(default=None, max_length=100)
 
 
 def _serialize(entry) -> dict:

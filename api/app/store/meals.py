@@ -11,6 +11,9 @@ FUTURE_DATETIME_MESSAGE = (
     "time it was eaten."
 )
 
+FOOD_NAME_MAX_LENGTH = 200
+QUANTITY_MAX_LENGTH = 100
+
 
 def _validate_amount(raw: str | None, label: str) -> tuple[int | None, str | None]:
     if not _present(raw):
@@ -42,8 +45,27 @@ def validate_entry(
     errors: dict[str, str] = {}
     cleaned: dict = {}
 
-    cleaned["food_name"] = food_name.strip() if _present(food_name) else None
-    cleaned["quantity"] = quantity.strip() if _present(quantity) else None
+    if _present(food_name):
+        stripped_food_name = food_name.strip()
+        if len(stripped_food_name) > FOOD_NAME_MAX_LENGTH:
+            errors["food_name"] = (
+                f"Food name can't be longer than {FOOD_NAME_MAX_LENGTH} characters."
+            )
+        else:
+            cleaned["food_name"] = stripped_food_name
+    else:
+        cleaned["food_name"] = None
+
+    if _present(quantity):
+        stripped_quantity = quantity.strip()
+        if len(stripped_quantity) > QUANTITY_MAX_LENGTH:
+            errors["quantity"] = (
+                f"Quantity can't be longer than {QUANTITY_MAX_LENGTH} characters."
+            )
+        else:
+            cleaned["quantity"] = stripped_quantity
+    else:
+        cleaned["quantity"] = None
 
     for field, raw, label in [
         ("calories", calories_str, "Calories"),
