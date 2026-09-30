@@ -1,4 +1,4 @@
-import { logout as sharedLogout } from './session-utils.js';
+import { logout as sharedLogout, submitEntry as sharedSubmitEntry } from './session-utils.js';
 import { todayIsoDate } from './workout-form.js';
 import {
   collectFormValues,
@@ -9,30 +9,8 @@ import {
 
 export { collectFormValues, renderValidationErrors, clearValidationErrors };
 
-export async function submitEntry(values) {
-  let res;
-  try {
-    res = await fetch('/api/meals', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values),
-    });
-  } catch (error) {
-    console.error('meal_save_failed', { error });
-    return { ok: false, networkError: true };
-  }
-  if (res.status === 201) {
-    return { ok: true, entry: await res.json() };
-  }
-  if (res.status === 401) {
-    return { ok: false, sessionExpired: true };
-  }
-  if (res.status === 400) {
-    const body = await res.json();
-    return { ok: false, errors: body.errors || {} };
-  }
-  return { ok: false, networkError: true };
+export function submitEntry(values) {
+  return sharedSubmitEntry('/api/meals', values, 'meal_save_failed');
 }
 
 const form = document.getElementById('meal-form');
@@ -81,6 +59,7 @@ form?.addEventListener('submit', async (event) => {
       renderConfirmSummary(result.entry);
       form.reset();
       saveButton.textContent = 'Save meal →';
+      confirmBox.querySelector('h2')?.focus();
     } else if (result.sessionExpired) {
       sessionExpiredBanner.hidden = false;
       saveButton.textContent = 'Save meal →';
@@ -90,6 +69,7 @@ form?.addEventListener('submit', async (event) => {
     } else {
       renderValidationErrors(result.errors);
       saveButton.textContent = 'Save meal →';
+      document.querySelector('[aria-invalid="true"]')?.focus();
     }
   } finally {
     saveButton.disabled = false;
@@ -109,6 +89,7 @@ logAnotherBtn?.addEventListener('click', () => {
   form.hidden = false;
   saveButton.textContent = 'Save meal →';
   initializeDate();
+  document.getElementById('cal')?.focus();
 });
 
 export function logout() {

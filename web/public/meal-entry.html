@@ -61,7 +61,7 @@
   <div class="content-pad">
     <div id="confirm-box" class="card confirm-box" hidden>
       <div class="icon-circle">✓</div>
-      <h2 class="text-lg text-bold">Meal saved</h2>
+      <h2 class="text-lg text-bold" tabindex="-1">Meal saved</h2>
       <p class="text-sm text-muted">This entry has been added to your diet history.</p>
       <ul class="summary-list" id="confirm-summary"></ul>
       <div class="row" style="justify-content:center; margin-top: var(--space-3);">
@@ -73,23 +73,23 @@
     <form id="meal-form" novalidate>
       <div class="field">
         <label class="label" for="cal">Calories (kcal)</label>
-        <input class="input" id="cal" type="number" min="0" step="1" placeholder="e.g. 650">
+        <input class="input" id="cal" type="number" min="0" step="1" placeholder="e.g. 650" aria-describedby="cal-error">
         <p class="field-error-text" id="cal-error" role="alert" hidden></p>
       </div>
       <div class="row-2">
         <div class="field">
           <label class="label" for="carbs">Carbs (g)</label>
-          <input class="input" id="carbs" type="number" min="0" step="1" placeholder="e.g. 80">
+          <input class="input" id="carbs" type="number" min="0" step="1" placeholder="e.g. 80" aria-describedby="carbs-error">
           <p class="field-error-text" id="carbs-error" role="alert" hidden></p>
         </div>
         <div class="field">
           <label class="label" for="protein">Protein (g)</label>
-          <input class="input" id="protein" type="number" min="0" step="1" placeholder="e.g. 35">
+          <input class="input" id="protein" type="number" min="0" step="1" placeholder="e.g. 35" aria-describedby="protein-error">
           <p class="field-error-text" id="protein-error" role="alert" hidden></p>
         </div>
         <div class="field">
           <label class="label" for="fat">Fat (g)</label>
-          <input class="input" id="fat" type="number" min="0" step="1" placeholder="e.g. 20">
+          <input class="input" id="fat" type="number" min="0" step="1" placeholder="e.g. 20" aria-describedby="fat-error">
           <p class="field-error-text" id="fat-error" role="alert" hidden></p>
         </div>
       </div>
@@ -98,12 +98,12 @@
       <div class="row-2">
         <div class="field">
           <label class="label" for="meal-date">Date</label>
-          <input class="input" id="meal-date" type="date">
+          <input class="input" id="meal-date" type="date" aria-describedby="meal-date-error">
           <p class="field-error-text" id="meal-date-error" role="alert" hidden></p>
         </div>
         <div class="field">
           <label class="label" for="meal-time">Time</label>
-          <input class="input" id="meal-time" type="time">
+          <input class="input" id="meal-time" type="time" aria-describedby="meal-time-error">
           <p class="helper-text">Your device's local time.</p>
           <p class="field-error-text" id="meal-time-error" role="alert" hidden></p>
         </div>

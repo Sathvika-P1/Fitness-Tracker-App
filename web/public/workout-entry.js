@@ -1,4 +1,4 @@
-import { logout as sharedLogout } from './session-utils.js';
+import { logout as sharedLogout, submitEntry as sharedSubmitEntry } from './session-utils.js';
 import {
   collectFormValues,
   filterSuggestions,
@@ -14,30 +14,8 @@ export {
   clearValidationErrors,
 };
 
-export async function submitEntry(values) {
-  let res;
-  try {
-    res = await fetch('/api/workouts', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values),
-    });
-  } catch (error) {
-    console.error('workout_save_failed', { error });
-    return { ok: false, networkError: true };
-  }
-  if (res.status === 201) {
-    return { ok: true, entry: await res.json() };
-  }
-  if (res.status === 401) {
-    return { ok: false, sessionExpired: true };
-  }
-  if (res.status === 400) {
-    const body = await res.json();
-    return { ok: false, errors: body.errors || {} };
-  }
-  return { ok: false, networkError: true };
+export function submitEntry(values) {
+  return sharedSubmitEntry('/api/workouts', values, 'workout_save_failed');
 }
 
 const form = document.getElementById('workout-form');

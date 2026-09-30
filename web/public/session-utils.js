@@ -13,6 +13,32 @@ export async function fetchOrRedirect(url, redirectTo = 'login.html') {
   }
 }
 
+export async function submitEntry(url, values, errorTag) {
+  let res;
+  try {
+    res = await fetch(url, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(values),
+    });
+  } catch (error) {
+    console.error(errorTag, { error });
+    return { ok: false, networkError: true };
+  }
+  if (res.status === 201) {
+    return { ok: true, entry: await res.json() };
+  }
+  if (res.status === 401) {
+    return { ok: false, sessionExpired: true };
+  }
+  if (res.status === 400) {
+    const body = await res.json();
+    return { ok: false, errors: body.errors || {} };
+  }
+  return { ok: false, networkError: true };
+}
+
 export async function logout(errorElId) {
   const errorEl = errorElId ? document.getElementById(errorElId) : null;
   if (errorEl) errorEl.hidden = true;

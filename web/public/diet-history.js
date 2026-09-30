@@ -1,17 +1,33 @@
 import { logout as sharedLogout } from './session-utils.js';
 import { formatMealDateTime } from './meal-form.js';
 
+async function fetchPage(offset) {
+  const qs = offset ? `?offset=${offset}` : '';
+  const res = await fetch(`/api/meals${qs}`, { credentials: 'include' });
+  if (res.status === 200) {
+    const body = await res.json();
+    return { ok: true, entries: body.entries || [], hasMore: Boolean(body.has_more) };
+  }
+  if (res.status === 401) {
+    return { ok: false, sessionExpired: true };
+  }
+  return { ok: false, networkError: true };
+}
+
+// AC2 requires the complete diet history on load, so pages are fetched and merged
+// here rather than exposed as a "load more" control; pagination only bounds per-request cost.
 export async function fetchHistory() {
   try {
-    const res = await fetch('/api/meals', { credentials: 'include' });
-    if (res.status === 200) {
-      const body = await res.json();
-      return { ok: true, entries: body.entries || [] };
+    const entries = [];
+    let offset = 0;
+    for (;;) {
+      const page = await fetchPage(offset);
+      if (!page.ok) return page;
+      entries.push(...page.entries);
+      if (!page.hasMore || page.entries.length === 0) break;
+      offset += page.entries.length;
     }
-    if (res.status === 401) {
-      return { ok: false, sessionExpired: true };
-    }
-    return { ok: false, networkError: true };
+    return { ok: true, entries };
   } catch (error) {
     console.error('diet_history_fetch_failed', { error });
     return { ok: false, networkError: true };

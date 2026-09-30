@@ -132,6 +132,30 @@ def test_unauthenticated_submit_is_rejected_and_nothing_saved(db):
     assert db.query(MealEntry).count() == 0
 
 
+def test_limit_paginates_and_reports_has_more(client_with_signed_up_account):
+    client = client_with_signed_up_account
+    client.post("/api/meals", json=valid_payload(calories="1"))
+    client.post("/api/meals", json=valid_payload(calories="2"))
+    client.post("/api/meals", json=valid_payload(calories="3"))
+
+    first_page = client.get("/api/meals", params={"limit": 2})
+    assert first_page.status_code == 200
+    body = first_page.json()
+    assert [e["calories"] for e in body["entries"]] == [3, 2]
+    assert body["has_more"] is True
+
+    second_page = client.get("/api/meals", params={"limit": 2, "offset": 2})
+    body = second_page.json()
+    assert [e["calories"] for e in body["entries"]] == [1]
+    assert body["has_more"] is False
+
+
+@pytest.mark.parametrize("limit", [0, 101])
+def test_invalid_limit_is_rejected(client_with_signed_up_account, limit):
+    res = client_with_signed_up_account.get("/api/meals", params={"limit": limit})
+    assert res.status_code == 422
+
+
 def test_account_with_meal_entries_can_be_deleted(client_with_signed_up_account, db):
     client_with_signed_up_account.post("/api/meals", json=valid_payload())
     res = client_with_signed_up_account.post(

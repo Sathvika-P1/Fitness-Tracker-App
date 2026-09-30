@@ -146,4 +146,64 @@ describe('meal-entry', () => {
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(document.getElementById('confirm-box').hidden).toBe(false);
   });
+
+  it('moves focus to the confirmation heading on a successful save (a11y)', async () => {
+    global.fetch.mockResolvedValueOnce({
+      status: 201,
+      json: async () => ({
+        id: 1,
+        calories: 650,
+        carbs_g: 80,
+        protein_g: 35,
+        fat_g: 20,
+        eaten_at_utc: '2026-09-20T16:30:00Z',
+      }),
+    });
+    await loadMealEntryPage();
+    fillValidForm();
+    document.getElementById('meal-form').dispatchEvent(new Event('submit', { cancelable: true }));
+    await flush();
+
+    expect(document.activeElement).toBe(
+      document.getElementById('confirm-box').querySelector('h2')
+    );
+  });
+
+  it('moves focus to the first invalid field on a validation error (a11y)', async () => {
+    global.fetch.mockResolvedValueOnce({
+      status: 400,
+      json: async () => ({
+        errors: { calories: "Calories can't be negative." },
+      }),
+    });
+    await loadMealEntryPage();
+    fillValidForm();
+    document.getElementById('cal').value = '-5';
+    document.getElementById('meal-form').dispatchEvent(new Event('submit', { cancelable: true }));
+    await flush();
+
+    expect(document.activeElement).toBe(document.getElementById('cal'));
+  });
+
+  it('moves focus to the calories field when logging another meal (a11y)', async () => {
+    global.fetch.mockResolvedValueOnce({
+      status: 201,
+      json: async () => ({
+        id: 1,
+        calories: 650,
+        carbs_g: 80,
+        protein_g: 35,
+        fat_g: 20,
+        eaten_at_utc: '2026-09-20T16:30:00Z',
+      }),
+    });
+    await loadMealEntryPage();
+    fillValidForm();
+    document.getElementById('meal-form').dispatchEvent(new Event('submit', { cancelable: true }));
+    await flush();
+
+    document.getElementById('log-another-btn').click();
+
+    expect(document.activeElement).toBe(document.getElementById('cal'));
+  });
 });

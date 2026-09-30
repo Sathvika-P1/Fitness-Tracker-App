@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.store.models import Account, MealEntry
-from app.store.workouts import _present, parse_date_or_none
+from app.store.workouts import MAX_PAGE_SIZE, _present, paginate, parse_date_or_none
 
 FUTURE_DATETIME_MESSAGE = (
     "This meal's date and time are in the future — choose the actual date and "
@@ -108,10 +108,15 @@ def create_entry(db: Session, account: Account, cleaned: dict) -> MealEntry:
     return entry
 
 
-def list_entries(db: Session, account: Account) -> list[MealEntry]:
+def list_entries(
+    db: Session,
+    account: Account,
+    limit: int = MAX_PAGE_SIZE,
+    offset: int = 0,
+) -> tuple[list[MealEntry], bool]:
     stmt = (
         select(MealEntry)
         .where(MealEntry.account_id == account.id)
         .order_by(MealEntry.eaten_at_utc.desc(), MealEntry.id.desc())
     )
-    return list(db.execute(stmt).scalars())
+    return paginate(db, stmt, limit, offset)
