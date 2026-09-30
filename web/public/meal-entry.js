@@ -83,6 +83,11 @@ function renderErrors(errors) {
       timeInput.setAttribute('aria-invalid', 'true');
       timeInput.classList.add('has-error');
     }
+    const dateErrorEl = document.getElementById(`${fieldElementId('date')}-error`);
+    if (dateErrorEl) {
+      dateErrorEl.textContent = `⚠ ${errors.date}`;
+      dateErrorEl.hidden = false;
+    }
     const timeErrorEl = document.getElementById(`${fieldElementId('time')}-error`);
     if (timeErrorEl) {
       timeErrorEl.textContent = `⚠ ${errors.time}`;

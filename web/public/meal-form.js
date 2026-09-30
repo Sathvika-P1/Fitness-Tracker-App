@@ -63,5 +63,5 @@ export function formatMealDateTime(
       minute: '2-digit',
       timeZone,
     })
-    .replace(/ /g, ' ');
+    .replace(/\u202f/g, ' ');
 }

@@ -116,6 +116,10 @@ describe('meal-entry', () => {
 
     expect(document.getElementById('meal-date').getAttribute('aria-invalid')).toBe('true');
     expect(document.getElementById('meal-time').getAttribute('aria-invalid')).toBe('true');
+    expect(document.getElementById('meal-date-error').hidden).toBe(false);
+    expect(document.getElementById('meal-date-error').textContent).toContain(
+      'This meal is in the future.'
+    );
     expect(document.getElementById('meal-time-error').hidden).toBe(false);
   });
 
