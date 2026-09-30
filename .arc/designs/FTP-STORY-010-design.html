@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTP-STORY-010 — Delete workout entry</title>
+<!-- App nav: bottom tabs + top app bar — matches history.html / edit-workout.html -->
+<style>
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1a1a1a; /** Primary body text color, used on color-bg. Contrast ratio ~17.4:1. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-surface: #f8fafc; /** Slightly recessed surface, distinct from color-bg, used for cards. */
+  --color-primary: #1d4ed8; /** Brand/interactive accent color. Meets 4.5:1 as text on color-bg (~6.7:1). */
+  --color-on-primary: #ffffff; /** Text/icon color placed on top of color-primary. */
+  --color-muted: #475569; /** Secondary/muted text color. */
+  --color-border: #e2e8f0; /** Default hairline border color. */
+  --color-danger: #dc2626; /** Destructive/error accent color. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 600;
+  --line-height-base: 1.5;
+  --button-primary-background: var(--color-primary);
+  --button-primary-foreground: var(--color-on-primary);
+  --button-primary-border-radius: var(--radius-md);
+  --button-secondary-background: var(--color-bg);
+  --button-secondary-foreground: var(--color-primary);
+  --button-secondary-border: var(--color-primary);
+  --card-default-background: var(--color-surface);
+  --card-default-border: var(--color-border);
+  --card-default-border-radius: var(--radius-lg);
+  --chip-default-background: var(--color-surface);
+  --chip-default-foreground: var(--color-muted);
+  --chip-default-border-radius: var(--radius-sm);
+  --input-default-background: var(--color-bg);
+  --input-default-border: var(--color-border);
+  --input-default-foreground: var(--color-fg);
+  --input-default-border-radius: var(--radius-sm);
+}
+
+</style>
+<style>
+/* Base layout / typography */
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-md);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-bold { font-weight: var(--font-weight-bold); }
+
+/* Layout utilities */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
+/* Buttons */
+
+.btn {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-md);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-radius: var(--button-primary-border-radius);
+}
+
+.btn-secondary {
+  background: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-on-primary);
+}
+
+/* Card */
+
+.card {
+  background: var(--card-default-background);
+  border: var(--border-width-sm) solid var(--card-default-border);
+  border-radius: var(--card-default-border-radius);
+  padding: var(--space-4);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Chip */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  background: var(--chip-default-background);
+  color: var(--chip-default-foreground);
+  border-radius: var(--chip-default-border-radius);
+  font-size: var(--font-size-sm);
+}
+
+/* Form controls */
+
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  background: var(--input-default-background);
+  color: var(--input-default-foreground);
+  border: var(--border-width-sm) solid var(--input-default-border);
+  border-radius: var(--input-default-border-radius);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-md);
+  outline: none;
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-1);
+}
+
+/* Style-guide page helpers */
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.swatch-color {
+  height: var(--space-4);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-sm) solid var(--color-border);
+}
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.section {
+  margin-bottom: var(--space-4);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* Auth pages (signup / login) */
+
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+.auth-shell {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-3);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.field {
+  margin-bottom: var(--space-3);
+}
+
+.field-error-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.input.has-error {
+  border-color: var(--color-danger);
+  border-width: var(--border-width-md);
+}
+
+.helper-text {
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.btn-block {
+  width: 100%;
+  min-height: 44px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.banner {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  background: var(--color-bg);
+  border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.banner[hidden] {
+  display: none;
+}
+
+.banner-icon {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.banner-title {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+}
+
+.banner-body {
+  color: var(--color-fg);
+  font-size: var(--font-size-sm);
+}
+
+.link-inline {
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.center-note {
+  text-align: center;
+  margin-top: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+
+.banner-neutral {
+  border-color: var(--color-border);
+}
+
+.banner-neutral .banner-icon,
+.banner-neutral .banner-title {
+  color: var(--color-primary);
+}
+
+.banner-success {
+  border-color: var(--color-primary);
+}
+
+.banner-success .banner-icon,
+.banner-success .banner-title {
+  color: var(--color-primary);
+}
+
+.banner-info {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+}
+
+.banner-info .banner-icon,
+.banner-info .banner-title {
+  color: var(--color-fg);
+}
+
+/* App shell (top bar, avatar, bottom tabs) */
+
+.page-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: var(--space-4);
+}
+
+.top-app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.bottom-tabs {
+  display: flex;
+  border-top: var(--border-width-sm) solid var(--color-border);
+  position: sticky;
+  bottom: 0;
+  background: var(--color-bg);
+}
+
+.bottom-tab {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.bottom-tab.active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Profile fields */
+
+.not-set {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.field-group-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.char-counter {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  text-align: right;
+  margin-top: var(--space-1);
+}
+
+.char-counter.over {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+}
+
+.content-pad {
+  padding: 0 var(--space-3);
+}
+
+/* Account deletion */
+
+.back-btn {
+  background: none; border: none; cursor: pointer; color: var(--color-primary);
+  font-size: var(--font-size-md); min-height: 44px; min-width: 44px;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+}
+
+.top-app-bar-title { font-weight: var(--font-weight-bold); font-size: var(--font-size-lg); }
+
+.danger-zone-card {
+  border: var(--border-width-sm) solid var(--color-danger);
+  border-radius: var(--card-default-border-radius);
+  background: var(--color-bg);
+  padding: var(--space-3);
+  margin: var(--space-3);
+}
+.danger-zone-title { color: var(--color-danger); font-weight: var(--font-weight-bold); margin-bottom: var(--space-1); }
+
+.consequence-list { margin: var(--space-3) 0; padding-left: 0; list-style: none; }
+.consequence-list li {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  padding: var(--space-1) 0; font-size: var(--font-size-sm); color: var(--color-fg);
+}
+.consequence-list li .mark { color: var(--color-danger); font-weight: var(--font-weight-bold); flex-shrink: 0; }
+
+.checkbox-row {
+  display: flex; align-items: flex-start; gap: var(--space-2);
+  margin: var(--space-3) 0; min-height: 44px;
+}
+.checkbox-row input[type="checkbox"] {
+  width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; accent-color: var(--color-danger);
+}
+.checkbox-row label { font-size: var(--font-size-sm); color: var(--color-fg); }
+
+.attempt-counter { font-size: var(--font-size-sm); color: var(--color-muted); margin-top: var(--space-1); }
+
+.lockout-banner {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  background: var(--color-bg); border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-3);
+}
+.lockout-banner .banner-icon { color: var(--color-danger); font-weight: var(--font-weight-bold); }
+.lockout-banner .banner-title { color: var(--color-danger); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+.lockout-banner .banner-body { color: var(--color-fg); font-size: var(--font-size-sm); }
+
+.account-empty-state {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: var(--space-4) var(--space-3); gap: var(--space-2);
+}
+.account-empty-state-icon {
+  width: 64px; height: 64px; border-radius: 50%; background: var(--color-surface);
+  display: flex; align-items: center; justify-content: center; font-size: var(--font-size-lg);
+  color: var(--color-danger);
+}
+
+/* Avatar menu — click the avatar to reveal View profile / Logout */
+.avatar-menu {
+  position: relative;
+}
+.avatar-menu-trigger {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  display: block;
+}
+.avatar-menu-trigger:focus-visible {
+  outline: var(--border-width-md) solid var(--color-primary);
+  outline-offset: 2px;
+}
+.avatar-menu-dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  min-width: 180px;
+  background: var(--color-bg);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-1);
+  z-index: 20;
+}
+.avatar-menu-dropdown[hidden] {
+  display: none;
+}
+.avatar-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.avatar-menu-item:hover,
+.avatar-menu-item:focus-visible {
+  background: var(--color-surface);
+}
+.avatar-menu-item.danger {
+  color: var(--color-danger);
+}
+.avatar-menu-error {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--space-1);
+  white-space: nowrap;
+}
+.inline-error {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+</style>
+<style>
+  .page-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--space-1); flex-wrap: wrap; gap: var(--space-2); }
+  .entry-count { color: var(--color-muted); font-size: var(--font-size-sm); }
+
+  .history-list { display: flex; flex-direction: column; gap: var(--space-2); list-style: none; margin: 0; padding: 0; }
+  .history-row {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--card-default-background);
+    border: var(--border-width-sm) solid var(--card-default-border);
+    border-radius: var(--radius-md);
+    flex-wrap: wrap;
+  }
+  .history-row-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .history-exercise { font-weight: var(--font-weight-bold); font-size: var(--font-size-md); }
+  .history-date { color: var(--color-muted); font-size: var(--font-size-sm); }
+  .history-metrics { display: flex; gap: var(--space-3); flex-shrink: 0; text-align: right; }
+  .history-metric { display: flex; flex-direction: column; align-items: flex-end; }
+  .history-metric .val { font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+  .history-metric .unit { color: var(--color-muted); font-size: var(--font-size-sm); }
+  .history-row-actions { display: flex; gap: var(--space-2); flex-shrink: 0; }
+  .icon-only-btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: var(--space-2);
+    font-size: var(--font-size-md);
+  }
+
+  .history-row.row-error {
+    border-color: var(--color-danger);
+  }
+  .row-inline-error {
+    display: flex; align-items: center; gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    margin-top: calc(-1 * var(--space-1));
+    background: var(--color-surface);
+    border: var(--border-width-sm) solid var(--color-danger);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-danger);
+  }
+  .row-inline-error button {
+    margin-left: auto;
+  }
+
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+    display: flex; align-items: center; justify-content: center; z-index: 50;
+  }
+  .modal-backdrop[hidden] { display: none; }
+  .modal {
+    background: var(--color-bg); border-radius: var(--radius-lg);
+    padding: var(--space-4); max-width: 360px; width: 90%;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  .modal-actions { display: flex; gap: var(--space-2); justify-content: flex-end; margin-top: var(--space-3); }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--surface);border-bottom:1px solid var(--border);font-size:13px;font-family:var(--font-sans)">
+  <span style="font-family:var(--font-mono);color:var(--muted)">FTP-STORY-010</span>
+  <button id="prev-btn">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--fg)"></span>
+  <button id="next-btn">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+
+<script>
+  const fixtureEntries = [
+    { id: 101, exercise_name: 'Back squat', entry_date: '2026-09-26', sets: 5, reps: 5 },
+    { id: 102, exercise_name: 'Morning run', entry_date: '2026-09-25', duration_minutes: 32 },
+    { id: 103, exercise_name: 'Bench press', entry_date: '2026-09-23', sets: 4, reps: 8 },
+  ];
+</script>
+
+<div id="screens">
+
+<!-- State: history list, default — AC4 (Delete action next to Edit on every row) -->
+<!--
+  Screen: Workout history — list with Delete action
+  Notes:
+    - Mirrors the real history.html layout/classes exactly (history-list, history-row, banners)
+      so the build can extend history.js's renderHistory() instead of a new component.
+    - Each row now has an actions group: a pencil icon (Edit, existing) + a trash-bin icon
+      (Delete, new). Icon-only per PO request; each button keeps an aria-label/title of "Edit" /
+      "Delete" so the accessible name and 44x44 touch target are unaffected by dropping the
+      visible text. Delete uses btn-secondary at rest (quiet, since it's a per-row action, not a
+      page-level warning) — btn-danger is reserved for the modal's confirm button where the
+      destructive intent is explicit.
+    - AC6-8 (403/404/ownership check) are backend behaviour with no dedicated screen: a 404 on
+      DELETE is treated the same as edit-workout's vanished-entry case (redirect to this list with
+      ?deleted=1 / screen 4); a 403 surfaces via the same inline row error as screen 5.
+-->
+<div class="screen" data-name="1. History list">
+  <div class="page-shell">
+    <div class="top-app-bar">
+      <div>
+        <h1 class="text-bold" style="margin:0;font-size:inherit">Workout history</h1>
+        <div class="text-sm text-muted">Your complete log, newest first.</div>
+      </div>
+      <div class="avatar-menu">
+        <div class="avatar" aria-hidden="true">JD</div>
+      </div>
+    </div>
+
+    <div class="content-pad">
+      <div class="page-header">
+        <span class="entry-count">3 entries</span>
+      </div>
+
+      <ul class="history-list" id="list-default"></ul>
+    </div>
+
+    <div class="bottom-tabs">
+      <a class="bottom-tab" href="#">Today</a>
+      <a class="bottom-tab" href="#">Log</a>
+      <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
+      <a class="bottom-tab active" href="#">History</a>
+      <a class="bottom-tab" href="#">Profile</a>
+    </div>
+  </div>
+</div>
+
+<!-- State: confirmation modal open — AC1 (confirm before removal), AC3 (cancel leaves entry unchanged) -->
+<!--
+  Screen: Delete confirmation
+  Notes:
+    - Lightweight modal, same shape as edit-workout.html's "Discard changes?" dialog — no password
+      re-entry, since this is lower-stakes than account deletion.
+    - Names the entry being removed and states the consequence, per UX baseline destructive-action rule.
+    - Esc / "Keep entry" both cancel and return to the unchanged list (AC3).
+-->
+<div class="screen" data-name="2. Confirm delete">
+  <div class="page-shell">
+    <div class="top-app-bar">
+      <div>
+        <h1 class="text-bold" style="margin:0;font-size:inherit">Workout history</h1>
+        <div class="text-sm text-muted">Your complete log, newest first.</div>
+      </div>
+      <div class="avatar-menu">
+        <div class="avatar" aria-hidden="true">JD</div>
+      </div>
+    </div>
+
+    <div class="content-pad">
+      <div class="page-header">
+        <span class="entry-count">3 entries</span>
+      </div>
+      <ul class="history-list" id="list-confirm"></ul>
+    </div>
+
+    <div class="bottom-tabs">
+      <a class="bottom-tab" href="#">Today</a>
+      <a class="bottom-tab" href="#">Log</a>
+      <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
+      <a class="bottom-tab active" href="#">History</a>
+      <a class="bottom-tab" href="#">Profile</a>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" role="presentation">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+      <h2 class="text-md text-bold" id="confirm-title" style="margin:0 0 var(--space-2);">Delete this entry?</h2>
+      <p class="text-sm text-muted" style="margin:0;">
+        "Back squat" on Sep 26, 2026 will be permanently removed. This can't be undone.
+      </p>
+      <p class="text-sm text-muted" style="margin:var(--space-2) 0 0;">
+        <label><input type="radio" name="sim-outcome" value="success" checked> Simulate success</label>
+        &nbsp;&nbsp;
+        <label><input type="radio" name="sim-outcome" value="error"> Simulate server/network error</label>
+      </p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" type="button" onclick="show(0)">Keep entry</button>
+        <button class="btn btn-danger" type="button" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- State: deleting (pending request) — Feedback baseline: buttons disable and relabel while pending -->
+<!--
+  Screen: Delete in progress
+  Notes:
+    - Simulates the DELETE request (300ms); row shows a disabled, relabelled action while pending.
+    - Reached from the confirm modal's Delete button, and reused when retrying from screen 5.
+-->
+<div class="screen" data-name="3. Deleting…">
+  <div class="page-shell">
+    <div class="top-app-bar">
+      <div>
+        <h1 class="text-bold" style="margin:0;font-size:inherit">Workout history</h1>
+        <div class="text-sm text-muted">Your complete log, newest first.</div>
+      </div>
+      <div class="avatar-menu">
+        <div class="avatar" aria-hidden="true">JD</div>
+      </div>
+    </div>
+
+    <div class="content-pad">
+      <div class="page-header">
+        <span class="entry-count">3 entries</span>
+      </div>
+      <ul class="history-list" id="list-pending"></ul>
+    </div>
+
+    <div class="bottom-tabs">
+      <a class="bottom-tab" href="#">Today</a>
+      <a class="bottom-tab" href="#">Log</a>
+      <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
+      <a class="bottom-tab active" href="#">History</a>
+      <a class="bottom-tab" href="#">Profile</a>
+    </div>
+  </div>
+</div>
+
+<!-- State: history list, success — AC2 (entry removed) + AC5 (returned to list with deleted-banner) -->
+<!--
+  Screen: History after successful delete
+  Notes:
+    - Reuses the exact deleted-banner already wired in history.js for the ?deleted=1 case that
+      edit-workout redirects to when an entry has vanished. Copy is unchanged from history.html
+      ("That workout no longer exists.") since the same banner is shared with that flow, and the
+      baseline says an action keeps its name through the flow, not the label — deletion and
+      "vanished when I opened it to edit" both correctly resolve to "the workout is gone now."
+    - Entry count drops from 3 to 2; the deleted entry is gone from the list.
+-->
+<div class="screen" data-name="4. Deleted — back to list">
+  <div class="page-shell">
+    <div class="top-app-bar">
+      <div>
+        <h1 class="text-bold" style="margin:0;font-size:inherit">Workout history</h1>
+        <div class="text-sm text-muted">Your complete log, newest first.</div>
+      </div>
+      <div class="avatar-menu">
+        <div class="avatar" aria-hidden="true">JD</div>
+      </div>
+    </div>
+
+    <div class="banner banner-info" role="status">
+      <span class="banner-icon" aria-hidden="true">ⓘ</span>
+      <div class="banner-title">That workout no longer exists.</div>
+    </div>
+
+    <div class="content-pad">
+      <div class="page-header">
+        <span class="entry-count">2 entries</span>
+      </div>
+      <ul class="history-list" id="list-success"></ul>
+    </div>
+
+    <div class="bottom-tabs">
+      <a class="bottom-tab" href="#">Today</a>
+      <a class="bottom-tab" href="#">Log</a>
+      <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
+      <a class="bottom-tab active" href="#">History</a>
+      <a class="bottom-tab" href="#">Profile</a>
+    </div>
+  </div>
+</div>
+
+<!-- State: delete request fails (server/network error) — AC9, AC10, AC11 -->
+<!--
+  Screen: Delete failed
+  Notes:
+    - AC9: entry remains in the list (row is restored, not removed).
+    - AC10: inline error message appears directly under the affected row, naming what happened
+      and offering a retry — not a page-level banner, so it's unambiguous which entry failed.
+    - AC11: no redirect to the deleted-banner state; user stays on this screen.
+-->
+<div class="screen" data-name="5. Delete failed (server/network error)">
+  <div class="page-shell">
+    <div class="top-app-bar">
+      <div>
+        <h1 class="text-bold" style="margin:0;font-size:inherit">Workout history</h1>
+        <div class="text-sm text-muted">Your complete log, newest first.</div>
+      </div>
+      <div class="avatar-menu">
+        <div class="avatar" aria-hidden="true">JD</div>
+      </div>
+    </div>
+
+    <div class="content-pad">
+      <div class="page-header">
+        <span class="entry-count">3 entries</span>
+      </div>
+      <ul class="history-list" id="list-error"></ul>
+    </div>
+
+    <div class="bottom-tabs">
+      <a class="bottom-tab" href="#">Today</a>
+      <a class="bottom-tab" href="#">Log</a>
+      <div class="bottom-tab" role="button" aria-disabled="true">Progress</div>
+      <a class="bottom-tab active" href="#">History</a>
+      <a class="bottom-tab" href="#">Profile</a>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function metricsFor(entry) {
+  const out = [];
+  if (entry.duration_minutes != null) out.push({ val: `${entry.duration_minutes}`, unit: 'minutes' });
+  if (entry.sets != null && entry.reps != null) out.push({ val: `${entry.sets} × ${entry.reps}`, unit: 'sets × reps' });
+  return out;
+}
+function formatDate(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+}
+
+function buildRow(entry, opts = {}) {
+  const li = document.createElement('li');
+  li.className = 'history-row' + (opts.removing ? ' removing' : '') + (opts.errored ? ' row-error' : '');
+
+  const main = document.createElement('div');
+  main.className = 'history-row-main';
+  main.innerHTML = `<span class="history-exercise">${entry.exercise_name}</span><span class="history-date">${formatDate(entry.entry_date)}</span>`;
+
+  const metrics = document.createElement('div');
+  metrics.className = 'history-metrics';
+  metricsFor(entry).forEach(({ val, unit }) => {
+    metrics.innerHTML += `<div class="history-metric"><span class="val">${val}</span><span class="unit">${unit}</span></div>`;
+  });
+
+  const actions = document.createElement('div');
+  actions.className = 'history-row-actions';
+
+  const editLink = document.createElement('a');
+  editLink.className = 'btn btn-secondary history-edit-link icon-only-btn';
+  editLink.href = '#';
+  editLink.setAttribute('aria-label', 'Edit');
+  editLink.title = 'Edit';
+  editLink.innerHTML = '<span aria-hidden="true">✏️</span>';
+  editLink.onclick = (e) => e.preventDefault();
+
+  const deleteBtn = document.createElement('button');
+  deleteBtn.className = 'btn btn-secondary history-delete-btn icon-only-btn';
+  deleteBtn.type = 'button';
+
+  if (opts.pending) {
+    deleteBtn.disabled = true;
+    deleteBtn.setAttribute('aria-label', 'Deleting…');
+    deleteBtn.title = 'Deleting…';
+    deleteBtn.innerHTML = '<span aria-hidden="true">🗑️</span>';
+  } else {
+    deleteBtn.setAttribute('aria-label', 'Delete');
+    deleteBtn.title = 'Delete';
+    deleteBtn.innerHTML = '<span aria-hidden="true">🗑️</span>';
+    deleteBtn.onclick = opts.onDelete || (() => show(1));
+  }
+
+  actions.appendChild(editLink);
+  actions.appendChild(deleteBtn);
+
+  li.appendChild(main);
+  li.appendChild(metrics);
+  li.appendChild(actions);
+  return li;
+}
+
+// Screen 1: default list
+document.getElementById('list-default').append(...fixtureEntries.map((e) => buildRow(e)));
+
+// Screen 2: confirm modal open, list frozen underneath (unchanged — AC3 demonstrates nothing removed yet)
+document.getElementById('list-confirm').append(...fixtureEntries.map((e) => buildRow(e, { onDelete: () => {} })));
+
+// Screen 3: pending delete on the first row — reused for both the "Delete" click and a "Retry" click
+document.getElementById('list-pending').append(
+  buildRow(fixtureEntries[0], { pending: true }),
+  ...fixtureEntries.slice(1).map((e) => buildRow(e)),
+);
+
+// Screen 4: success — first entry removed entirely
+document.getElementById('list-success').append(...fixtureEntries.slice(1).map((e) => buildRow(e)));
+
+// Screen 5: error — first row restored with inline error + retry, AC9/AC10/AC11
+const errorList = document.getElementById('list-error');
+const errorRow = buildRow(fixtureEntries[0], { errored: true, onDelete: retryDelete });
+const errorMsg = document.createElement('li');
+errorMsg.innerHTML = `
+  <div class="row-inline-error" role="alert">
+    <span aria-hidden="true">⚠</span>
+    <span>Couldn't delete this entry. Check your connection and try again.</span>
+    <button class="btn btn-secondary" type="button" id="retry-delete-btn">Retry</button>
+  </div>`;
+errorMsg.style.listStyle = 'none';
+errorMsg.style.margin = '0';
+errorMsg.style.padding = '0';
+errorList.append(errorRow, errorMsg, ...fixtureEntries.slice(1).map((e) => buildRow(e)));
+errorMsg.querySelector('#retry-delete-btn').onclick = retryDelete;
+
+// AC1/AC2/AC5/AC9-11: confirm → pending (simulated setTimeout latency) → success or error,
+// branching on the reviewer-only "Simulate" toggle in the confirm modal.
+async function confirmDelete() {
+  const outcome = document.querySelector('input[name="sim-outcome"]:checked').value;
+  show(2);
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  show(outcome === 'success' ? 3 : 4);
+}
+
+async function retryDelete() {
+  show(2);
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  show(3);
+}
+</script>
+
+<script>
+const screens = Array.from(document.querySelectorAll('.screen'));
+let cur = 0;
+function show(i) {
+  cur = Math.max(0, Math.min(screens.length - 1, i));
+  screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+  document.getElementById('screen-label').textContent =
+    `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+}
+document.getElementById('prev-btn').onclick = () => show(cur - 1);
+document.getElementById('next-btn').onclick = () => show(cur + 1);
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') show(cur + 1);
+  if (e.key === 'ArrowLeft') show(cur - 1);
+  if (e.key === 'Escape' && cur === 1) show(0);
+});
+show(0);
+</script>
+
+<style>
+#review-bar button { color: var(--brand); background: none; border: none; cursor: pointer; }
+</style>
+
+</body>
+</html>
+
+<!-- arc:css-inlined -->

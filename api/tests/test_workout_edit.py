@@ -1,17 +1,6 @@
 import pytest
 
-
-def _create_entry(client, **overrides):
-    payload = {
-        "exercise_name": "Back squat",
-        "entry_date": "2026-09-20",
-        "duration_minutes": "30",
-        "sets": "",
-        "reps": "",
-    }
-    payload.update(overrides)
-    res = client.post("/api/workouts", json=payload)
-    return res.json()["id"]
+from tests.conftest import create_entry as _create_entry
 
 
 def test_get_prefills_owned_entry_with_current_values(client_with_signed_up_account):

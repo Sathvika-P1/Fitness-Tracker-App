@@ -2,7 +2,7 @@ import datetime
 import logging
 import time
 
-from fastapi import APIRouter, Cookie, Depends, Query
+from fastapi import APIRouter, Cookie, Depends, Query, Response
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -247,3 +247,51 @@ def update_workout(
         (time.monotonic() - start) * 1000,
     )
     return {"id": updated.id, "exercise_name": updated.exercise_name}
+
+
+@router.delete("/api/workouts/{entry_id}")
+def delete_workout(
+    entry_id: int,
+    db: Session = Depends(get_db),
+    sid: str | None = Cookie(default=None),
+):
+    start = time.monotonic()
+    account = sessions.require_account(db, sid)
+    if account is None:
+        logger.warning(
+            "workout_delete_unauthorized entry_id=%s duration_ms=%.1f",
+            entry_id,
+            (time.monotonic() - start) * 1000,
+        )
+        return JSONResponse(status_code=401, content={"message": "Not signed in."})
+    entry, status = workouts.get_entry_for_account(db, account, entry_id)
+    if status == "not_found":
+        logger.warning(
+            "workout_delete_not_found account_id=%s entry_id=%s duration_ms=%.1f",
+            account.id,
+            entry_id,
+            (time.monotonic() - start) * 1000,
+        )
+        return JSONResponse(
+            status_code=404, content={"message": "This workout no longer exists."}
+        )
+    if status == "forbidden":
+        logger.warning(
+            "workout_delete_forbidden account_id=%s entry_id=%s duration_ms=%.1f",
+            account.id,
+            entry_id,
+            (time.monotonic() - start) * 1000,
+        )
+        return JSONResponse(
+            status_code=403,
+            content={"message": "You can only delete workouts you've logged yourself."},
+        )
+
+    workouts.delete_entry(db, entry)
+    logger.info(
+        "workout_delete account_id=%s entry_id=%s duration_ms=%.1f",
+        account.id,
+        entry_id,
+        (time.monotonic() - start) * 1000,
+    )
+    return Response(status_code=204)
