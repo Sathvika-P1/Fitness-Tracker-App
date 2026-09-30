@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diet history — Fitness Tracker</title>
+<title>Meal history — Fitness Tracker</title>
 <link rel="stylesheet" href="/design-system/tokens.css">
 <link rel="stylesheet" href="/design-system/prototype-utils.css">
 <style>
@@ -21,22 +21,21 @@
     flex-wrap: wrap;
   }
   .history-row-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .history-title { font-weight: var(--font-weight-bold); font-size: var(--font-size-md); display: flex; align-items: center; gap: var(--space-2); }
+  .history-title { font-weight: var(--font-weight-bold); font-size: var(--font-size-md); }
   .history-datetime { color: var(--color-muted); font-size: var(--font-size-sm); }
   .history-metrics { display: flex; gap: var(--space-3); flex-shrink: 0; text-align: right; flex-wrap: wrap; justify-content: flex-end; }
   .history-metric { display: flex; flex-direction: column; align-items: flex-end; }
   .history-metric .val { font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
   .history-metric .unit { color: var(--color-muted); font-size: var(--font-size-sm); }
 
-  .entry-type-chip {
-    display: inline-flex; align-items: center;
-    background: var(--chip-default-background); color: var(--chip-default-foreground);
-    border-radius: var(--chip-default-border-radius);
-    padding: 2px var(--space-1); font-size: var(--font-size-sm); font-weight: var(--font-weight-regular);
-  }
-  .entry-type-chip.meal { color: var(--color-primary); }
-
   .no-actions-note { color: var(--color-muted); font-size: var(--font-size-sm); font-style: italic; }
+
+  .pagination {
+    display: flex; align-items: center; justify-content: center; gap: var(--space-2);
+    margin-top: var(--space-4); flex-wrap: wrap;
+  }
+  .pagination .btn { min-height: 44px; min-width: 44px; }
+  .pagination .page-status { font-size: var(--font-size-sm); color: var(--color-muted); min-width: 110px; text-align: center; }
 
   .empty-state {
     display: flex; flex-direction: column; align-items: center; text-align: center;
@@ -64,8 +63,8 @@
 <div class="page-shell">
   <div class="top-app-bar">
     <div>
-      <h1 class="text-bold" style="margin:0;font-size:inherit">Diet history</h1>
-      <div class="text-sm text-muted">Your complete diet log, newest first.</div>
+      <h1 class="text-bold" style="margin:0;font-size:inherit">Meal history</h1>
+      <div class="text-sm text-muted">Your logged meals, newest first. Entries can't be edited or deleted here.</div>
     </div>
     <div class="avatar-menu" data-avatar-menu>
       <button class="avatar-menu-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Account menu" data-avatar-trigger>
@@ -82,10 +81,11 @@
   <div class="banner" role="alert" id="load-error-banner" hidden>
     <span class="banner-icon" aria-hidden="true">⚠</span>
     <div>
-      <div class="banner-title">Couldn't load your history</div>
-      <div class="banner-body">Something went wrong while fetching your entries. Check your connection and try again.</div>
+      <div class="banner-title" id="load-error-title">Couldn't load your meal history</div>
+      <div class="banner-body" id="load-error-body">Something went wrong while fetching your entries. Check your connection and try again.</div>
     </div>
-    <button class="btn btn-primary" type="button" id="retry-btn" style="margin-left:auto;">Retry →</button>
+    <button class="btn btn-secondary" type="button" id="back-to-first-btn" hidden>← Back to page 1</button>
+    <button class="btn btn-primary" type="button" id="retry-btn">Retry →</button>
   </div>
 
   <div class="content-pad">
@@ -96,18 +96,24 @@
     <p class="tz-note" id="tz-note" hidden><span aria-hidden="true">🕒</span> <span id="tz-note-text"></span></p>
     <p class="sr-only" id="diet-history-status" role="status" aria-live="polite"></p>
 
-    <ul class="history-list" id="history-list" aria-label="Diet history, newest first"></ul>
+    <ul class="history-list" id="history-list" aria-label="Meal history, newest first"></ul>
+
+    <nav class="pagination" id="pagination" aria-label="Pagination" hidden>
+      <button type="button" class="btn btn-secondary" id="prev-page-btn">← Prev</button>
+      <span class="page-status" id="page-status"></span>
+      <button type="button" class="btn btn-secondary" id="next-page-btn">Next →</button>
+    </nav>
 
     <div class="empty-state" id="empty-state" hidden>
       <div class="empty-state-icon" aria-hidden="true">🍽</div>
       <h2 class="text-md text-bold" style="margin:0;">No meals logged yet</h2>
-      <p class="text-sm text-muted" style="margin:0; max-width:40ch;">Once you log a meal, it'll show up here alongside the rest of your diet history.</p>
+      <p class="text-sm text-muted" style="margin:0; max-width:40ch;">Once you log a meal, it'll show up here — newest first.</p>
       <div class="actions">
         <a class="btn btn-primary" href="meal-entry.html">Log your first meal →</a>
       </div>
     </div>
 
-    <p class="no-actions-note" id="no-actions-note" style="margin-top: var(--space-3);" hidden>Saved entries are view-only — there's no edit or delete option in diet history.</p>
+    <p class="no-actions-note" id="no-actions-note" style="margin-top: var(--space-3);" hidden>Saved meals are view-only — there's no edit or delete option in meal history.</p>
   </div>
 
   <div class="bottom-tabs">

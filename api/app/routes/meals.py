@@ -4,7 +4,7 @@ import time
 
 from fastapi import APIRouter, Cookie, Depends, Query
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from app.db import get_db
@@ -23,6 +23,8 @@ class MealEntryRequest(BaseModel):
     date: str | None = None
     time: str | None = None
     utc_offset_minutes: str | None = None
+    food_name: str | None = Field(default=None, max_length=200)
+    quantity: str | None = Field(default=None, max_length=100)
 
 
 def _serialize(entry) -> dict:
@@ -32,6 +34,8 @@ def _serialize(entry) -> dict:
         "carbs_g": entry.carbs_g,
         "protein_g": entry.protein_g,
         "fat_g": entry.fat_g,
+        "food_name": entry.food_name,
+        "quantity": entry.quantity,
         "eaten_at_utc": entry.eaten_at_utc.isoformat() + "Z",
     }
 
@@ -59,6 +63,8 @@ def create_meal(
         payload.time,
         payload.utc_offset_minutes,
         datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None),
+        payload.food_name,
+        payload.quantity,
     )
     if errors:
         logger.warning(
@@ -95,6 +101,7 @@ def list_meals(
         return JSONResponse(status_code=401, content={"message": "Not signed in."})
 
     entries, has_more = meals.list_entries(db, account, limit=limit, offset=offset)
+    total_count = meals.count_entries(db, account)
     logger.info(
         "meals_list account_id=%s count=%s has_more=%s duration_ms=%.1f",
         account.id,
@@ -102,4 +109,8 @@ def list_meals(
         has_more,
         (time.monotonic() - start) * 1000,
     )
-    return {"entries": [_serialize(entry) for entry in entries], "has_more": has_more}
+    return {
+        "entries": [_serialize(entry) for entry in entries],
+        "has_more": has_more,
+        "total_count": total_count,
+    }

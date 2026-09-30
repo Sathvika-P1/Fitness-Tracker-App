@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.store.models import Account, MealEntry
@@ -10,6 +10,9 @@ FUTURE_DATETIME_MESSAGE = (
     "This meal's date and time are in the future — choose the actual date and "
     "time it was eaten."
 )
+
+FOOD_NAME_MAX_LENGTH = 200
+QUANTITY_MAX_LENGTH = 100
 
 
 def _validate_amount(raw: str | None, label: str) -> tuple[int | None, str | None]:
@@ -36,9 +39,33 @@ def validate_entry(
     time_str: str | None,
     utc_offset_minutes_str: str | None,
     now_utc: datetime.datetime,
+    food_name: str | None = None,
+    quantity: str | None = None,
 ) -> tuple[dict, dict]:
     errors: dict[str, str] = {}
     cleaned: dict = {}
+
+    if _present(food_name):
+        stripped_food_name = food_name.strip()
+        if len(stripped_food_name) > FOOD_NAME_MAX_LENGTH:
+            errors["food_name"] = (
+                f"Food name can't be longer than {FOOD_NAME_MAX_LENGTH} characters."
+            )
+        else:
+            cleaned["food_name"] = stripped_food_name
+    else:
+        cleaned["food_name"] = None
+
+    if _present(quantity):
+        stripped_quantity = quantity.strip()
+        if len(stripped_quantity) > QUANTITY_MAX_LENGTH:
+            errors["quantity"] = (
+                f"Quantity can't be longer than {QUANTITY_MAX_LENGTH} characters."
+            )
+        else:
+            cleaned["quantity"] = stripped_quantity
+    else:
+        cleaned["quantity"] = None
 
     for field, raw, label in [
         ("calories", calories_str, "Calories"),
@@ -100,6 +127,8 @@ def create_entry(db: Session, account: Account, cleaned: dict) -> MealEntry:
         carbs_g=cleaned["carbs_g"],
         protein_g=cleaned["protein_g"],
         fat_g=cleaned["fat_g"],
+        food_name=cleaned.get("food_name"),
+        quantity=cleaned.get("quantity"),
         eaten_at_utc=cleaned["eaten_at_utc"],
     )
     db.add(entry)
@@ -120,3 +149,8 @@ def list_entries(
         .order_by(MealEntry.eaten_at_utc.desc(), MealEntry.id.desc())
     )
     return paginate(db, stmt, limit, offset)
+
+
+def count_entries(db: Session, account: Account) -> int:
+    stmt = select(func.count()).select_from(MealEntry).where(MealEntry.account_id == account.id)
+    return db.scalar(stmt) or 0

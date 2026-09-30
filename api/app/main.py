@@ -53,11 +53,29 @@ def _backfill_profile_columns() -> None:
                 )
 
 
+def _backfill_meal_columns() -> None:
+    inspector = inspect(engine)
+    if "meal_entries" not in inspector.get_table_names():
+        return
+    columns = {col["name"] for col in inspector.get_columns("meal_entries")}
+    additions = {
+        "food_name": "VARCHAR(200)",
+        "quantity": "VARCHAR(100)",
+    }
+    with engine.begin() as connection:
+        for name, sql_type in additions.items():
+            if name not in columns:
+                connection.execute(
+                    text(f"ALTER TABLE meal_entries ADD COLUMN {name} {sql_type} NULL")
+                )
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(engine)
     _backfill_session_ttl_columns()
     _backfill_profile_columns()
+    _backfill_meal_columns()
     yield
 
 

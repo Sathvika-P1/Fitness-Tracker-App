@@ -132,6 +132,29 @@ def test_unauthenticated_submit_is_rejected_and_nothing_saved(db):
     assert db.query(MealEntry).count() == 0
 
 
+def test_food_name_and_quantity_are_saved_and_returned_when_captured(
+    client_with_signed_up_account,
+):
+    client = client_with_signed_up_account
+    client.post(
+        "/api/meals",
+        json=valid_payload(food_name="Grilled chicken & rice bowl", quantity="1 bowl"),
+    )
+    res = client.get("/api/meals")
+    entry = res.json()["entries"][0]
+    assert entry["food_name"] == "Grilled chicken & rice bowl"
+    assert entry["quantity"] == "1 bowl"
+
+
+def test_food_name_and_quantity_are_null_when_not_captured(client_with_signed_up_account):
+    client = client_with_signed_up_account
+    client.post("/api/meals", json=valid_payload())
+    res = client.get("/api/meals")
+    entry = res.json()["entries"][0]
+    assert entry["food_name"] is None
+    assert entry["quantity"] is None
+
+
 def test_limit_paginates_and_reports_has_more(client_with_signed_up_account):
     client = client_with_signed_up_account
     client.post("/api/meals", json=valid_payload(calories="1"))
@@ -148,6 +171,61 @@ def test_limit_paginates_and_reports_has_more(client_with_signed_up_account):
     body = second_page.json()
     assert [e["calories"] for e in body["entries"]] == [1]
     assert body["has_more"] is False
+
+
+def test_exactly_25_entries_fit_on_a_single_page(client_with_signed_up_account):
+    client = client_with_signed_up_account
+    for i in range(25):
+        client.post(
+            "/api/meals",
+            json=valid_payload(calories=str(i), date=f"2026-01-{i + 1:02d}"),
+        )
+
+    res = client.get("/api/meals", params={"limit": 25, "offset": 0})
+    body = res.json()
+    assert len(body["entries"]) == 25
+    assert body["has_more"] is False
+    assert body["total_count"] == 25
+
+
+def test_26_entries_puts_the_remaining_one_on_a_second_page(client_with_signed_up_account):
+    client = client_with_signed_up_account
+    for i in range(26):
+        client.post(
+            "/api/meals",
+            json=valid_payload(calories=str(i), date=f"2026-01-{i + 1:02d}"),
+        )
+
+    first = client.get("/api/meals", params={"limit": 25, "offset": 0}).json()
+    assert len(first["entries"]) == 25
+    assert first["has_more"] is True
+    assert first["total_count"] == 26
+    assert first["entries"][0]["calories"] == 25
+
+    second = client.get("/api/meals", params={"limit": 25, "offset": 25}).json()
+    assert len(second["entries"]) == 1
+    assert second["has_more"] is False
+    assert second["total_count"] == 26
+    assert second["entries"][0]["calories"] == 0
+
+
+def test_total_count_is_scoped_to_the_caller_account(client_with_signed_up_account):
+    client_a = client_with_signed_up_account
+    client_b = TestClient(app)
+    client_b.post(
+        "/api/signup",
+        json={
+            "email": "alex@example.com",
+            "password": "test-password",
+            "display_name": "Alex",
+        },
+    )
+
+    client_a.post("/api/meals", json=valid_payload())
+    client_b.post("/api/meals", json=valid_payload())
+    client_b.post("/api/meals", json=valid_payload())
+
+    assert client_a.get("/api/meals").json()["total_count"] == 1
 
 
 @pytest.mark.parametrize("limit", [0, 101])
