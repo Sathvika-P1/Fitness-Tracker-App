@@ -84,6 +84,10 @@ const updatedBanner = document.getElementById('updated-banner');
 const deletedBanner = document.getElementById('deleted-banner');
 const filterStartError = document.getElementById('filter-start-error');
 const filterEndError = document.getElementById('filter-end-error');
+const deleteBackdrop = document.getElementById('delete-backdrop');
+const deleteConfirmBody = document.getElementById('delete-confirm-body');
+const keepEntryBtn = document.getElementById('keep-entry-btn');
+const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
 
 function setFieldError(el, message) {
   if (!el) return;
@@ -190,16 +194,131 @@ export function renderHistory(entries, filters = {}, highlightId = null) {
     });
 
     const editLink = document.createElement('a');
-    editLink.className = 'btn btn-secondary history-edit-link';
+    editLink.className = 'btn btn-secondary history-edit-link icon-only-btn';
     editLink.href = `edit-workout.html?id=${entry.id}`;
-    editLink.textContent = 'Edit';
+    editLink.setAttribute('aria-label', 'Edit');
+    editLink.title = 'Edit';
+    editLink.innerHTML = '<span aria-hidden="true">✏️</span>';
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'btn btn-secondary history-delete-btn icon-only-btn';
+    deleteBtn.type = 'button';
+    deleteBtn.setAttribute('aria-label', 'Delete');
+    deleteBtn.title = 'Delete';
+    deleteBtn.innerHTML = '<span aria-hidden="true">🗑️</span>';
+    deleteBtn.addEventListener('click', () => openDeleteModal(entry, li, deleteBtn));
+
+    const actionsEl = document.createElement('div');
+    actionsEl.className = 'history-row-actions';
+    actionsEl.appendChild(editLink);
+    actionsEl.appendChild(deleteBtn);
 
     li.appendChild(main);
     li.appendChild(metricsEl);
-    li.appendChild(editLink);
+    li.appendChild(actionsEl);
     historyList.appendChild(li);
   });
 }
+
+let pendingDelete = null;
+
+function openDeleteModal(entry, row, deleteBtn) {
+  pendingDelete = { entry, row, deleteBtn };
+  deleteConfirmBody.textContent =
+    `"${entry.exercise_name}" on ${formatDate(entry.entry_date)} will be permanently removed. This can't be undone.`;
+  deleteBackdrop.hidden = false;
+  keepEntryBtn?.focus();
+}
+
+function closeDeleteModal() {
+  deleteBackdrop.hidden = true;
+  pendingDelete?.deleteBtn?.focus();
+  pendingDelete = null;
+}
+
+function clearRowError(row) {
+  row.classList.remove('row-error');
+  const errorRow = row.nextElementSibling;
+  if (errorRow && errorRow.classList.contains('row-inline-error-item')) {
+    errorRow.remove();
+  }
+}
+
+function showRowError(entry, row, deleteBtn) {
+  row.classList.add('row-error');
+  const errorItem = document.createElement('li');
+  errorItem.className = 'row-inline-error-item';
+  const errorDiv = document.createElement('div');
+  errorDiv.className = 'row-inline-error';
+  errorDiv.setAttribute('role', 'alert');
+  const icon = document.createElement('span');
+  icon.setAttribute('aria-hidden', 'true');
+  icon.textContent = '⚠';
+  const message = document.createElement('span');
+  message.textContent = "Couldn't delete this entry. Check your connection and try again.";
+  const retryBtn = document.createElement('button');
+  retryBtn.className = 'btn btn-secondary';
+  retryBtn.type = 'button';
+  retryBtn.textContent = 'Retry';
+  retryBtn.addEventListener('click', () => performDelete(entry, row, deleteBtn));
+  errorDiv.appendChild(icon);
+  errorDiv.appendChild(message);
+  errorDiv.appendChild(retryBtn);
+  errorItem.appendChild(errorDiv);
+  row.after(errorItem);
+}
+
+async function performDelete(entry, row, deleteBtn) {
+  clearRowError(row);
+  deleteBtn.disabled = true;
+  deleteBtn.setAttribute('aria-label', 'Deleting…');
+  deleteBtn.title = 'Deleting…';
+
+  let res;
+  try {
+    res = await fetch(`/api/workouts/${encodeURIComponent(entry.id)}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+  } catch (error) {
+    console.error('history_delete_failed', { error });
+    deleteBtn.disabled = false;
+    deleteBtn.setAttribute('aria-label', 'Delete');
+    deleteBtn.title = 'Delete';
+    showRowError(entry, row, deleteBtn);
+    return;
+  }
+
+  if (res.status === 204 || res.status === 404) {
+    window.location.href = 'history.html?deleted=1';
+    return;
+  }
+  if (res.status === 401) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  deleteBtn.disabled = false;
+  deleteBtn.setAttribute('aria-label', 'Delete');
+  deleteBtn.title = 'Delete';
+  showRowError(entry, row, deleteBtn);
+}
+
+keepEntryBtn?.addEventListener('click', closeDeleteModal);
+
+confirmDeleteBtn?.addEventListener('click', () => {
+  const { entry, row, deleteBtn } = pendingDelete;
+  deleteBackdrop.hidden = true;
+  performDelete(entry, row, deleteBtn);
+  pendingDelete = null;
+});
+
+document.addEventListener('keydown', (event) => {
+  if (deleteBackdrop.hidden) return;
+  if (event.key === 'Escape') {
+    closeDeleteModal();
+  }
+});
 
 let requestInFlight = false;
 

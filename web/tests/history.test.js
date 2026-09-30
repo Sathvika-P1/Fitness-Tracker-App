@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const htmlPath = path.resolve(__dirname, '../public/history.html');
 
@@ -220,5 +220,108 @@ describe('history', () => {
 
     expect(document.getElementById('deleted-banner').hidden).toBe(false);
     expect(window.location.search).toBe('');
+  });
+
+  describe('delete workout entry (FTP-STORY-010)', () => {
+    let originalLocation;
+
+    beforeEach(() => {
+      originalLocation = window.location;
+    });
+
+    afterEach(() => {
+      window.location = originalLocation;
+    });
+
+    function stubLocation() {
+      delete window.location;
+      window.location = { href: '', search: '' };
+    }
+
+    async function renderFullFixture() {
+      global.fetch.mockResolvedValue({ status: 200, json: async () => ({ entries: fullFixture }) });
+      await loadHistoryPage();
+      await flush();
+    }
+
+    it('shows a Delete action next to Edit on each row (AC4)', async () => {
+      await renderFullFixture();
+
+      const rows = document.querySelectorAll('.history-row');
+      expect(document.querySelectorAll('.history-delete-btn').length).toBe(2);
+      expect(rows[0].querySelector('.history-delete-btn').getAttribute('aria-label')).toBe('Delete');
+    });
+
+    it('shows a confirmation prompt before removing anything (AC1)', async () => {
+      await renderFullFixture();
+
+      document.querySelectorAll('.history-delete-btn')[0].click();
+
+      expect(document.getElementById('delete-backdrop').hidden).toBe(false);
+      expect(fetch.mock.calls.some(([, opts]) => opts?.method === 'DELETE')).toBe(false);
+    });
+
+    it('cancelling the confirmation leaves the entry unchanged (AC3)', async () => {
+      await renderFullFixture();
+
+      document.querySelectorAll('.history-delete-btn')[0].click();
+      document.getElementById('keep-entry-btn').click();
+
+      expect(document.getElementById('delete-backdrop').hidden).toBe(true);
+      expect(document.querySelectorAll('.history-row').length).toBe(2);
+      expect(fetch.mock.calls.some(([, opts]) => opts?.method === 'DELETE')).toBe(false);
+    });
+
+    it('confirming deletion removes the entry and redirects to the deleted-banner (AC2, AC5)', async () => {
+      stubLocation();
+      global.fetch.mockImplementation((url, opts) => {
+        if (opts?.method === 'DELETE') return Promise.resolve({ status: 204 });
+        return Promise.resolve({ status: 200, json: async () => ({ entries: fullFixture }) });
+      });
+      await loadHistoryPage();
+      await flush();
+
+      document.querySelectorAll('.history-delete-btn')[0].click();
+      document.getElementById('confirm-delete-btn').click();
+      await flush();
+
+      expect(window.location.href).toBe('history.html?deleted=1');
+    });
+
+    it('keeps the entry and shows an inline error when the DELETE request fails with a server error (AC9, AC10, AC11)', async () => {
+      stubLocation();
+      global.fetch.mockImplementation((url, opts) => {
+        if (opts?.method === 'DELETE') return Promise.resolve({ status: 500 });
+        return Promise.resolve({ status: 200, json: async () => ({ entries: fullFixture }) });
+      });
+      await loadHistoryPage();
+      await flush();
+
+      document.querySelectorAll('.history-delete-btn')[0].click();
+      document.getElementById('confirm-delete-btn').click();
+      await flush();
+
+      expect(document.querySelectorAll('.history-row').length).toBe(2);
+      expect(document.querySelector('.row-inline-error')).not.toBeNull();
+      expect(window.location.href).toBe('');
+    });
+
+    it('keeps the entry and shows an inline error when the DELETE request throws a network error (AC9, AC10, AC11)', async () => {
+      stubLocation();
+      global.fetch.mockImplementation((url, opts) => {
+        if (opts?.method === 'DELETE') return Promise.reject(new Error('network down'));
+        return Promise.resolve({ status: 200, json: async () => ({ entries: fullFixture }) });
+      });
+      await loadHistoryPage();
+      await flush();
+
+      document.querySelectorAll('.history-delete-btn')[0].click();
+      document.getElementById('confirm-delete-btn').click();
+      await flush();
+
+      expect(document.querySelectorAll('.history-row').length).toBe(2);
+      expect(document.querySelector('.row-inline-error')).not.toBeNull();
+      expect(window.location.href).toBe('');
+    });
   });
 });

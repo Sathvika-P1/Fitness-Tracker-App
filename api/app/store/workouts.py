@@ -140,6 +140,11 @@ def update_entry(db: Session, entry: WorkoutEntry, cleaned: dict) -> WorkoutEntr
     return entry
 
 
+def delete_entry(db: Session, entry: WorkoutEntry) -> None:
+    db.delete(entry)
+    db.commit()
+
+
 def list_exercise_names(db: Session, account: Account) -> list[str]:
     rows = db.execute(
         select(distinct(WorkoutEntry.exercise_name))
