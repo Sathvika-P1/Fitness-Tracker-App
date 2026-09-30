@@ -157,6 +157,13 @@ def list_exercise_names(db: Session, account: Account) -> list[str]:
 MAX_PAGE_SIZE = 100
 
 
+def paginate(db: Session, stmt, limit: int, offset: int) -> tuple[list, bool]:
+    stmt = stmt.offset(offset).limit(limit + 1)
+    rows = list(db.execute(stmt).scalars())
+    has_more = len(rows) > limit
+    return rows[:limit], has_more
+
+
 def list_entries(
     db: Session,
     account: Account,
@@ -174,7 +181,4 @@ def list_entries(
     if name_contains:
         stmt = stmt.where(WorkoutEntry.exercise_name.icontains(name_contains, autoescape=True))
     stmt = stmt.order_by(WorkoutEntry.entry_date.desc(), WorkoutEntry.id.desc())
-    stmt = stmt.offset(offset).limit(limit + 1)
-    rows = list(db.execute(stmt).scalars())
-    has_more = len(rows) > limit
-    return rows[:limit], has_more
+    return paginate(db, stmt, limit, offset)

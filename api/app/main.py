@@ -5,6 +5,7 @@ from sqlalchemy import inspect, text
 
 from app.db import Base, engine
 from app.routes.auth import router as auth_router
+from app.routes.meals import router as meals_router
 from app.routes.profile import router as profile_router
 from app.routes.workouts import router as workouts_router
 
@@ -64,3 +65,4 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(auth_router)
 app.include_router(profile_router)
 app.include_router(workouts_router)
+app.include_router(meals_router)

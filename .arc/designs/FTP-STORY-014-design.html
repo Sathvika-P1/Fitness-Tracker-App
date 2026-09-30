@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTP-STORY-014 — Log a Meal Entry</title>
+<style>
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1a1a1a; /** Primary body text color, used on color-bg. Contrast ratio ~17.4:1. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-surface: #f8fafc; /** Slightly recessed surface, distinct from color-bg, used for cards. */
+  --color-primary: #1d4ed8; /** Brand/interactive accent color. Meets 4.5:1 as text on color-bg (~6.7:1). */
+  --color-on-primary: #ffffff; /** Text/icon color placed on top of color-primary. */
+  --color-muted: #475569; /** Secondary/muted text color. */
+  --color-border: #e2e8f0; /** Default hairline border color. */
+  --color-danger: #dc2626; /** Destructive/error accent color. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 600;
+  --line-height-base: 1.5;
+  --button-primary-background: var(--color-primary);
+  --button-primary-foreground: var(--color-on-primary);
+  --button-primary-border-radius: var(--radius-md);
+  --button-secondary-background: var(--color-bg);
+  --button-secondary-foreground: var(--color-primary);
+  --button-secondary-border: var(--color-primary);
+  --card-default-background: var(--color-surface);
+  --card-default-border: var(--color-border);
+  --card-default-border-radius: var(--radius-lg);
+  --chip-default-background: var(--color-surface);
+  --chip-default-foreground: var(--color-muted);
+  --chip-default-border-radius: var(--radius-sm);
+  --input-default-background: var(--color-bg);
+  --input-default-border: var(--color-border);
+  --input-default-foreground: var(--color-fg);
+  --input-default-border-radius: var(--radius-sm);
+}
+
+</style>
+<style>
+/* Base layout / typography */
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-md);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-bold { font-weight: var(--font-weight-bold); }
+
+/* Layout utilities */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
+/* Buttons */
+
+.btn {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-md);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-radius: var(--button-primary-border-radius);
+}
+
+.btn-secondary {
+  background: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-on-primary);
+}
+
+/* Card */
+
+.card {
+  background: var(--card-default-background);
+  border: var(--border-width-sm) solid var(--card-default-border);
+  border-radius: var(--card-default-border-radius);
+  padding: var(--space-4);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Chip */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  background: var(--chip-default-background);
+  color: var(--chip-default-foreground);
+  border-radius: var(--chip-default-border-radius);
+  font-size: var(--font-size-sm);
+}
+
+/* Form controls */
+
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  background: var(--input-default-background);
+  color: var(--input-default-foreground);
+  border: var(--border-width-sm) solid var(--input-default-border);
+  border-radius: var(--input-default-border-radius);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-md);
+  outline: none;
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-1);
+}
+
+/* Style-guide page helpers */
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.swatch-color {
+  height: var(--space-4);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-sm) solid var(--color-border);
+}
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.section {
+  margin-bottom: var(--space-4);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* Auth pages (signup / login) */
+
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+.auth-shell {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-3);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.field {
+  margin-bottom: var(--space-3);
+}
+
+.field-error-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.input.has-error {
+  border-color: var(--color-danger);
+  border-width: var(--border-width-md);
+}
+
+.helper-text {
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.btn-block {
+  width: 100%;
+  min-height: 44px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.banner {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  background: var(--color-bg);
+  border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.banner[hidden] {
+  display: none;
+}
+
+.banner-icon {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.banner-title {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+}
+
+.banner-body {
+  color: var(--color-fg);
+  font-size: var(--font-size-sm);
+}
+
+.link-inline {
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.center-note {
+  text-align: center;
+  margin-top: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+
+.banner-neutral {
+  border-color: var(--color-border);
+}
+
+.banner-neutral .banner-icon,
+.banner-neutral .banner-title {
+  color: var(--color-primary);
+}
+
+.banner-success {
+  border-color: var(--color-primary);
+}
+
+.banner-success .banner-icon,
+.banner-success .banner-title {
+  color: var(--color-primary);
+}
+
+.banner-info {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+}
+
+.banner-info .banner-icon,
+.banner-info .banner-title {
+  color: var(--color-fg);
+}
+
+/* App shell (top bar, avatar, bottom tabs) */
+
+.page-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: var(--space-4);
+}
+
+.top-app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.bottom-tabs {
+  display: flex;
+  border-top: var(--border-width-sm) solid var(--color-border);
+  position: sticky;
+  bottom: 0;
+  background: var(--color-bg);
+}
+
+.bottom-tab {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.bottom-tab.active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Profile fields */
+
+.not-set {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.field-group-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.char-counter {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  text-align: right;
+  margin-top: var(--space-1);
+}
+
+.char-counter.over {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+}
+
+.content-pad {
+  padding: 0 var(--space-3);
+}
+
+/* Account deletion */
+
+.back-btn {
+  background: none; border: none; cursor: pointer; color: var(--color-primary);
+  font-size: var(--font-size-md); min-height: 44px; min-width: 44px;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+}
+
+.top-app-bar-title { font-weight: var(--font-weight-bold); font-size: var(--font-size-lg); }
+
+.danger-zone-card {
+  border: var(--border-width-sm) solid var(--color-danger);
+  border-radius: var(--card-default-border-radius);
+  background: var(--color-bg);
+  padding: var(--space-3);
+  margin: var(--space-3);
+}
+.danger-zone-title { color: var(--color-danger); font-weight: var(--font-weight-bold); margin-bottom: var(--space-1); }
+
+.consequence-list { margin: var(--space-3) 0; padding-left: 0; list-style: none; }
+.consequence-list li {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  padding: var(--space-1) 0; font-size: var(--font-size-sm); color: var(--color-fg);
+}
+.consequence-list li .mark { color: var(--color-danger); font-weight: var(--font-weight-bold); flex-shrink: 0; }
+
+.checkbox-row {
+  display: flex; align-items: flex-start; gap: var(--space-2);
+  margin: var(--space-3) 0; min-height: 44px;
+}
+.checkbox-row input[type="checkbox"] {
+  width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; accent-color: var(--color-danger);
+}
+.checkbox-row label { font-size: var(--font-size-sm); color: var(--color-fg); }
+
+.attempt-counter { font-size: var(--font-size-sm); color: var(--color-muted); margin-top: var(--space-1); }
+
+.lockout-banner {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  background: var(--color-bg); border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-3);
+}
+.lockout-banner .banner-icon { color: var(--color-danger); font-weight: var(--font-weight-bold); }
+.lockout-banner .banner-title { color: var(--color-danger); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+.lockout-banner .banner-body { color: var(--color-fg); font-size: var(--font-size-sm); }
+
+.account-empty-state {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: var(--space-4) var(--space-3); gap: var(--space-2);
+}
+.account-empty-state-icon {
+  width: 64px; height: 64px; border-radius: 50%; background: var(--color-surface);
+  display: flex; align-items: center; justify-content: center; font-size: var(--font-size-lg);
+  color: var(--color-danger);
+}
+
+/* Avatar menu — click the avatar to reveal View profile / Logout */
+.avatar-menu {
+  position: relative;
+}
+.avatar-menu-trigger {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  display: block;
+}
+.avatar-menu-trigger:focus-visible {
+  outline: var(--border-width-md) solid var(--color-primary);
+  outline-offset: 2px;
+}
+.avatar-menu-dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  min-width: 180px;
+  background: var(--color-bg);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-1);
+  z-index: 20;
+}
+.avatar-menu-dropdown[hidden] {
+  display: none;
+}
+.avatar-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.avatar-menu-item:hover,
+.avatar-menu-item:focus-visible {
+  background: var(--color-surface);
+}
+.avatar-menu-item.danger {
+  color: var(--color-danger);
+}
+.avatar-menu-error {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--space-1);
+  white-space: nowrap;
+}
+.inline-error {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center; z-index: 50;
+}
+.modal-backdrop[hidden] { display: none; }
+.modal {
+  background: var(--color-bg); border-radius: var(--radius-lg);
+  padding: var(--space-4); max-width: 360px; width: 90%;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.modal-actions { display: flex; gap: var(--space-2); justify-content: flex-end; margin-top: var(--space-3); }
+
+</style>
+<!--
+  App nav: top bar — Dashboard · Workouts · Diet · Profile (fitness-tracker app; no arc chrome).
+  Borrowed structure from FTP-STORY-007 (Create Workout Entry) and FTP-STORY-008 (View Workout
+  History): same .page-wrap / .field / .field-error / .banner / .history-list patterns, so the
+  build reuses those components rather than inventing new ones for diet entries.
+  Design system note: no color-success token exists in tokens.json — confirmation and "saved"
+  states use color-primary plus an explicit ✓ glyph + text label instead of inventing a green
+  (never color alone, per UX baseline). No alert/banner utility class ships in tokens.css either,
+  so banner/field-error/history-list are built here with existing --color-* / --space-* tokens only.
+-->
+<style>
+  body { background: var(--color-bg); color: var(--color-fg); font-family: var(--font-family-base); }
+
+  .app-topbar {
+    display: flex; align-items: center; gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: var(--border-width-sm) solid var(--color-border);
+    background: var(--color-bg);
+  }
+  .app-topbar .brand { font-weight: var(--font-weight-bold); font-size: var(--font-size-lg); }
+  .app-topbar nav { display: flex; gap: var(--space-3); flex: 1; }
+  .app-topbar nav a { color: var(--color-muted); text-decoration: none; font-size: var(--font-size-sm); }
+  .app-topbar nav a.active { color: var(--color-primary); font-weight: var(--font-weight-bold); }
+  .app-topbar .current-user { display: flex; align-items: center; gap: var(--space-1); font-size: var(--font-size-sm); color: var(--color-muted); }
+  .avatar-sm {
+    width: 24px; height: 24px; border-radius: 50%; background: var(--color-primary);
+    color: var(--color-on-primary); display: inline-flex; align-items: center; justify-content: center;
+    font-size: var(--font-size-sm); font-weight: var(--font-weight-bold);
+  }
+
+  .page-wrap { max-width: 560px; margin: 0 auto; padding: var(--space-4); }
+
+  .field { margin-bottom: var(--space-3); position: relative; }
+  .field .label { display: block; margin-bottom: var(--space-1); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+  .field .hint { display: block; margin-top: var(--space-1); font-size: var(--font-size-sm); color: var(--color-muted); }
+  .field .input { width: 100%; box-sizing: border-box; padding: var(--space-2); font-size: var(--font-size-md); min-height: 44px; }
+  .field .input[aria-invalid="true"] { border-color: var(--color-danger); border-width: var(--border-width-md); }
+  .field-error {
+    display: flex; align-items: center; gap: var(--space-1);
+    margin-top: var(--space-1); color: var(--color-danger); font-size: var(--font-size-sm);
+  }
+  .field-error::before { content: "⚠"; }
+
+  .row-2 { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .row-2 > .field { flex: 1; min-width: 120px; }
+
+  .banner {
+    display: flex; align-items: flex-start; gap: var(--space-2);
+    padding: var(--space-3); margin-bottom: var(--space-3);
+    border: var(--border-width-md) solid var(--color-danger);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-danger);
+  }
+  .banner .icon { font-size: var(--font-size-lg); line-height: 1; }
+  .banner .body { color: var(--color-fg); font-size: var(--font-size-sm); }
+  .banner .body strong { color: var(--color-danger); display: block; margin-bottom: var(--space-1); }
+
+  .confirm-box { text-align: center; padding: var(--space-4); }
+  .confirm-box .icon-circle {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: var(--border-width-md) solid var(--color-primary);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto var(--space-3); font-size: var(--font-size-lg); color: var(--color-primary);
+  }
+  .summary-list { text-align: left; list-style: none; margin: var(--space-3) 0; padding: 0; }
+  .summary-list li { display: flex; justify-content: space-between; padding: var(--space-1) 0; border-bottom: var(--border-width-sm) solid var(--color-border); font-size: var(--font-size-sm); }
+  .summary-list li span:first-child { color: var(--color-muted); }
+
+  .actions { display: flex; gap: var(--space-2); margin-top: var(--space-3); flex-wrap: wrap; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .btn[disabled] { opacity: 0.6; cursor: not-allowed; }
+  .screen[data-name] { animation: none; }
+
+  /* Diet history */
+  .page-header { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
+  .page-header h1 { margin: 0; }
+  .entry-count { color: var(--color-muted); font-size: var(--font-size-sm); }
+
+  .history-list { display: flex; flex-direction: column; gap: var(--space-2); list-style: none; margin: var(--space-3) 0 0; padding: 0; }
+  .history-row {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--card-default-background);
+    border: var(--border-width-sm) solid var(--card-default-border);
+    border-radius: var(--radius-md);
+  }
+  .history-row-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .history-title { font-weight: var(--font-weight-bold); font-size: var(--font-size-md); display: flex; align-items: center; gap: var(--space-2); }
+  .history-datetime { color: var(--color-muted); font-size: var(--font-size-sm); }
+  .history-metrics { display: flex; gap: var(--space-3); flex-shrink: 0; text-align: right; flex-wrap: wrap; justify-content: flex-end; }
+  .history-metric { display: flex; flex-direction: column; align-items: flex-end; }
+  .history-metric .val { font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+  .history-metric .unit { color: var(--color-muted); font-size: var(--font-size-sm); }
+
+  .entry-type-chip {
+    display: inline-flex; align-items: center;
+    background: var(--chip-default-background); color: var(--chip-default-foreground);
+    border-radius: var(--chip-default-border-radius);
+    padding: 2px var(--space-1); font-size: var(--font-size-sm); font-weight: var(--font-weight-regular);
+  }
+  .entry-type-chip.meal { color: var(--color-primary); }
+
+  .no-actions-note { color: var(--color-muted); font-size: var(--font-size-sm); font-style: italic; }
+
+  .empty-state {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: var(--space-4); gap: var(--space-2);
+    background: var(--color-surface);
+    border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    margin-top: var(--space-3);
+  }
+  .empty-state-icon {
+    width: 64px; height: 64px; border-radius: 50%; background: var(--color-bg);
+    border: var(--border-width-sm) solid var(--color-border);
+    display: flex; align-items: center; justify-content: center; font-size: var(--font-size-lg);
+    color: var(--color-muted);
+  }
+
+  .tz-note { display: flex; align-items: center; gap: var(--space-1); color: var(--color-muted); font-size: var(--font-size-sm); margin-top: var(--space-1); }
+</style>
+</head>
+<body>
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--surface);border-bottom:1px solid var(--border);font-size:13px;font-family:var(--font-sans)">
+  <span style="font-family:var(--font-mono);color:var(--muted)">FTP-STORY-014</span>
+  <button id="prev-btn">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--fg)"></span>
+  <button id="next-btn">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+
+<div class="app-topbar">
+  <span class="brand">FitTrack</span>
+  <nav>
+    <a href="#">Dashboard</a>
+    <a href="#">Workouts</a>
+    <a href="#" class="active">Diet</a>
+    <a href="#">Profile</a>
+  </nav>
+  <span class="current-user"><span class="avatar-sm">A</span> Alex</span>
+</div>
+
+<div id="screens">
+
+  <!-- Screen: Meal Entry Form — Default
+       Notes:
+         - AC1: calories, carbs (g), protein (g), fat (g), date and time are all editable,
+           empty fields. Date input defaults to today's local date; time has no default so
+           the user makes a deliberate choice.
+         - AC6: date input max is set to today (native affordance); real enforcement of the
+           future-date/time rule is server-side, demonstrated in its own error state below.
+         - AC10: all six fields are required — none is optional.
+  -->
+  <!-- State: default -->
+  <div class="screen" data-name="Meal Entry Form — Default">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-1);">Log a meal</h1>
+      <p class="text-sm text-muted" style="margin-bottom: var(--space-4);">Record the calories and macros for something you ate.</p>
+
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="cal-default">Calories (kcal)</label>
+          <input class="input" id="cal-default" type="number" min="0" step="1" placeholder="e.g. 650">
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="carbs-default">Carbs (g)</label>
+            <input class="input" id="carbs-default" type="number" min="0" step="1" placeholder="e.g. 80">
+          </div>
+          <div class="field">
+            <label class="label" for="protein-default">Protein (g)</label>
+            <input class="input" id="protein-default" type="number" min="0" step="1" placeholder="e.g. 35">
+          </div>
+          <div class="field">
+            <label class="label" for="fat-default">Fat (g)</label>
+            <input class="input" id="fat-default" type="number" min="0" step="1" placeholder="e.g. 20">
+          </div>
+        </div>
+        <span class="hint" style="display:block; margin-bottom: var(--space-3);">Whole numbers only. Zero is accepted for any field — decimals aren't.</span>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="date-default">Date</label>
+            <input class="input" id="date-default" type="date" max="2026-09-30" value="2026-09-30">
+          </div>
+          <div class="field">
+            <label class="label" for="time-default">Time</label>
+            <input class="input" id="time-default" type="time">
+            <span class="hint">Your device's local time.</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="go('Meal Entry Form — Filled')">Save meal →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Meal Entry Form — Filled
+       Notes:
+         - A fully valid, complete entry ready to submit — feeds into the Submitting /
+           Save Confirmed states.
+  -->
+  <!-- State: filled -->
+  <div class="screen" data-name="Meal Entry Form — Filled">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-1);">Log a meal</h1>
+      <p class="text-sm text-muted" style="margin-bottom: var(--space-4);">Record the calories and macros for something you ate.</p>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="cal-filled">Calories (kcal)</label>
+          <input class="input" id="cal-filled" type="number" min="0" step="1" value="650">
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="carbs-filled">Carbs (g)</label>
+            <input class="input" id="carbs-filled" type="number" min="0" step="1" value="80">
+          </div>
+          <div class="field">
+            <label class="label" for="protein-filled">Protein (g)</label>
+            <input class="input" id="protein-filled" type="number" min="0" step="1" value="35">
+          </div>
+          <div class="field">
+            <label class="label" for="fat-filled">Fat (g)</label>
+            <input class="input" id="fat-filled" type="number" min="0" step="1" value="20">
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="date-filled">Date</label>
+            <input class="input" id="date-filled" type="date" max="2026-09-30" value="2026-09-30">
+          </div>
+          <div class="field">
+            <label class="label" for="time-filled">Time</label>
+            <input class="input" id="time-filled" type="time" value="12:30">
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="submitThen('Save Confirmed')">Save meal →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Submitting
+       Notes:
+         - Button disabled and re-labeled while the (simulated) save request is in flight.
+         - Auto-advances to confirmation after ~350ms via setTimeout.
+  -->
+  <!-- State: submitting -->
+  <div class="screen" data-name="Submitting">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-1);">Log a meal</h1>
+      <form novalidate aria-busy="true">
+        <div class="field">
+          <label class="label">Calories (kcal)</label>
+          <input class="input" type="number" value="650" disabled>
+        </div>
+        <div class="row-2">
+          <div class="field"><label class="label">Carbs (g)</label><input class="input" type="number" value="80" disabled></div>
+          <div class="field"><label class="label">Protein (g)</label><input class="input" type="number" value="35" disabled></div>
+          <div class="field"><label class="label">Fat (g)</label><input class="input" type="number" value="20" disabled></div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label class="label">Date</label><input class="input" type="date" value="2026-09-30" disabled></div>
+          <div class="field"><label class="label">Time</label><input class="input" type="time" value="12:30" disabled></div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" disabled>Saving…</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Save Confirmed
+       Notes:
+         - AC1: entry saved and associated with the signed-in account (Alex, top bar).
+         - No color-success token exists — accent uses color-primary + explicit ✓ glyph
+           and text, never color alone.
+  -->
+  <!-- State: saved -->
+  <div class="screen" data-name="Save Confirmed">
+    <div class="page-wrap">
+      <div class="card confirm-box">
+        <div class="icon-circle">✓</div>
+        <h2 class="text-lg text-bold">Meal saved</h2>
+        <p class="text-sm text-muted">This entry has been added to your diet history.</p>
+        <ul class="summary-list">
+          <li><span>Calories</span><span>650 kcal</span></li>
+          <li><span>Carbs</span><span>80 g</span></li>
+          <li><span>Protein</span><span>35 g</span></li>
+          <li><span>Fat</span><span>20 g</span></li>
+          <li><span>Logged</span><span>Sep 30, 2026, 12:30 PM</span></li>
+        </ul>
+        <div class="actions" style="justify-content:center;">
+          <button class="btn btn-primary" onclick="go('Meal Entry Form — Default')">Log another meal</button>
+          <button class="btn btn-secondary" onclick="go('Diet History — Full List')">View diet history →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Validation — Missing Fields
+       Notes:
+         - AC10: calories, carbs, and time left blank — each shows an independent inline
+           error; entered values (protein, fat, date) are preserved, nothing is saved.
+  -->
+  <!-- State: error-missing-fields -->
+  <div class="screen" data-name="Validation — Missing Fields">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-3);">Log a meal</h1>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="cal-missing">Calories (kcal)</label>
+          <input class="input" id="cal-missing" type="number" min="0" step="1" placeholder="e.g. 650" aria-invalid="true" aria-describedby="err-cal-missing">
+          <p class="field-error" id="err-cal-missing" role="alert">Calories is required.</p>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="carbs-missing">Carbs (g)</label>
+            <input class="input" id="carbs-missing" type="number" min="0" step="1" placeholder="e.g. 80" aria-invalid="true" aria-describedby="err-carbs-missing">
+            <p class="field-error" id="err-carbs-missing" role="alert">Carbs is required.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="protein-missing">Protein (g)</label>
+            <input class="input" id="protein-missing" type="number" min="0" step="1" value="35">
+          </div>
+          <div class="field">
+            <label class="label" for="fat-missing">Fat (g)</label>
+            <input class="input" id="fat-missing" type="number" min="0" step="1" value="20">
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="date-missing">Date</label>
+            <input class="input" id="date-missing" type="date" max="2026-09-30" value="2026-09-30">
+          </div>
+          <div class="field">
+            <label class="label" for="time-missing">Time</label>
+            <input class="input" id="time-missing" type="time" aria-invalid="true" aria-describedby="err-time-missing">
+            <p class="field-error" id="err-time-missing" role="alert">Time is required.</p>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="go('Meal Entry Form — Default')">Save meal →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Validation — Negative Values
+       Notes:
+         - AC4: negative calories, carbs, and fat are each rejected inline, independently,
+           in the same submission.
+  -->
+  <!-- State: error-negative -->
+  <div class="screen" data-name="Validation — Negative Values">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-3);">Log a meal</h1>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="cal-neg">Calories (kcal)</label>
+          <input class="input" id="cal-neg" type="number" value="-50" aria-invalid="true" aria-describedby="err-cal-neg">
+          <p class="field-error" id="err-cal-neg" role="alert">Calories can't be negative.</p>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="carbs-neg">Carbs (g)</label>
+            <input class="input" id="carbs-neg" type="number" value="-5" aria-invalid="true" aria-describedby="err-carbs-neg">
+            <p class="field-error" id="err-carbs-neg" role="alert">Carbs can't be negative.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="protein-neg">Protein (g)</label>
+            <input class="input" id="protein-neg" type="number" value="30">
+          </div>
+          <div class="field">
+            <label class="label" for="fat-neg">Fat (g)</label>
+            <input class="input" id="fat-neg" type="number" value="-2" aria-invalid="true" aria-describedby="err-fat-neg">
+            <p class="field-error" id="err-fat-neg" role="alert">Fat can't be negative.</p>
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="date-neg">Date</label>
+            <input class="input" id="date-neg" type="date" max="2026-09-30" value="2026-09-30">
+          </div>
+          <div class="field">
+            <label class="label" for="time-neg">Time</label>
+            <input class="input" id="time-neg" type="time" value="19:00">
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="go('Meal Entry Form — Default')">Save meal →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Zero Values — Valid
+       Notes:
+         - AC5: zero is explicitly valid for calories and every macro (e.g. logging a
+           black coffee). No error shown, submit proceeds to save.
+  -->
+  <!-- State: zero-valid -->
+  <div class="screen" data-name="Zero Values — Valid">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-1);">Log a meal</h1>
+      <p class="text-sm text-muted" style="margin-bottom: var(--space-3);">Zero is accepted for calories and macros — e.g. logging black coffee.</p>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="cal-zero">Calories (kcal)</label>
+          <input class="input" id="cal-zero" type="number" value="0">
+        </div>
+        <div class="row-2">
+          <div class="field"><label class="label" for="carbs-zero">Carbs (g)</label><input class="input" id="carbs-zero" type="number" value="0"></div>
+          <div class="field"><label class="label" for="protein-zero">Protein (g)</label><input class="input" id="protein-zero" type="number" value="0"></div>
+          <div class="field"><label class="label" for="fat-zero">Fat (g)</label><input class="input" id="fat-zero" type="number" value="0"></div>
+        </div>
+        <span class="hint" style="display:block; margin-bottom:var(--space-3);">No validation error — all-zero entries are valid and saveable.</span>
+        <div class="row-2">
+          <div class="field"><label class="label" for="date-zero">Date</label><input class="input" id="date-zero" type="date" max="2026-09-30" value="2026-09-30"></div>
+          <div class="field"><label class="label" for="time-zero">Time</label><input class="input" id="time-zero" type="time" value="07:15"></div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="submitThen('Save Confirmed')">Save meal →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Very High Values — Valid
+       Notes:
+         - AC7: a large but non-negative calorie/macro value (e.g. a big buffet meal or a
+           bulk-tracking user) is accepted with no upper-bound rejection.
+  -->
+  <!-- State: high-value-valid -->
+  <div class="screen" data-name="Very High Values — Valid">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-1);">Log a meal</h1>
+      <p class="text-sm text-muted" style="margin-bottom: var(--space-3);">There's no upper limit — very large values are accepted as-is.</p>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="cal-high">Calories (kcal)</label>
+          <input class="input" id="cal-high" type="number" value="4200">
+        </div>
+        <div class="row-2">
+          <div class="field"><label class="label" for="carbs-high">Carbs (g)</label><input class="input" id="carbs-high" type="number" value="500"></div>
+          <div class="field"><label class="label" for="protein-high">Protein (g)</label><input class="input" id="protein-high" type="number" value="300"></div>
+          <div class="field"><label class="label" for="fat-high">Fat (g)</label><input class="input" id="fat-high" type="number" value="150"></div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label class="label" for="date-high">Date</label><input class="input" id="date-high" type="date" max="2026-09-30" value="2026-09-30"></div>
+          <div class="field"><label class="label" for="time-high">Time</label><input class="input" id="time-high" type="time" value="20:00"></div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="submitThen('Save Confirmed')">Save meal →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Values Don't Reconcile — Still Saved
+       Notes:
+         - AC8: 650 kcal but 80g carbs + 35g protein + 20g fat is far above (and here also
+           mismatched from) the calorie total (macro math ≈ 900 kcal vs. stated 650 kcal).
+           No cross-field "macros don't add up" error is shown — the entry saves as entered.
+  -->
+  <!-- State: mismatched-macros-valid -->
+  <div class="screen" data-name="Values Don't Reconcile — Still Saved">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-1);">Log a meal</h1>
+      <p class="text-sm text-muted" style="margin-bottom: var(--space-3);">Calories and macros are saved exactly as entered — we don't check that they add up.</p>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="cal-mismatch">Calories (kcal)</label>
+          <input class="input" id="cal-mismatch" type="number" value="650">
+        </div>
+        <div class="row-2">
+          <div class="field"><label class="label" for="carbs-mismatch">Carbs (g)</label><input class="input" id="carbs-mismatch" type="number" value="200"></div>
+          <div class="field"><label class="label" for="protein-mismatch">Protein (g)</label><input class="input" id="protein-mismatch" type="number" value="150"></div>
+          <div class="field"><label class="label" for="fat-mismatch">Fat (g)</label><input class="input" id="fat-mismatch" type="number" value="100"></div>
+        </div>
+        <span class="hint" style="display:block; margin-bottom:var(--space-3);">No cross-field error — macros here work out to roughly 2,300 kcal on their own, well above the 650 kcal entered. Submission is still accepted.</span>
+        <div class="row-2">
+          <div class="field"><label class="label" for="date-mismatch">Date</label><input class="input" id="date-mismatch" type="date" max="2026-09-30" value="2026-09-30"></div>
+          <div class="field"><label class="label" for="time-mismatch">Time</label><input class="input" id="time-mismatch" type="time" value="13:00"></div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="submitThen('Save Confirmed')">Save meal →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Validation — Decimal Values
+       Notes:
+         - AC12: non-integer calories/macros are rejected inline with a clear message;
+           whole-number fields (AC11) stay unaffected.
+  -->
+  <!-- State: error-decimal -->
+  <div class="screen" data-name="Validation — Decimal Values">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-3);">Log a meal</h1>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="cal-decimal">Calories (kcal)</label>
+          <input class="input" id="cal-decimal" type="number" value="650.5" aria-invalid="true" aria-describedby="err-cal-decimal">
+          <p class="field-error" id="err-cal-decimal" role="alert">Calories must be a whole number — decimals aren't allowed.</p>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="carbs-decimal">Carbs (g)</label>
+            <input class="input" id="carbs-decimal" type="number" value="80">
+          </div>
+          <div class="field">
+            <label class="label" for="protein-decimal">Protein (g)</label>
+            <input class="input" id="protein-decimal" type="number" value="35.25" aria-invalid="true" aria-describedby="err-protein-decimal">
+            <p class="field-error" id="err-protein-decimal" role="alert">Protein must be a whole number — decimals aren't allowed.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="fat-decimal">Fat (g)</label>
+            <input class="input" id="fat-decimal" type="number" value="20">
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label class="label" for="date-decimal">Date</label><input class="input" id="date-decimal" type="date" max="2026-09-30" value="2026-09-30"></div>
+          <div class="field"><label class="label" for="time-decimal">Time</label><input class="input" id="time-decimal" type="time" value="12:30"></div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="go('Meal Entry Form — Default')">Save meal →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Validation — Future Date/Time
+       Notes:
+         - AC6: a date+time later than the device's current moment is rejected. Native
+           max=today on the date input is a nicety; server-side rejection (shown here) is
+           the real enforcement, and it also covers a future *time* on today's date.
+  -->
+  <!-- State: error-future-datetime -->
+  <div class="screen" data-name="Validation — Future Date/Time">
+    <div class="page-wrap">
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-3);">Log a meal</h1>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="cal-future">Calories (kcal)</label>
+          <input class="input" id="cal-future" type="number" value="500">
+        </div>
+        <div class="row-2">
+          <div class="field"><label class="label" for="carbs-future">Carbs (g)</label><input class="input" id="carbs-future" type="number" value="60"></div>
+          <div class="field"><label class="label" for="protein-future">Protein (g)</label><input class="input" id="protein-future" type="number" value="25"></div>
+          <div class="field"><label class="label" for="fat-future">Fat (g)</label><input class="input" id="fat-future" type="number" value="15"></div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label class="label" for="date-future">Date</label>
+            <input class="input" id="date-future" type="date" value="2026-10-05" aria-invalid="true" aria-describedby="err-future-dt">
+          </div>
+          <div class="field">
+            <label class="label" for="time-future">Time</label>
+            <input class="input" id="time-future" type="time" value="09:00" aria-invalid="true" aria-describedby="err-future-dt">
+          </div>
+        </div>
+        <p class="field-error" id="err-future-dt" role="alert">This meal's date and time are in the future — choose the actual date and time it was eaten.</p>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="go('Meal Entry Form — Default')">Save meal →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Save Failed — Offline / Server Error
+       Notes:
+         - AC9: generic, retryable error banner; every entered value is preserved for
+           retry and nothing is saved.
+  -->
+  <!-- State: error-save-failed -->
+  <div class="screen" data-name="Save Failed — Offline / Server Error">
+    <div class="page-wrap">
+      <div class="banner" role="alert">
+        <span class="icon">⚠</span>
+        <div class="body">
+          <strong>Something went wrong</strong>
+          We couldn't save your meal. Check your connection and try again — your entry hasn't been lost.
+        </div>
+      </div>
+      <h1 class="text-lg text-bold" style="margin-bottom: var(--space-3);">Log a meal</h1>
+      <form novalidate>
+        <div class="field">
+          <label class="label" for="cal-fail">Calories (kcal)</label>
+          <input class="input" id="cal-fail" type="number" value="720">
+        </div>
+        <div class="row-2">
+          <div class="field"><label class="label" for="carbs-fail">Carbs (g)</label><input class="input" id="carbs-fail" type="number" value="90"></div>
+          <div class="field"><label class="label" for="protein-fail">Protein (g)</label><input class="input" id="protein-fail" type="number" value="40"></div>
+          <div class="field"><label class="label" for="fat-fail">Fat (g)</label><input class="input" id="fat-fail" type="number" value="22"></div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label class="label" for="date-fail">Date</label><input class="input" id="date-fail" type="date" max="2026-09-30" value="2026-09-29"></div>
+          <div class="field"><label class="label" for="time-fail">Time</label><input class="input" id="time-fail" type="time" value="18:45"></div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" onclick="submitThen('Save Confirmed')">Retry save →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen: Diet History — Full List
+       Notes:
+         - AC2: meal entries appear listed alongside other diet history entries (a water
+           intake entry from a different story is shown interleaved, newest first).
+         - AC3: list is scoped to the signed-in account (Alex, top bar) — the fixture
+           contains no other user's rows.
+         - AC13: no edit/delete affordance appears on any row — a muted "view only" note
+           replaces the action area entirely.
+         - AC14: each meal's date/time is shown already converted to the device's local
+           timezone; a small note calls this out explicitly for reviewer sign-off.
+  -->
+  <!-- State: default -->
+  <div class="screen" data-name="Diet History — Full List">
+    <div class="page-wrap">
+      <div class="page-header">
+        <h1 class="text-lg text-bold">Diet history</h1>
+        <span class="entry-count">5 entries</span>
+      </div>
+      <p class="text-sm text-muted" style="margin: var(--space-1) 0 0;">Your complete diet log, newest first. Entries can't be edited or deleted once saved.</p>
+      <p class="tz-note"><span aria-hidden="true">🕒</span> Times shown in your device's local timezone (America/New_York, UTC−4).</p>
+
+      <ul class="history-list" aria-label="Diet history, newest first">
+        <li class="history-row">
+          <div class="history-row-main">
+            <span class="history-title"><span class="entry-type-chip meal">Meal</span> Grilled chicken &amp; rice bowl</span>
+            <span class="history-datetime">Sep 30, 2026, 12:30 PM</span>
+          </div>
+          <div class="history-metrics">
+            <div class="history-metric"><span class="val">650</span><span class="unit">kcal</span></div>
+            <div class="history-metric"><span class="val">80/35/20</span><span class="unit">C/P/F (g)</span></div>
+          </div>
+        </li>
+        <li class="history-row">
+          <div class="history-row-main">
+            <span class="history-title"><span class="entry-type-chip">Water</span> Water intake</span>
+            <span class="history-datetime">Sep 30, 2026, 9:10 AM</span>
+          </div>
+          <div class="history-metrics">
+            <div class="history-metric"><span class="val">500</span><span class="unit">ml</span></div>
+          </div>
+        </li>
+        <li class="history-row">
+          <div class="history-row-main">
+            <span class="history-title"><span class="entry-type-chip meal">Meal</span> Greek yogurt &amp; berries</span>
+            <span class="history-datetime">Sep 29, 2026, 7:45 AM</span>
+          </div>
+          <div class="history-metrics">
+            <div class="history-metric"><span class="val">280</span><span class="unit">kcal</span></div>
+            <div class="history-metric"><span class="val">30/20/8</span><span class="unit">C/P/F (g)</span></div>
+          </div>
+        </li>
+        <li class="history-row">
+          <div class="history-row-main">
+            <span class="history-title"><span class="entry-type-chip meal">Meal</span> Black coffee</span>
+            <span class="history-datetime">Sep 28, 2026, 7:15 AM</span>
+          </div>
+          <div class="history-metrics">
+            <div class="history-metric"><span class="val">0</span><span class="unit">kcal</span></div>
+            <div class="history-metric"><span class="val">0/0/0</span><span class="unit">C/P/F (g)</span></div>
+          </div>
+        </li>
+        <li class="history-row">
+          <div class="history-row-main">
+            <span class="history-title"><span class="entry-type-chip">Water</span> Water intake</span>
+            <span class="history-datetime">Sep 27, 2026, 6:00 PM</span>
+          </div>
+          <div class="history-metrics">
+            <div class="history-metric"><span class="val">750</span><span class="unit">ml</span></div>
+          </div>
+        </li>
+      </ul>
+      <p class="no-actions-note" style="margin-top: var(--space-3);">Saved entries are view-only — there's no edit or delete option in diet history.</p>
+    </div>
+  </div>
+
+  <!-- Screen: Diet History — Empty State
+       Notes:
+         - A user with no diet entries yet sees an invitation to log their first meal
+           instead of an empty list.
+  -->
+  <!-- State: empty -->
+  <div class="screen" data-name="Diet History — Empty State">
+    <div class="page-wrap">
+      <div class="page-header">
+        <h1 class="text-lg text-bold">Diet history</h1>
+      </div>
+      <div class="empty-state">
+        <div class="empty-state-icon">🍽</div>
+        <h2 class="text-md text-bold" style="margin:0;">No meals logged yet</h2>
+        <p class="text-sm text-muted" style="margin:0; max-width:40ch;">Once you log a meal, it'll show up here alongside the rest of your diet history.</p>
+        <div class="actions" style="justify-content:center;">
+          <button type="button" class="btn btn-primary" onclick="go('Meal Entry Form — Default')">Log your first meal →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const screens = Array.from(document.querySelectorAll('.screen'));
+  let cur = 0;
+
+  function show(i) {
+    cur = Math.max(0, Math.min(screens.length - 1, i));
+    screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+    document.getElementById('screen-label').textContent =
+      `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+  }
+
+  function go(name) {
+    const idx = screens.findIndex(s => s.dataset.name === name);
+    if (idx !== -1) show(idx);
+  }
+
+  // Used by submit buttons only, so reviewer-bar Prev/Next always shows Submitting
+  // as a static state instead of auto-advancing.
+  function submitThen(target) {
+    go('Submitting');
+    setTimeout(() => {
+      if (screens[cur].dataset.name === 'Submitting') go(target);
+    }, 350);
+  }
+
+  document.getElementById('prev-btn').onclick = () => show(cur - 1);
+  document.getElementById('next-btn').onclick = () => show(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') show(cur + 1);
+    if (e.key === 'ArrowLeft') show(cur - 1);
+  });
+
+  show(0);
+</script>
+
+</body>
+</html>
+
+<!-- arc:css-inlined -->
