@@ -54,6 +54,19 @@ def db():
     session.close()
 
 
+def create_entry(client, **overrides):
+    payload = {
+        "exercise_name": "Back squat",
+        "entry_date": "2026-09-20",
+        "duration_minutes": "30",
+        "sets": "",
+        "reps": "",
+    }
+    payload.update(overrides)
+    res = client.post("/api/workouts", json=payload)
+    return res.json()["id"]
+
+
 @pytest.fixture
 def client_with_signed_up_account():
     from fastapi.testclient import TestClient

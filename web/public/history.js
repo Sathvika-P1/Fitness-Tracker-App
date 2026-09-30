@@ -1,4 +1,4 @@
-import { logout as sharedLogout } from './session-utils.js';
+import { logout as sharedLogout, goToHistoryDeleted } from './session-utils.js';
 
 export function formatMetrics(entry) {
   const metrics = [];
@@ -290,7 +290,7 @@ async function performDelete(entry, row, deleteBtn) {
   }
 
   if (res.status === 204 || res.status === 404) {
-    window.location.href = 'history.html?deleted=1';
+    goToHistoryDeleted();
     return;
   }
   if (res.status === 401) {
@@ -307,6 +307,7 @@ async function performDelete(entry, row, deleteBtn) {
 keepEntryBtn?.addEventListener('click', closeDeleteModal);
 
 confirmDeleteBtn?.addEventListener('click', () => {
+  if (!pendingDelete) return;
   const { entry, row, deleteBtn } = pendingDelete;
   deleteBackdrop.hidden = true;
   performDelete(entry, row, deleteBtn);

@@ -1,19 +1,7 @@
 from fastapi.testclient import TestClient
 
 from app.main import app
-
-
-def _create_entry(client, **overrides):
-    payload = {
-        "exercise_name": "Back squat",
-        "entry_date": "2026-09-20",
-        "duration_minutes": "30",
-        "sets": "",
-        "reps": "",
-    }
-    payload.update(overrides)
-    res = client.post("/api/workouts", json=payload)
-    return res.json()["id"]
+from tests.conftest import create_entry as _create_entry
 
 
 def test_owner_can_delete_their_entry(client_with_signed_up_account):

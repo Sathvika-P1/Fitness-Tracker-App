@@ -1,4 +1,4 @@
-import { logout as sharedLogout } from './session-utils.js';
+import { logout as sharedLogout, goToHistoryDeleted } from './session-utils.js';
 import {
   collectFormValues,
   renderValidationErrors,
@@ -99,10 +99,6 @@ function markDirty() {
 [exerciseInput, dateInput, durationInput, setsInput, repsInput].forEach((input) => {
   input?.addEventListener('input', markDirty);
 });
-
-function goToHistoryDeleted() {
-  window.location.href = 'history.html?deleted=1';
-}
 
 export async function loadEntry() {
   entryId = entryIdFromLocation(window.location);

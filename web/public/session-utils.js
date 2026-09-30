@@ -31,6 +31,10 @@ export async function logout(errorElId) {
   window.location.href = 'login.html?logged_out=1';
 }
 
+export function goToHistoryDeleted() {
+  window.location.href = 'history.html?deleted=1';
+}
+
 export async function checkSessionAndReveal(revealFn) {
   try {
     const res = await fetch('/api/me', { credentials: 'include' });
