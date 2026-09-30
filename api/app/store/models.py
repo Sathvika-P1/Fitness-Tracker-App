@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import Column, Date, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import BigInteger, Column, Date, DateTime, Float, ForeignKey, Integer, String
 
 from app.db import Base
 
@@ -59,4 +59,17 @@ class WorkoutEntry(Base):
     duration_minutes = Column(Float, nullable=True)
     sets = Column(Integer, nullable=True)
     reps = Column(Integer, nullable=True)
+    created_at = Column(DateTime, nullable=False, default=_utcnow)
+
+
+class MealEntry(Base):
+    __tablename__ = "meal_entries"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
+    calories = Column(BigInteger, nullable=False)
+    carbs_g = Column(BigInteger, nullable=False)
+    protein_g = Column(BigInteger, nullable=False)
+    fat_g = Column(BigInteger, nullable=False)
+    eaten_at_utc = Column(DateTime, nullable=False)
     created_at = Column(DateTime, nullable=False, default=_utcnow)
