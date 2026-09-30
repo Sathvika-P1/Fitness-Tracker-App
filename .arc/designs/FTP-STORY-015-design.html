@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTP-STORY-015 — View Meal History</title>
+<style>
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #1a1a1a; /** Primary body text color, used on color-bg. Contrast ratio ~17.4:1. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-surface: #f8fafc; /** Slightly recessed surface, distinct from color-bg, used for cards. */
+  --color-primary: #1d4ed8; /** Brand/interactive accent color. Meets 4.5:1 as text on color-bg (~6.7:1). */
+  --color-on-primary: #ffffff; /** Text/icon color placed on top of color-primary. */
+  --color-muted: #475569; /** Secondary/muted text color. */
+  --color-border: #e2e8f0; /** Default hairline border color. */
+  --color-danger: #dc2626; /** Destructive/error accent color. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 600;
+  --line-height-base: 1.5;
+  --button-primary-background: var(--color-primary);
+  --button-primary-foreground: var(--color-on-primary);
+  --button-primary-border-radius: var(--radius-md);
+  --button-secondary-background: var(--color-bg);
+  --button-secondary-foreground: var(--color-primary);
+  --button-secondary-border: var(--color-primary);
+  --card-default-background: var(--color-surface);
+  --card-default-border: var(--color-border);
+  --card-default-border-radius: var(--radius-lg);
+  --chip-default-background: var(--color-surface);
+  --chip-default-foreground: var(--color-muted);
+  --chip-default-border-radius: var(--radius-sm);
+  --input-default-background: var(--color-bg);
+  --input-default-border: var(--color-border);
+  --input-default-foreground: var(--color-fg);
+  --input-default-border-radius: var(--radius-sm);
+}
+
+</style>
+<style>
+/* Base layout / typography */
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  font-size: var(--font-size-md);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-bold { font-weight: var(--font-weight-bold); }
+
+/* Layout utilities */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
+/* Buttons */
+
+.btn {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-md);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-radius: var(--button-primary-border-radius);
+}
+
+.btn-secondary {
+  background: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-width: var(--border-width-sm);
+  border-style: solid;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-on-primary);
+}
+
+/* Card */
+
+.card {
+  background: var(--card-default-background);
+  border: var(--border-width-sm) solid var(--card-default-border);
+  border-radius: var(--card-default-border-radius);
+  padding: var(--space-4);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* Chip */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  background: var(--chip-default-background);
+  color: var(--chip-default-foreground);
+  border-radius: var(--chip-default-border-radius);
+  font-size: var(--font-size-sm);
+}
+
+/* Form controls */
+
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  background: var(--input-default-background);
+  color: var(--input-default-foreground);
+  border: var(--border-width-sm) solid var(--input-default-border);
+  border-radius: var(--input-default-border-radius);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-md);
+  outline: none;
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-1);
+}
+
+/* Style-guide page helpers */
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.swatch-color {
+  height: var(--space-4);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-sm) solid var(--color-border);
+}
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.section {
+  margin-bottom: var(--space-4);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* Auth pages (signup / login) */
+
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+.auth-shell {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-3);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.field {
+  margin-bottom: var(--space-3);
+}
+
+.field-error-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.input.has-error {
+  border-color: var(--color-danger);
+  border-width: var(--border-width-md);
+}
+
+.helper-text {
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.btn-block {
+  width: 100%;
+  min-height: 44px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.banner {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  background: var(--color-bg);
+  border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.banner[hidden] {
+  display: none;
+}
+
+.banner-icon {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.banner-title {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+}
+
+.banner-body {
+  color: var(--color-fg);
+  font-size: var(--font-size-sm);
+}
+
+.link-inline {
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.center-note {
+  text-align: center;
+  margin-top: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+
+.banner-neutral {
+  border-color: var(--color-border);
+}
+
+.banner-neutral .banner-icon,
+.banner-neutral .banner-title {
+  color: var(--color-primary);
+}
+
+.banner-success {
+  border-color: var(--color-primary);
+}
+
+.banner-success .banner-icon,
+.banner-success .banner-title {
+  color: var(--color-primary);
+}
+
+.banner-info {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+}
+
+.banner-info .banner-icon,
+.banner-info .banner-title {
+  color: var(--color-fg);
+}
+
+/* App shell (top bar, avatar, bottom tabs) */
+
+.page-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: var(--space-4);
+}
+
+.top-app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border-bottom: var(--border-width-sm) solid var(--color-border);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.bottom-tabs {
+  display: flex;
+  border-top: var(--border-width-sm) solid var(--color-border);
+  position: sticky;
+  bottom: 0;
+  background: var(--color-bg);
+}
+
+.bottom-tab {
+  flex: 1;
+  text-align: center;
+  padding: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.bottom-tab.active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Profile fields */
+
+.not-set {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.field-group-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.char-counter {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  text-align: right;
+  margin-top: var(--space-1);
+}
+
+.char-counter.over {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-bold);
+}
+
+.content-pad {
+  padding: 0 var(--space-3);
+}
+
+/* Account deletion */
+
+.back-btn {
+  background: none; border: none; cursor: pointer; color: var(--color-primary);
+  font-size: var(--font-size-md); min-height: 44px; min-width: 44px;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+}
+
+.top-app-bar-title { font-weight: var(--font-weight-bold); font-size: var(--font-size-lg); }
+
+.danger-zone-card {
+  border: var(--border-width-sm) solid var(--color-danger);
+  border-radius: var(--card-default-border-radius);
+  background: var(--color-bg);
+  padding: var(--space-3);
+  margin: var(--space-3);
+}
+.danger-zone-title { color: var(--color-danger); font-weight: var(--font-weight-bold); margin-bottom: var(--space-1); }
+
+.consequence-list { margin: var(--space-3) 0; padding-left: 0; list-style: none; }
+.consequence-list li {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  padding: var(--space-1) 0; font-size: var(--font-size-sm); color: var(--color-fg);
+}
+.consequence-list li .mark { color: var(--color-danger); font-weight: var(--font-weight-bold); flex-shrink: 0; }
+
+.checkbox-row {
+  display: flex; align-items: flex-start; gap: var(--space-2);
+  margin: var(--space-3) 0; min-height: 44px;
+}
+.checkbox-row input[type="checkbox"] {
+  width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; accent-color: var(--color-danger);
+}
+.checkbox-row label { font-size: var(--font-size-sm); color: var(--color-fg); }
+
+.attempt-counter { font-size: var(--font-size-sm); color: var(--color-muted); margin-top: var(--space-1); }
+
+.lockout-banner {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  background: var(--color-bg); border: var(--border-width-md) solid var(--color-danger);
+  border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-3);
+}
+.lockout-banner .banner-icon { color: var(--color-danger); font-weight: var(--font-weight-bold); }
+.lockout-banner .banner-title { color: var(--color-danger); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+.lockout-banner .banner-body { color: var(--color-fg); font-size: var(--font-size-sm); }
+
+.account-empty-state {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: var(--space-4) var(--space-3); gap: var(--space-2);
+}
+.account-empty-state-icon {
+  width: 64px; height: 64px; border-radius: 50%; background: var(--color-surface);
+  display: flex; align-items: center; justify-content: center; font-size: var(--font-size-lg);
+  color: var(--color-danger);
+}
+
+/* Avatar menu — click the avatar to reveal View profile / Logout */
+.avatar-menu {
+  position: relative;
+}
+.avatar-menu-trigger {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  display: block;
+}
+.avatar-menu-trigger:focus-visible {
+  outline: var(--border-width-md) solid var(--color-primary);
+  outline-offset: 2px;
+}
+.avatar-menu-dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  min-width: 180px;
+  background: var(--color-bg);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-1);
+  z-index: 20;
+}
+.avatar-menu-dropdown[hidden] {
+  display: none;
+}
+.avatar-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-fg);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.avatar-menu-item:hover,
+.avatar-menu-item:focus-visible {
+  background: var(--color-surface);
+}
+.avatar-menu-item.danger {
+  color: var(--color-danger);
+}
+.avatar-menu-error {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--space-1);
+  white-space: nowrap;
+}
+.inline-error {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center; z-index: 50;
+}
+.modal-backdrop[hidden] { display: none; }
+.modal {
+  background: var(--color-bg); border-radius: var(--radius-lg);
+  padding: var(--space-4); max-width: 360px; width: 90%;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.modal-actions { display: flex; gap: var(--space-2); justify-content: flex-end; margin-top: var(--space-3); }
+
+</style>
+<!--
+  App nav: top bar — Dashboard · Workouts · Diet · Profile (fitness-tracker app; no arc chrome).
+  Borrowed structure/component patterns from FTP-STORY-014 (Log a Meal Entry) and
+  FTP-STORY-008 (View Workout History): .page-wrap / .history-list / .history-row /
+  .empty-state / .banner / skeleton-loading patterns, so the eventual build reuses
+  those components rather than inventing new ones for this screen.
+  Design system note: no color-success token and no pagination-component alias exist in
+  tokens.json, so the pagination nav below is built from existing --color-* / --space-*
+  tokens only (buttons reuse .btn / .btn-secondary).
+-->
+<style>
+  body { background: var(--color-bg); color: var(--color-fg); font-family: var(--font-family-base); }
+
+  .app-topbar {
+    display: flex; align-items: center; gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: var(--border-width-sm) solid var(--color-border);
+    background: var(--color-bg);
+  }
+  .app-topbar .brand { font-weight: var(--font-weight-bold); font-size: var(--font-size-lg); }
+  .app-topbar nav { display: flex; gap: var(--space-3); flex: 1; }
+  .app-topbar nav a { color: var(--color-muted); text-decoration: none; font-size: var(--font-size-sm); }
+  .app-topbar nav a.active { color: var(--color-primary); font-weight: var(--font-weight-bold); }
+  .app-topbar .current-user { display: flex; align-items: center; gap: var(--space-1); font-size: var(--font-size-sm); color: var(--color-muted); }
+  .avatar-sm {
+    width: 24px; height: 24px; border-radius: 50%; background: var(--color-primary);
+    color: var(--color-on-primary); display: inline-flex; align-items: center; justify-content: center;
+    font-size: var(--font-size-sm); font-weight: var(--font-weight-bold);
+  }
+
+  .page-wrap { max-width: 640px; margin: 0 auto; padding: var(--space-4); }
+
+  .page-header { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
+  .page-header h1 { margin: 0; }
+  .entry-count { color: var(--color-muted); font-size: var(--font-size-sm); }
+
+  /* History list */
+  .history-list { display: flex; flex-direction: column; gap: var(--space-2); list-style: none; margin: var(--space-3) 0 0; padding: 0; }
+  .history-row {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--card-default-background);
+    border: var(--border-width-sm) solid var(--card-default-border);
+    border-radius: var(--radius-md);
+    flex-wrap: wrap;
+  }
+  .history-row-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 180px; }
+  .history-title { font-weight: var(--font-weight-bold); font-size: var(--font-size-md); }
+  .history-datetime { color: var(--color-muted); font-size: var(--font-size-sm); }
+  .history-metrics { display: flex; gap: var(--space-3); flex-wrap: wrap; text-align: right; justify-content: flex-end; flex: 0 1 auto; }
+  .history-metric { display: flex; flex-direction: column; align-items: flex-end; }
+  .history-metric .val { font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+  .history-metric .unit { color: var(--color-muted); font-size: var(--font-size-sm); }
+
+  .no-actions-note { color: var(--color-muted); font-size: var(--font-size-sm); font-style: italic; margin-top: var(--space-3); }
+
+  /* Pagination */
+  .pagination {
+    display: flex; align-items: center; justify-content: center; gap: var(--space-2);
+    margin-top: var(--space-4); flex-wrap: wrap;
+  }
+  .pagination .btn { min-height: 44px; min-width: 44px; }
+  .pagination .page-status { font-size: var(--font-size-sm); color: var(--color-muted); min-width: 110px; text-align: center; }
+
+  /* Empty state */
+  .empty-state {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: var(--space-4); gap: var(--space-2);
+    background: var(--color-surface);
+    border: var(--border-width-sm) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    margin-top: var(--space-3);
+  }
+  .empty-state-icon {
+    width: 64px; height: 64px; border-radius: 50%; background: var(--color-bg);
+    border: var(--border-width-sm) solid var(--color-border);
+    display: flex; align-items: center; justify-content: center; font-size: var(--font-size-lg);
+    color: var(--color-muted);
+  }
+
+  /* Skeleton loading */
+  .skeleton-row {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--card-default-background);
+    border: var(--border-width-sm) solid var(--card-default-border);
+    border-radius: var(--radius-md);
+  }
+  .skeleton-block {
+    background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-border) 37%, var(--color-surface) 63%);
+    background-size: 400% 100%;
+    border-radius: var(--radius-sm);
+    animation: skeleton-shimmer 1.4s ease infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-block { animation: none; }
+  }
+  @keyframes skeleton-shimmer {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+  }
+
+  .banner {
+    display: flex; align-items: flex-start; gap: var(--space-2);
+    padding: var(--space-3); margin-bottom: var(--space-3);
+    border: var(--border-width-md) solid var(--color-danger);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-danger);
+  }
+  .banner .icon { font-size: var(--font-size-lg); line-height: 1; }
+  .banner .body { color: var(--color-fg); font-size: var(--font-size-sm); }
+  .banner .body strong { color: var(--color-danger); display: block; margin-bottom: var(--space-1); }
+
+  .actions { display: flex; gap: var(--space-2); margin-top: var(--space-3); flex-wrap: wrap; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .btn[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+  /* Reviewer-only simulation panel for AC13 (staleness) — clearly separated from product UI */
+  .sim-panel {
+    margin-top: var(--space-4);
+    padding: var(--space-3);
+    border: var(--border-width-md) dashed var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+  .sim-panel .sim-label {
+    font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); color: var(--color-muted);
+    text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: var(--space-2); display: block;
+  }
+  .sim-note { font-size: var(--font-size-sm); color: var(--color-muted); margin-top: var(--space-2); }
+  .new-row-flag { color: var(--color-primary); font-weight: var(--font-weight-bold); }
+</style>
+</head>
+<body>
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--surface);border-bottom:1px solid var(--border);font-size:13px;font-family:var(--font-sans)">
+  <span style="font-family:var(--font-mono);color:var(--muted)">FTP-STORY-015</span>
+  <button id="prev-btn">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--fg)"></span>
+  <button id="next-btn">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+<style>#review-bar button{color:var(--brand);border:none;background:none;cursor:pointer;font-size:13px;padding:4px 8px;}</style>
+
+<div class="app-topbar">
+  <span class="brand">FitTrack</span>
+  <nav>
+    <a href="#">Dashboard</a>
+    <a href="#">Workouts</a>
+    <a href="#" class="active">Diet</a>
+    <a href="#">Profile</a>
+  </nav>
+  <span class="current-user"><span class="avatar-sm">A</span> Alex</span>
+</div>
+
+<div id="screens">
+
+  <!-- Screen: Meal History — Loading
+       Notes:
+         - AC8 partial-state cousin: skeleton rows reserve the real row layout so nothing
+           shifts once data arrives.
+  -->
+  <!-- State: loading -->
+  <div class="screen" data-name="Meal History — Loading">
+    <div class="page-wrap">
+      <div class="page-header"><h1 class="text-lg text-bold">Meal history</h1></div>
+      <p class="text-sm text-muted" style="margin: var(--space-1) 0 0;">Loading your meals…</p>
+      <ul class="history-list" aria-busy="true" aria-label="Loading meal history">
+        <li class="skeleton-row"><div class="stack" style="flex:1;"><div class="skeleton-block" style="width:180px; height:16px;"></div><div class="skeleton-block" style="width:110px; height:12px;"></div></div><div class="skeleton-block" style="width:70px; height:32px;"></div></li>
+        <li class="skeleton-row"><div class="stack" style="flex:1;"><div class="skeleton-block" style="width:150px; height:16px;"></div><div class="skeleton-block" style="width:110px; height:12px;"></div></div><div class="skeleton-block" style="width:70px; height:32px;"></div></li>
+        <li class="skeleton-row"><div class="stack" style="flex:1;"><div class="skeleton-block" style="width:200px; height:16px;"></div><div class="skeleton-block" style="width:110px; height:12px;"></div></div><div class="skeleton-block" style="width:70px; height:32px;"></div></li>
+      </ul>
+      <div class="actions"><button type="button" class="btn btn-secondary" onclick="renderPage(1); go('Meal History — Page 1 of 2')">Skip to loaded state →</button></div>
+    </div>
+  </div>
+
+  <!-- Screen: Meal History — Page 1 of 2
+       Notes:
+         - AC1/AC2: 26-entry fixture, newest first; each row shows whatever fields were
+           captured (food name + quantity when logged, always calories + macros).
+         - AC3/AC4/AC11: 25 rows per page, discrete pagination (no infinite scroll);
+           "Next" is enabled because a second page exists with the remaining 1 entry.
+         - AC5: no edit/delete affordance on any row — a muted view-only note replaces it.
+         - AC12: no per-day or per-meal totals shown anywhere on this screen.
+  -->
+  <!-- State: page-1-of-2 -->
+  <div class="screen" data-name="Meal History — Page 1 of 2">
+    <div class="page-wrap">
+      <div class="page-header">
+        <h1 class="text-lg text-bold">Meal history</h1>
+        <span class="entry-count" id="count-label-1">Showing 1–25 of 26 meals</span>
+      </div>
+      <p class="text-sm text-muted" style="margin: var(--space-1) 0 0;">Your logged meals, newest first. Entries can't be edited or deleted here.</p>
+
+      <ul class="history-list" id="list-1" aria-label="Meal history, newest first, page 1"></ul>
+
+      <nav class="pagination" aria-label="Pagination">
+        <button type="button" class="btn btn-secondary" disabled aria-disabled="true">← Prev</button>
+        <span class="page-status" aria-current="page">Page 1 of 2</span>
+        <button type="button" class="btn btn-secondary" onclick="loadPageThen(2, 'Meal History — Page 2 of 2')">Next →</button>
+      </nav>
+
+      <p class="no-actions-note">Saved meals are view-only — there's no edit or delete option in meal history.</p>
+    </div>
+  </div>
+
+  <!-- Screen: Meal History — Loading Page 2
+       Notes:
+         - Brief skeleton shown while the next page is fetched (AC4).
+  -->
+  <!-- State: loading-page-2 -->
+  <div class="screen" data-name="Meal History — Loading Page 2">
+    <div class="page-wrap">
+      <div class="page-header"><h1 class="text-lg text-bold">Meal history</h1><span class="entry-count">Showing 26–26 of 26 meals</span></div>
+      <ul class="history-list" aria-busy="true" aria-label="Loading page 2">
+        <li class="skeleton-row"><div class="stack" style="flex:1;"><div class="skeleton-block" style="width:170px; height:16px;"></div><div class="skeleton-block" style="width:110px; height:12px;"></div></div><div class="skeleton-block" style="width:70px; height:32px;"></div></li>
+      </ul>
+      <nav class="pagination" aria-label="Pagination">
+        <button type="button" class="btn btn-secondary" disabled>← Prev</button>
+        <span class="page-status">Page 2 of 2</span>
+        <button type="button" class="btn btn-secondary" disabled>Next →</button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Screen: Meal History — Page 2 of 2
+       Notes:
+         - AC4/AC11: continues newest-first order — this single remaining, oldest entry;
+           "Next" is disabled (no third page), "Prev" returns to page 1.
+  -->
+  <!-- State: page-2-of-2 -->
+  <div class="screen" data-name="Meal History — Page 2 of 2">
+    <div class="page-wrap">
+      <div class="page-header">
+        <h1 class="text-lg text-bold">Meal history</h1>
+        <span class="entry-count" id="count-label-2">Showing 26–26 of 26 meals</span>
+      </div>
+      <p class="text-sm text-muted" style="margin: var(--space-1) 0 0;">Your logged meals, newest first. Entries can't be edited or deleted here.</p>
+
+      <ul class="history-list" id="list-2" aria-label="Meal history, newest first, page 2"></ul>
+
+      <nav class="pagination" aria-label="Pagination">
+        <button type="button" class="btn btn-secondary" onclick="loadPageThen(1, 'Meal History — Page 1 of 2')">← Prev</button>
+        <span class="page-status" aria-current="page">Page 2 of 2</span>
+        <button type="button" class="btn btn-secondary" disabled aria-disabled="true">Next →</button>
+      </nav>
+
+      <p class="no-actions-note">Saved meals are view-only — there's no edit or delete option in meal history.</p>
+    </div>
+  </div>
+
+  <!-- Screen: Meal History — Exactly 25 Entries (Single Page)
+       Notes:
+         - AC10: with exactly 25 meals, all fit on one page; Next is disabled and no
+           second page exists — labeled "Page 1 of 1" rather than hidden, so the absence
+           of a second page is explicit, not ambiguous.
+  -->
+  <!-- State: exactly-25-single-page -->
+  <div class="screen" data-name="Meal History — Exactly 25 Entries (Single Page)">
+    <div class="page-wrap">
+      <div class="page-header">
+        <h1 class="text-lg text-bold">Meal history</h1>
+        <span class="entry-count">Showing 1–25 of 25 meals</span>
+      </div>
+      <p class="text-sm text-muted" style="margin: var(--space-1) 0 0;">Your logged meals, newest first. Entries can't be edited or deleted here.</p>
+
+      <ul class="history-list" id="list-25" aria-label="Meal history, newest first"></ul>
+
+      <nav class="pagination" aria-label="Pagination">
+        <button type="button" class="btn btn-secondary" disabled aria-disabled="true">← Prev</button>
+        <span class="page-status" aria-current="page">Page 1 of 1</span>
+        <button type="button" class="btn btn-secondary" disabled aria-disabled="true" title="No further pages — all 25 meals are shown">Next →</button>
+      </nav>
+
+      <p class="no-actions-note">Saved meals are view-only — there's no edit or delete option in meal history.</p>
+    </div>
+  </div>
+
+  <!-- Screen: Meal History — Empty State
+       Notes:
+         - AC6/AC7: no meals logged yet — an invitation and a clear call-to-action to log
+           the first meal, instead of an empty list or table.
+  -->
+  <!-- State: empty -->
+  <div class="screen" data-name="Meal History — Empty State">
+    <div class="page-wrap">
+      <div class="page-header"><h1 class="text-lg text-bold">Meal history</h1></div>
+      <div class="empty-state">
+        <div class="empty-state-icon">🍽</div>
+        <h2 class="text-md text-bold" style="margin:0;">No meals logged yet</h2>
+        <p class="text-sm text-muted" style="margin:0; max-width:40ch;">Once you log a meal, it'll show up here — newest first.</p>
+        <div class="actions" style="justify-content:center;">
+          <button type="button" class="btn btn-primary">Log your first meal →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Meal History — Load Error
+       Notes:
+         - AC8/AC9: generic, non-technical error shown when the initial history request
+           fails or the device is offline; Retry re-runs the request (shows the loading
+           skeleton, then the loaded page).
+  -->
+  <!-- State: error-initial-load -->
+  <div class="screen" data-name="Meal History — Load Error">
+    <div class="page-wrap">
+      <div class="page-header"><h1 class="text-lg text-bold">Meal history</h1></div>
+      <div class="banner" role="alert">
+        <span class="icon">⚠</span>
+        <div class="body">
+          <strong>Couldn't load your meal history</strong>
+          Something went wrong while fetching your entries. Check your connection and try again.
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-primary" onclick="loadPageThen(1, 'Meal History — Page 1 of 2')">Retry →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Meal History — Page Load Error
+       Notes:
+         - AC8/AC9: the same generic error, but triggered while turning the page (moving
+           from page 1 to page 2) rather than on first open — page 1's rows stay visible
+           context is dropped in favor of a focused, clearly-retryable error per the
+           existing error-state pattern; Retry re-attempts the page-2 request.
+  -->
+  <!-- State: error-page-turn -->
+  <div class="screen" data-name="Meal History — Page Load Error">
+    <div class="page-wrap">
+      <div class="page-header"><h1 class="text-lg text-bold">Meal history</h1></div>
+      <div class="banner" role="alert">
+        <span class="icon">⚠</span>
+        <div class="body">
+          <strong>Couldn't load the next page</strong>
+          Something went wrong while fetching more entries. Check your connection and try again.
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" onclick="loadPageThen(1, 'Meal History — Page 1 of 2')">← Back to page 1</button>
+        <button type="button" class="btn btn-primary" onclick="loadPageThen(2, 'Meal History — Page 2 of 2')">Retry →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen: Meal History — Stale While Viewing (AC13)
+       Notes:
+         - Reviewer-only simulation panel (dashed border, clearly not product UI) lets a
+           reviewer trigger "log a meal in another flow" and see the currently displayed
+           list stay unchanged, then reopen the screen to see the new entry appear at
+           the top. This demonstrates the list does not silently refresh mid-view.
+  -->
+  <!-- State: stale-while-viewing -->
+  <div class="screen" data-name="Meal History — Stale While Viewing (AC13)">
+    <div class="page-wrap">
+      <div class="page-header">
+        <h1 class="text-lg text-bold">Meal history</h1>
+        <span class="entry-count" id="count-label-stale">Showing 1–25 of 26 meals</span>
+      </div>
+      <p class="text-sm text-muted" style="margin: var(--space-1) 0 0;">Your logged meals, newest first. Entries can't be edited or deleted here.</p>
+
+      <ul class="history-list" id="list-stale" aria-label="Meal history, newest first"></ul>
+
+      <nav class="pagination" aria-label="Pagination">
+        <button type="button" class="btn btn-secondary" disabled aria-disabled="true">← Prev</button>
+        <span class="page-status" aria-current="page">Page 1 of 2</span>
+        <button type="button" class="btn btn-secondary" disabled aria-disabled="true">Next →</button>
+      </nav>
+
+      <div class="sim-panel">
+        <span class="sim-label">Reviewer simulation — not part of the product UI</span>
+        <p class="text-sm" id="stale-status">Nothing simulated yet. Use the button below to log a meal "in a separate flow" and see whether this open list updates.</p>
+        <div class="actions" style="margin-top:0;">
+          <button type="button" class="btn btn-secondary" id="sim-log-btn" onclick="simulateNewMeal()">Simulate: log a meal in another tab</button>
+          <button type="button" class="btn btn-primary" id="sim-reopen-btn" onclick="reopenHistory()" disabled>Reopen meal history</button>
+        </div>
+        <p class="sim-note" id="stale-note"></p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Inline fixture: 26 of this signed-in user's ("Alex") meal entries, newest first.
+  // Each entry carries only the fields FTP-STORY-014 actually captures: calories, carbs,
+  // protein, fat, and a logged date/time. Food name and quantity are optional — present
+  // only when the user chose to record them — so rows fall back to a generic label when absent.
+  const mealFixture = [];
+  const baseEntries = [
+    { name: "Grilled chicken & rice bowl", qty: "1 bowl", cal: 650, carbs: 80, protein: 35, fat: 20 },
+    { name: null, qty: null, cal: 0, carbs: 0, protein: 0, fat: 0 },
+    { name: "Greek yogurt & berries", qty: "1 cup", cal: 280, carbs: 30, protein: 20, fat: 8 },
+    { name: "Turkey sandwich", qty: "1 sandwich", cal: 420, carbs: 45, protein: 28, fat: 14 },
+    { name: null, qty: null, cal: 320, carbs: 40, protein: 12, fat: 10 },
+    { name: "Protein shake", qty: "1 serving", cal: 210, carbs: 12, protein: 30, fat: 4 },
+    { name: "Veggie stir fry", qty: "1 plate", cal: 380, carbs: 50, protein: 15, fat: 12 }
+  ];
+  for (let i = 0; i < 26; i++) {
+    const b = baseEntries[i % baseEntries.length];
+    const day = 30 - i; // descending day-of-month within Sep 2026, oldest = entry 26
+    const hour = 7 + (i % 12);
+    mealFixture.push({
+      id: 26 - i,
+      name: b.name,
+      qty: b.qty,
+      cal: b.cal,
+      carbs: b.carbs,
+      protein: b.protein,
+      fat: b.fat,
+      dateLabel: `Sep ${Math.max(day, 1)}, 2026`,
+      timeLabel: `${(hour % 12) || 12}:${i % 2 === 0 ? '00' : '30'} ${hour < 12 ? 'AM' : 'PM'}`
+    });
+  }
+  const mealFixture25 = mealFixture.slice(0, 25);
+
+  function rowHtml(m) {
+    const title = m.name ? m.name : 'Meal';
+    const qty = m.qty ? ` <span class="text-muted text-sm">(${m.qty})</span>` : '';
+    return `<li class="history-row">
+      <div class="history-row-main">
+        <span class="history-title">${title}${qty}</span>
+        <span class="history-datetime">${m.dateLabel}, ${m.timeLabel}</span>
+      </div>
+      <div class="history-metrics">
+        <div class="history-metric"><span class="val">${m.cal}</span><span class="unit">kcal</span></div>
+        <div class="history-metric"><span class="val">${m.carbs} g</span><span class="unit">Carbs</span></div>
+        <div class="history-metric"><span class="val">${m.protein} g</span><span class="unit">Protein</span></div>
+        <div class="history-metric"><span class="val">${m.fat} g</span><span class="unit">Fat</span></div>
+      </div>
+    </li>`;
+  }
+
+  function renderPage(pageNum) {
+    if (pageNum === 1) {
+      document.getElementById('list-1').innerHTML = mealFixture.slice(0, 25).map(rowHtml).join('');
+    } else if (pageNum === 2) {
+      document.getElementById('list-2').innerHTML = mealFixture.slice(25, 26).map(rowHtml).join('');
+    }
+  }
+  function renderStatic() {
+    document.getElementById('list-25').innerHTML = mealFixture25.map(rowHtml).join('');
+    document.getElementById('list-stale').innerHTML = mealFixture.slice(0, 25).map(rowHtml).join('');
+  }
+
+  const screens = Array.from(document.querySelectorAll('.screen'));
+  let cur = 0;
+
+  function show(i) {
+    cur = Math.max(0, Math.min(screens.length - 1, i));
+    screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+    document.getElementById('screen-label').textContent =
+      `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+  }
+
+  function go(name) {
+    const idx = screens.findIndex(s => s.dataset.name === name);
+    if (idx !== -1) show(idx);
+  }
+
+  // Simulates the page/initial-load request: shows a loading state briefly, then the target.
+  function loadPageThen(pageNum, targetName) {
+    const loadingName = pageNum === 2 ? 'Meal History — Loading Page 2' : 'Meal History — Loading';
+    go(loadingName);
+    setTimeout(() => {
+      if (screens[cur].dataset.name === loadingName) {
+        renderPage(pageNum);
+        go(targetName);
+      }
+    }, 300);
+  }
+
+  // AC13 simulation: logging a meal elsewhere does not change the already-open list.
+  let simulatedNewMeal = false;
+  function simulateNewMeal() {
+    simulatedNewMeal = true;
+    document.getElementById('stale-status').textContent =
+      'A new meal ("Oatmeal & banana", 9:45 AM today) was just logged in a separate flow.';
+    document.getElementById('stale-note').textContent =
+      'This list is unchanged — the new entry has not appeared. Reopen the screen to see it.';
+    document.getElementById('sim-log-btn').disabled = true;
+    document.getElementById('sim-reopen-btn').disabled = false;
+  }
+  function reopenHistory() {
+    if (!simulatedNewMeal) return;
+    const list = document.getElementById('list-stale');
+    const newRow = `<li class="history-row">
+      <div class="history-row-main">
+        <span class="history-title new-row-flag">✓ New — Oatmeal &amp; banana <span class="text-muted text-sm">(1 bowl)</span></span>
+        <span class="history-datetime">Sep 30, 2026, 9:45 AM</span>
+      </div>
+      <div class="history-metrics">
+        <div class="history-metric"><span class="val">310</span><span class="unit">kcal</span></div>
+        <div class="history-metric"><span class="val">55 g</span><span class="unit">Carbs</span></div>
+        <div class="history-metric"><span class="val">9 g</span><span class="unit">Protein</span></div>
+        <div class="history-metric"><span class="val">6 g</span><span class="unit">Fat</span></div>
+      </div>
+    </li>`;
+    list.insertAdjacentHTML('afterbegin', newRow);
+    document.getElementById('count-label-stale').textContent = 'Showing 1–25 of 27 meals';
+    document.getElementById('stale-status').textContent = 'Meal history reopened.';
+    document.getElementById('stale-note').textContent = 'The new entry now appears at the top, newest first.';
+    document.getElementById('sim-reopen-btn').disabled = true;
+  }
+
+  document.getElementById('prev-btn').onclick = () => show(cur - 1);
+  document.getElementById('next-btn').onclick = () => show(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') show(cur + 1);
+    if (e.key === 'ArrowLeft') show(cur - 1);
+  });
+
+  renderPage(1);
+  renderStatic();
+  show(0);
+</script>
+
+</body>
+</html>
+
+<!-- arc:css-inlined -->
