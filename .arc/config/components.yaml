@@ -4,10 +4,30 @@ components:
     name: API
     kind: api_service
     directory: api
+    stack:
+      choices:
+        database: MySQL
+        language: Python
+        framework: FastAPI
+        package_manager: uv
+        testing_tool_unit: pytest
+      notes: 'database read from api/app/db.py: SQLAlchemy 2 + PyMySQL, DATABASE_URL
+        defaults to mysql+pymysql://ftp:ftp@localhost:3306/ftp_signup; pytest from
+        dev dependencies; styling not applicable — API only'
   comp_web:
     name: Web
     kind: web_ui
     directory: web
+    stack:
+      choices:
+        language: JavaScript/TypeScript
+        package_manager: npm
+        testing_tool_unit: vitest
+      notes: static HTML/JS served by web/server.py, no UI framework and no stylesheet
+        files found; owns no data (proxies /api/* to the API), so no database
   comp_mysql:
     name: MySQL
     kind: infrastructure
+    stack:
+      choices:
+        managed_service: MySQL 8 (self-hosted, docker compose)
