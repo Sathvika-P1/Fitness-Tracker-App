@@ -1,0 +1,3 @@
+# arc branching policy (ADR-0121) — only the copy on the default branch counts.
+version: 1
+template: github-flow
