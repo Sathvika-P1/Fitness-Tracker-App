@@ -1,0 +1,13 @@
+version: 1
+components:
+  comp_api:
+    name: API
+    kind: api_service
+    directory: api
+  comp_web:
+    name: Web
+    kind: web_ui
+    directory: web
+  comp_mysql:
+    name: MySQL
+    kind: infrastructure
